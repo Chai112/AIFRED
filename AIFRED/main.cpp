@@ -15,9 +15,6 @@
 #include <stdarg.h>
 #include <assert.h>
 
-#include "game/playerControl.hpp"
-#include "game/playerPhysics.hpp"
-
 #include "input/mouseInput.hpp"
 
 #include "render/texture.hpp"
@@ -26,9 +23,6 @@
 #include "debug.hpp"
 
 MouseIn mouseIn;
-
-G_PlayerControl playerControl;
-G_PlayerPhysics playerPhysics;
 
 V_Texture texture;
 V_Shader shader;
