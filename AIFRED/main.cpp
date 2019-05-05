@@ -26,7 +26,6 @@ MouseIn mouseIn;
 
 V_Texture texture;
 V_Shader shader;
-V_Perspective perspective;
 
 Debug debug;
 
