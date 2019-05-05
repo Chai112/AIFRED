@@ -35,14 +35,14 @@
 
 /* Begin PBXFileReference section */
 		EE1D7FD22273FE8900901CDE /* mouseInput.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mouseInput.cpp; sourceTree = "<group>"; };
-		EE57929E226DE29A00BB89EC /* ESC */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ESC; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE57929E226DE29A00BB89EC /* AIFRED */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AIFRED; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE5792A1226DE29A00BB89EC /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		EE5792AB226DE34700BB89EC /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../../../usr/local/Cellar/glew/2.1.0/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
 		EE5792AD226DE36500BB89EC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		EE5792B2226DE94C00BB89EC /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		EE5792BB2270461F00BB89EC /* glm.pc */ = {isa = PBXFileReference; lastKnownFileType = text; name = glm.pc; path = ../../../../../../usr/local/Cellar/glm/0.9.9.5/lib/pkgconfig/glm.pc; sourceTree = "<group>"; };
 		EE7BB29E22742071002774C7 /* log */ = {isa = PBXFileReference; lastKnownFileType = folder; path = log; sourceTree = "<group>"; };
-		EE7BB2A3227423E3002774C7 /* texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = ESC/render/texture.cpp; sourceTree = SOURCE_ROOT; };
+		EE7BB2A3227423E3002774C7 /* texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = AIFRED/render/texture.cpp; sourceTree = SOURCE_ROOT; };
 		EE7BB2A4227423E3002774C7 /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = texture.hpp; sourceTree = "<group>"; };
 		EE7BB2AC227437E7002774C7 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		EE7BB2AD227437E7002774C7 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
@@ -75,7 +75,7 @@
 		EE579295226DE29A00BB89EC = {
 			isa = PBXGroup;
 			children = (
-				EE5792A0226DE29A00BB89EC /* ESC */,
+				EE5792A0226DE29A00BB89EC /* AIFRED */,
 				EE7BB2BC22748588002774C7 /* debug.cpp */,
 				EE7BB2BE2274858B002774C7 /* debug.hpp */,
 				EE57929F226DE29A00BB89EC /* Products */,
@@ -86,12 +86,12 @@
 		EE57929F226DE29A00BB89EC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EE57929E226DE29A00BB89EC /* ESC */,
+				EE57929E226DE29A00BB89EC /* AIFRED */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		EE5792A0226DE29A00BB89EC /* ESC */ = {
+		EE5792A0226DE29A00BB89EC /* AIFRED */ = {
 			isa = PBXGroup;
 			children = (
 				EE7BB29E22742071002774C7 /* log */,
@@ -100,7 +100,7 @@
 				EE7BB2B5227482DA002774C7 /* input */,
 				EE7BB2A6227424DE002774C7 /* render */,
 			);
-			path = ESC;
+			path = AIFRED;
 			sourceTree = "<group>";
 		};
 		EE5792A8226DE33200BB89EC /* Frameworks */ = {
@@ -150,9 +150,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EE57929D226DE29A00BB89EC /* ESC */ = {
+		EE57929D226DE29A00BB89EC /* AIFRED */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EE5792A5226DE29A00BB89EC /* Build configuration list for PBXNativeTarget "ESC" */;
+			buildConfigurationList = EE5792A5226DE29A00BB89EC /* Build configuration list for PBXNativeTarget "AIFRED" */;
 			buildPhases = (
 				EE57929A226DE29A00BB89EC /* Sources */,
 				EE57929B226DE29A00BB89EC /* Frameworks */,
@@ -162,9 +162,9 @@
 			);
 			dependencies = (
 			);
-			name = ESC;
+			name = AIFRED;
 			productName = ESC;
-			productReference = EE57929E226DE29A00BB89EC /* ESC */;
+			productReference = EE57929E226DE29A00BB89EC /* AIFRED */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -181,7 +181,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EE579299226DE29A00BB89EC /* Build configuration list for PBXProject "ESC" */;
+			buildConfigurationList = EE579299226DE29A00BB89EC /* Build configuration list for PBXProject "AIFRED" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -193,7 +193,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EE57929D226DE29A00BB89EC /* ESC */,
+				EE57929D226DE29A00BB89EC /* AIFRED */,
 			);
 		};
 /* End PBXProject section */
@@ -359,7 +359,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EE579299226DE29A00BB89EC /* Build configuration list for PBXProject "ESC" */ = {
+		EE579299226DE29A00BB89EC /* Build configuration list for PBXProject "AIFRED" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EE5792A3226DE29A00BB89EC /* Debug */,
@@ -368,7 +368,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EE5792A5226DE29A00BB89EC /* Build configuration list for PBXNativeTarget "ESC" */ = {
+		EE5792A5226DE29A00BB89EC /* Build configuration list for PBXNativeTarget "AIFRED" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EE5792A6226DE29A00BB89EC /* Debug */,
