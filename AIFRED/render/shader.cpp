@@ -20,12 +20,12 @@ int V_Shader::init()
     }
     
     float points[] = {
-        0.0f,  0.0f,  0.0f,
-        0.5f, 0.0f,  0.0f,
-        0.0f, 0.5f,  0.0f,
-        0.0f,  0.5f,  0.0f,
-        0.5f, 0.0f,  0.0f,
-        0.5f, 0.5f,  0.0f
+        -1.0f,  -1.0f,  0.0f,
+        1.f, -1.0f,  0.0f,
+        -1.0f, 1.f,  0.0f,
+        -1.0f,  1.f,  0.0f,
+        1.f, -1.0f,  0.0f,
+        1.f, 1.f,  0.0f
     };
     
     // Two UV coordinatesfor each vertex. They were created with Blender. You'll learn shortly how to do this yourself.
@@ -46,8 +46,8 @@ int V_Shader::init()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     GLFWmonitor* mon = glfwGetPrimaryMonitor();
-    const GLFWvidmode* vmode = glfwGetVideoMode(mon);
-    GLFWwindow* window = glfwCreateWindow(vmode->width, vmode->height, "Hello Triangle", mon, NULL);
+    //const GLFWvidmode* vmode = glfwGetVideoMode(mon);
+    GLFWwindow* window = glfwCreateWindow(900, 900, "Hello Triangle", NULL, NULL);
     if (!window) {
         fprintf(stderr, "ERROR: could not open window with GLFW3\n");
         glfwTerminate();

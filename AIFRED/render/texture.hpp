@@ -30,6 +30,7 @@ public:
     // Open the file
     GLuint load ();
     void read_png_file(char *filename);
+    float sum(int x, int y, int width, int height, float greyPixels[128][128]);
 };
 
 #endif /* visual_texture_hpp */

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cmath>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> // GLFW helper library
@@ -169,22 +170,51 @@ GLuint V_Texture::load () {
     
     return textureID;*/
     
-    float pixels[128][128][3];
+    // must be square of 2
+    int xs = 128;
+    int ys = 128;
+    
+    float pixels[xs][ys][3];
+    
+    
     char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
     V_Texture::read_png_file(filename);
     
-    for (int y = 0; y < 128; y++)
+    // load rgb
+    for (int x = 0; x < xs; x++)
     {
-        png_bytep row = row_pointers[y];
-        for (int x = 0; x < 128; x++)
+        png_bytep row = row_pointers[x];
+        for (int y = 0; y < ys; y++)
         {
-            png_bytep px = &(row[x * 4]);
+            png_bytep px = &(row[(ys - y) * 4]);
             float r = px[0];
             float g = px[1];
             float b = px[2];
-            pixels[y][x][0] = r / 255;
-            pixels[y][x][1] = g / 255;
-            pixels[y][x][2] = b / 255;
+            greyPixels[x][y] = (r + g + b) / 3;
+            greyPixelsOut[x][y] = greyPixels[x][y];
+        }
+    }
+    // processing
+    for (int x = 0; x < xs; x++)
+    {
+        for (int y = 0; y < ys; y++)
+        {
+            // (note x = 1 so no conflict)
+            if (x > 0 && y > 0)
+            {
+                greyPixels[x][y] = greyPixels[x - 1][y] + greyPixels[x][y - 1] - greyPixels[x - 1][y - 1] + greyPixels[x][y];
+            }
+        }
+    }
+    printf("%f\n", V_Texture::sum(10,10,50,50, greyPixels) / 16);
+    // output rgb
+    for (int x = 0; x < xs; x++)
+    {
+        for (int y = 0; y < ys; y++)
+        {
+            pixels[x][y][0] = greyPixelsOut[x][y] / 255;
+            pixels[x][y][1] = greyPixelsOut[x][y] / 255;
+            pixels[x][y][2] = greyPixelsOut[x][y] / 255;
         }
     }
     
@@ -195,7 +225,7 @@ GLuint V_Texture::load () {
     // "Bind" the newly created texture : all future texture functions will modify this texture
     glBindTexture(GL_TEXTURE_2D, textureID);
     
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 128, 128, 0, GL_RGB, GL_FLOAT, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, xs, ys, 0, GL_RGB, GL_FLOAT, pixels);
     
     /*int width, height;
     unsigned char* image =
@@ -208,4 +238,10 @@ GLuint V_Texture::load () {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     
     return GL_TEXTURE_2D;
+}
+
+// width 0, height 0 is a 1x1 box
+float V_Texture::sum (int x, int y, int width, int height, float greyPixels[128][128])
+{
+    return (greyPixels[x+width][y+height] - greyPixels[x+width][y-1] - greyPixels[x-1][y+width] + greyPixels[x-1][y-1]);
 }
