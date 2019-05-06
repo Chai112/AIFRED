@@ -28,7 +28,7 @@ png_byte bit_depth;
 png_bytep *row_pointers;
 
 void V_Texture::read_png_file(char *filename) {
-    FILE *fp = fopen("/Users/chaidhatchaimongkol/Downloads/t.png", "rb");
+    FILE *fp = fopen(filename, "rb");
     
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if(!png) abort();
@@ -170,7 +170,7 @@ GLuint V_Texture::load () {
     return textureID;*/
     
     float pixels[128][128][3];
-    char *filename = "/Users/chaidhatchaimongkol/Downloads/uvtemplate.png";
+    char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
     V_Texture::read_png_file(filename);
     
     for (int y = 0; y < 128; y++)
@@ -182,14 +182,11 @@ GLuint V_Texture::load () {
             float r = px[0];
             float g = px[1];
             float b = px[2];
-            pixels[x][y][0] = r / 255;
-            pixels[x][y][1] = g / 255;
-            pixels[x][y][2] = b / 255;
-            printf("%f , %f , %f", r, g, b);
+            pixels[y][x][0] = r / 255;
+            pixels[y][x][1] = g / 255;
+            pixels[y][x][2] = b / 255;
         }
-        printf("\n");
     }
-    printf("asdaskjfs\n");
     
     // Create one OpenGL texture
     GLuint textureID;
