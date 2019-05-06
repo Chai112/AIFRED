@@ -29,7 +29,7 @@ V_Shader shader;
 
 Debug debug;
 
-#define GL_LOG_FILE "/Users/chaidhatchaimongkol/Documents/ESC/ESC/log/gl.log"
+#define GL_LOG_FILE "/Users/chaidhatchaimongkol/Documents/AIFRED/AIFRED/log/gl.log"
 #define GL_TEXTURE_FILE "/Users/chaidhatchaimongkol/Documents/ESC/gl.bmp"
 
 void glfw_error_callback(int error, const char* description) {
@@ -122,6 +122,14 @@ int main() {
         GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
         
         GLuint Texture = texture.load();
+        
+        unsigned char pick_col[3][100][100];
+        glReadPixels(841 , 270 , 100 , 100 , GL_RGB , GL_UNSIGNED_BYTE , pick_col);
+        if (pick_col[0][0][0] + pick_col[1][0][0] + pick_col[2][0][0] == 0)
+        {
+            printf("a\n");
+        }
+        
         
         // Bind our texture in Texture Unit 0
         glActiveTexture(GL_TEXTURE0);

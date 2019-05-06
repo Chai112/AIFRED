@@ -29,4 +29,5 @@ float MouseIn::y() {   return MouseIn::yl();   }
 
 float MouseIn::z() {   return cosf(((-MouseIn::xMouse()-7)/7)*180*0.01745329252) * MouseIn::zl();  }
 
-int MouseIn::init (GLFWwindow* window) { glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); return 0;}
+int MouseIn::init (GLFWwindow* window) { //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    return 0;}

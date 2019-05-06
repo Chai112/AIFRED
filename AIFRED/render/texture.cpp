@@ -15,7 +15,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> // GLFW helper library
 
-#define GL_TEXTURE_FILE "/Users/chaidhatchaimongkol/Downloads/uvtemplate.DDS"
+#define GL_TEXTURE_FILE "/Users/chaidhatchaimongkol/Downloads/uvtemplate.bmp"
 
 #define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
 #define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
@@ -23,7 +23,7 @@
 
 GLuint V_Texture::load () {
     
-    unsigned char header[124];
+    /*unsigned char header[124];
     
     FILE *fp;
     
@@ -103,10 +103,10 @@ GLuint V_Texture::load () {
     
     free(buffer);
     
-    return textureID;
+    return textureID;*/
     
     
-    /*for uncompressed, unused :D
+    //for uncompressed, unused :D
      FILE * file = fopen(GL_TEXTURE_FILE,"rb");
     if (!file){printf("Image could not be opened\n"); return 0;}
     
@@ -152,10 +152,5 @@ GLuint V_Texture::load () {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     
-    // Bind our texture in Texture Unit 0
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, Texture);
-    // Set our "myTextureSampler" sampler to use Texture Unit 0
-    glUniform1i(TextureID, 0);
-    return GL_TEXTURE_2D;*/
+    return GL_TEXTURE_2D;
 }

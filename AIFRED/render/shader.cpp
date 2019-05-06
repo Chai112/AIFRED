@@ -128,6 +128,11 @@ void V_Shader::update ()
     
     // wipe the drawing surface clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    //gluPerspective( 65.0, (double)1024/(double)768, 1.0, 60.0 );
+    glLoadIdentity();
+    glOrtho(0,1024,768,0,100,-100);
+    glMatrixMode(GL_MODELVIEW);
     glUseProgram(V_Shader::shader_programme);
     glBindVertexArray(V_Shader::vao);
     

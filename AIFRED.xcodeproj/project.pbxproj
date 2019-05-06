@@ -15,10 +15,7 @@
 		EE5792BC2270461F00BB89EC /* glm.pc in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5792BB2270461F00BB89EC /* glm.pc */; };
 		EE7BB2A5227423E3002774C7 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2A3227423E3002774C7 /* texture.cpp */; };
 		EE7BB2AE227437E7002774C7 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2AC227437E7002774C7 /* shader.cpp */; };
-		EE7BB2B4227482D4002774C7 /* playerControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2B2227482D3002774C7 /* playerControl.cpp */; };
-		EE7BB2B822748323002774C7 /* perspective.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2B622748323002774C7 /* perspective.cpp */; };
 		EE7BB2BD22748588002774C7 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2BC22748588002774C7 /* debug.cpp */; };
-		EE7BB2C2227485EB002774C7 /* playerPhysics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2C0227485EB002774C7 /* playerPhysics.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,14 +43,8 @@
 		EE7BB2A4227423E3002774C7 /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = texture.hpp; sourceTree = "<group>"; };
 		EE7BB2AC227437E7002774C7 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		EE7BB2AD227437E7002774C7 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
-		EE7BB2B2227482D3002774C7 /* playerControl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = playerControl.cpp; sourceTree = "<group>"; };
-		EE7BB2B3227482D4002774C7 /* playerControl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = playerControl.hpp; sourceTree = "<group>"; };
-		EE7BB2B622748323002774C7 /* perspective.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = perspective.cpp; sourceTree = "<group>"; };
-		EE7BB2B722748323002774C7 /* perspective.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = perspective.hpp; sourceTree = "<group>"; };
 		EE7BB2BC22748588002774C7 /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = /Users/chaidhatchaimongkol/Documents/ESC/ESC/debug.cpp; sourceTree = "<absolute>"; };
 		EE7BB2BE2274858B002774C7 /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = debug.hpp; path = /Users/chaidhatchaimongkol/Documents/ESC/ESC/debug.hpp; sourceTree = "<absolute>"; };
-		EE7BB2C0227485EB002774C7 /* playerPhysics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = playerPhysics.cpp; sourceTree = "<group>"; };
-		EE7BB2C1227485EB002774C7 /* playerPhysics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = playerPhysics.hpp; sourceTree = "<group>"; };
 		EEB1AB8E227407D300CC684B /* mouseInput.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mouseInput.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -96,7 +87,6 @@
 			children = (
 				EE7BB29E22742071002774C7 /* log */,
 				EE5792A1226DE29A00BB89EC /* main.cpp */,
-				EE7BB2BF227485C3002774C7 /* game */,
 				EE7BB2B5227482DA002774C7 /* input */,
 				EE7BB2A6227424DE002774C7 /* render */,
 			);
@@ -117,8 +107,6 @@
 		EE7BB2A6227424DE002774C7 /* render */ = {
 			isa = PBXGroup;
 			children = (
-				EE7BB2B622748323002774C7 /* perspective.cpp */,
-				EE7BB2B722748323002774C7 /* perspective.hpp */,
 				EE7BB2AC227437E7002774C7 /* shader.cpp */,
 				EE7BB2AD227437E7002774C7 /* shader.hpp */,
 				EE7BB2A3227423E3002774C7 /* texture.cpp */,
@@ -134,17 +122,6 @@
 				EEB1AB8E227407D300CC684B /* mouseInput.hpp */,
 			);
 			path = input;
-			sourceTree = "<group>";
-		};
-		EE7BB2BF227485C3002774C7 /* game */ = {
-			isa = PBXGroup;
-			children = (
-				EE7BB2B2227482D3002774C7 /* playerControl.cpp */,
-				EE7BB2B3227482D4002774C7 /* playerControl.hpp */,
-				EE7BB2C0227485EB002774C7 /* playerPhysics.cpp */,
-				EE7BB2C1227485EB002774C7 /* playerPhysics.hpp */,
-			);
-			path = game;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,10 +181,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE7BB2AE227437E7002774C7 /* shader.cpp in Sources */,
-				EE7BB2B4227482D4002774C7 /* playerControl.cpp in Sources */,
-				EE7BB2C2227485EB002774C7 /* playerPhysics.cpp in Sources */,
 				EE1D7FD42273FE8900901CDE /* mouseInput.cpp in Sources */,
-				EE7BB2B822748323002774C7 /* perspective.cpp in Sources */,
 				EE5792A2226DE29A00BB89EC /* main.cpp in Sources */,
 				EE7BB2A5227423E3002774C7 /* texture.cpp in Sources */,
 				EE7BB2BD22748588002774C7 /* debug.cpp in Sources */,
