@@ -29,6 +29,7 @@ public:
     
     // Open the file
     GLuint load ();
+    void read_png_file(char *filename);
 };
 
 #endif /* visual_texture_hpp */

@@ -16,6 +16,7 @@
 		EE7BB2A5227423E3002774C7 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2A3227423E3002774C7 /* texture.cpp */; };
 		EE7BB2AE227437E7002774C7 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2AC227437E7002774C7 /* shader.cpp */; };
 		EE7BB2BD22748588002774C7 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2BC22748588002774C7 /* debug.cpp */; };
+		EEC4CFA6227FF19F002F39A0 /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC4CFA5227FF19F002F39A0 /* libpng16.16.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,6 +47,7 @@
 		EE7BB2BC22748588002774C7 /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = /Users/chaidhatchaimongkol/Documents/ESC/ESC/debug.cpp; sourceTree = "<absolute>"; };
 		EE7BB2BE2274858B002774C7 /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = debug.hpp; path = /Users/chaidhatchaimongkol/Documents/ESC/ESC/debug.hpp; sourceTree = "<absolute>"; };
 		EEB1AB8E227407D300CC684B /* mouseInput.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mouseInput.hpp; sourceTree = "<group>"; };
+		EEC4CFA5227FF19F002F39A0 /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../../../usr/local/Cellar/libpng/1.6.37/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEC4CFA6227FF19F002F39A0 /* libpng16.16.dylib in Frameworks */,
 				EE5792BC2270461F00BB89EC /* glm.pc in Frameworks */,
 				EE5792B3226DE94C00BB89EC /* libglfw.3.3.dylib in Frameworks */,
 				EE5792AE226DE36500BB89EC /* OpenGL.framework in Frameworks */,
@@ -96,6 +99,7 @@
 		EE5792A8226DE33200BB89EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EEC4CFA5227FF19F002F39A0 /* libpng16.16.dylib */,
 				EE5792BB2270461F00BB89EC /* glm.pc */,
 				EE5792B2226DE94C00BB89EC /* libglfw.3.3.dylib */,
 				EE5792AD226DE36500BB89EC /* OpenGL.framework */,
@@ -312,6 +316,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/glfw/3.3/lib,
 					/usr/local/Cellar/glew/2.1.0/lib,
+					/usr/local/Cellar/libpng/1.6.37/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -325,6 +330,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/glfw/3.3/lib,
 					/usr/local/Cellar/glew/2.1.0/lib,
+					/usr/local/Cellar/libpng/1.6.37/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

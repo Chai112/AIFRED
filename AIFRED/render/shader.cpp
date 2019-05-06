@@ -30,11 +30,11 @@ int V_Shader::init()
     
     // Two UV coordinatesfor each vertex. They were created with Blender. You'll learn shortly how to do this yourself.
     static const GLfloat g_uv_buffer_data[] = {
-        0.33594f, 0.33594f,
-        0.0f, 0.33594f,
-        0.33594f, 0.0f,
-        0.33594f, 0.0f,
-        0.0f, 0.33594f,
+        1.f, 1.f,
+        0.0f, 1.f,
+        1.f, 0.0f,
+        1.f, 0.0f,
+        0.0f, 1.f,
         0.0f, 0.0f,
     };
     
