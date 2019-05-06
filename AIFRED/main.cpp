@@ -36,6 +36,12 @@ void glfw_error_callback(int error, const char* description) {
     debug.gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }
 
+float points[] = {
+    0.0f,  0.5f,  0.0f,
+    0.5f, -0.5f,  0.0f,
+    -0.5f, -0.5f,  0.0f
+};
+
 static const GLfloat g_vertex_buffer_data[] = {
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
     -1.0f,-1.0f, 1.0f,
@@ -89,8 +95,6 @@ int main() {
     // register the error call-back function that we wrote, above
     glfwSetErrorCallback(glfw_error_callback);
     
-    playerPhysics.playerTransform = glm::vec3(4,3,3);
-    
     // uncomment these lines if on Apple OS xMouse
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -111,13 +115,6 @@ int main() {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
             glfwSetWindowShouldClose(shader.window, 1);
         }
-        
-        playerControl.velocity = playerPhysics.playerVelocity;
-        playerControl.update(shader.window, mouseIn);
-        
-        playerPhysics.playerAccel = playerControl.accel;
-        playerPhysics.update();
-        perspective.update(shader.window, mouseIn, playerPhysics.playerTransform, shader.shader_programme);
         
         glfwSetCursorPosCallback(shader.window, cursor_position_callback);
         
