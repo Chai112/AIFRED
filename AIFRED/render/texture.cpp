@@ -179,6 +179,8 @@ GLuint V_Texture::load () {
     
     char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
     V_Texture::read_png_file(filename);
+    float greyPixels[128][128];
+    float greyPixelsOut[xs][ys];
     
     // load rgb
     for (int x = 0; x < xs; x++)
