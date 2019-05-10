@@ -13,24 +13,22 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> // GLFW helper library
 
-class V_Texture
+namespace V_Texture
 {
-public:
     //GLuint loadBMP_custom(const char * imagepath);
     //GLuint image = loadBMP_custom("./my_texture.bmp");
     
-    // Data read from the header of the BMP file
-    unsigned char header[54]; // Each BMP file begins by a 54-bytes header
-    unsigned int dataPos;     // Position in the file where the actual data begins
-    unsigned int width, height;
-    unsigned int imageSize;   // = width*height*3
-    // Actual RGB data
-    unsigned char * data;
+    
+    // must be square of 2
+    const int xs = 128;
+    const int ys = 128;
     
     // Open the file
-    GLuint load ();
-    void read_png_file(char *filename);
-    float sum(int x, int y, int width, int height, float greyPixels[128][128]);
+    void read_png_file(const char *filename);
+    int sum(int x, int y, int width, int height, int **greyPixels);
+    
+    int** read(const char *filename);
+    GLuint load(int **greymap);
 };
 
 #endif /* visual_texture_hpp */

@@ -13,9 +13,10 @@
 		EE5792AE226DE36500BB89EC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5792AD226DE36500BB89EC /* OpenGL.framework */; };
 		EE5792B3226DE94C00BB89EC /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5792B2226DE94C00BB89EC /* libglfw.3.3.dylib */; };
 		EE5792BC2270461F00BB89EC /* glm.pc in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5792BB2270461F00BB89EC /* glm.pc */; };
+		EE6CAA1522847E9100F687F2 /* facialDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE6CAA1322847E9100F687F2 /* facialDetection.cpp */; };
 		EE7BB2A5227423E3002774C7 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2A3227423E3002774C7 /* texture.cpp */; };
 		EE7BB2AE227437E7002774C7 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2AC227437E7002774C7 /* shader.cpp */; };
-		EE7BB2BD22748588002774C7 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE7BB2BC22748588002774C7 /* debug.cpp */; };
+		EE93B60022859CC40000952E /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE93B5FF22859CC30000952E /* debug.cpp */; };
 		EEC4CFA6227FF19F002F39A0 /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC4CFA5227FF19F002F39A0 /* libpng16.16.dylib */; };
 /* End PBXBuildFile section */
 
@@ -34,18 +35,20 @@
 /* Begin PBXFileReference section */
 		EE1D7FD22273FE8900901CDE /* mouseInput.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mouseInput.cpp; sourceTree = "<group>"; };
 		EE57929E226DE29A00BB89EC /* AIFRED */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AIFRED; sourceTree = BUILT_PRODUCTS_DIR; };
-		EE5792A1226DE29A00BB89EC /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		EE5792A1226DE29A00BB89EC /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = AIFRED/main.cpp; sourceTree = SOURCE_ROOT; };
 		EE5792AB226DE34700BB89EC /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../../../usr/local/Cellar/glew/2.1.0/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
 		EE5792AD226DE36500BB89EC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		EE5792B2226DE94C00BB89EC /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		EE5792BB2270461F00BB89EC /* glm.pc */ = {isa = PBXFileReference; lastKnownFileType = text; name = glm.pc; path = ../../../../../../usr/local/Cellar/glm/0.9.9.5/lib/pkgconfig/glm.pc; sourceTree = "<group>"; };
+		EE6CAA1322847E9100F687F2 /* facialDetection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facialDetection.cpp; sourceTree = "<group>"; };
+		EE6CAA1422847E9100F687F2 /* facialDetection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = facialDetection.hpp; sourceTree = "<group>"; };
 		EE7BB29E22742071002774C7 /* log */ = {isa = PBXFileReference; lastKnownFileType = folder; path = log; sourceTree = "<group>"; };
 		EE7BB2A3227423E3002774C7 /* texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = AIFRED/render/texture.cpp; sourceTree = SOURCE_ROOT; };
-		EE7BB2A4227423E3002774C7 /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = texture.hpp; sourceTree = "<group>"; };
+		EE7BB2A4227423E3002774C7 /* texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = texture.hpp; path = AIFRED/render/texture.hpp; sourceTree = SOURCE_ROOT; };
 		EE7BB2AC227437E7002774C7 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		EE7BB2AD227437E7002774C7 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
-		EE7BB2BC22748588002774C7 /* debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = /Users/chaidhatchaimongkol/Documents/ESC/ESC/debug.cpp; sourceTree = "<absolute>"; };
-		EE7BB2BE2274858B002774C7 /* debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = debug.hpp; path = /Users/chaidhatchaimongkol/Documents/ESC/ESC/debug.hpp; sourceTree = "<absolute>"; };
+		EE93B5FE22859CC30000952E /* debug.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug.hpp; path = AIFRED/debug.hpp; sourceTree = "<group>"; };
+		EE93B5FF22859CC30000952E /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = AIFRED/debug.cpp; sourceTree = "<group>"; };
 		EEB1AB8E227407D300CC684B /* mouseInput.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mouseInput.hpp; sourceTree = "<group>"; };
 		EEC4CFA5227FF19F002F39A0 /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../../../usr/local/Cellar/libpng/1.6.37/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,8 +73,8 @@
 			isa = PBXGroup;
 			children = (
 				EE5792A0226DE29A00BB89EC /* AIFRED */,
-				EE7BB2BC22748588002774C7 /* debug.cpp */,
-				EE7BB2BE2274858B002774C7 /* debug.hpp */,
+				EE93B5FF22859CC30000952E /* debug.cpp */,
+				EE93B5FE22859CC30000952E /* debug.hpp */,
 				EE57929F226DE29A00BB89EC /* Products */,
 				EE5792A8226DE33200BB89EC /* Frameworks */,
 			);
@@ -90,6 +93,8 @@
 			children = (
 				EE7BB29E22742071002774C7 /* log */,
 				EE5792A1226DE29A00BB89EC /* main.cpp */,
+				EE6CAA1322847E9100F687F2 /* facialDetection.cpp */,
+				EE6CAA1422847E9100F687F2 /* facialDetection.hpp */,
 				EE7BB2B5227482DA002774C7 /* input */,
 				EE7BB2A6227424DE002774C7 /* render */,
 			);
@@ -188,7 +193,8 @@
 				EE1D7FD42273FE8900901CDE /* mouseInput.cpp in Sources */,
 				EE5792A2226DE29A00BB89EC /* main.cpp in Sources */,
 				EE7BB2A5227423E3002774C7 /* texture.cpp in Sources */,
-				EE7BB2BD22748588002774C7 /* debug.cpp in Sources */,
+				EE6CAA1522847E9100F687F2 /* facialDetection.cpp in Sources */,
+				EE93B60022859CC40000952E /* debug.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,7 +11,7 @@
 #include <time.h>
 #include <stdarg.h>
 
-#define GL_LOG_FILE "/Users/chaidhatchaimongkol/Documents/ESC/ESC/log/gl.log"
+#define GL_LOG_FILE "/Users/chaidhatchaimongkol/Documents/AIFRED/AIFRED/log/gl.log"
 
 bool Debug::restart_gl_log() {
     FILE* file = fopen(GL_LOG_FILE, "w");

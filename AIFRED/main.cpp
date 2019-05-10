@@ -16,21 +16,21 @@
 #include <assert.h>
 
 #include "input/mouseInput.hpp"
+#include "facialDetection.hpp"
 
 #include "render/texture.hpp"
 #include "render/shader.hpp"
 
 #include "debug.hpp"
 
+using namespace facialDetection;
+//using namespace V_Texture;
+
 MouseIn mouseIn;
 
-V_Texture texture;
 V_Shader shader;
 
 Debug debug;
-
-#define GL_LOG_FILE "/Users/chaidhatchaimongkol/Documents/AIFRED/AIFRED/log/gl.log"
-#define GL_TEXTURE_FILE "/Users/chaidhatchaimongkol/Documents/ESC/gl.bmp"
 
 void glfw_error_callback(int error, const char* description) {
     debug.gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
@@ -121,7 +121,9 @@ int main() {
         // Get a handle for our "myTextureSampler" uniform
         GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
         
-        GLuint Texture = texture.load();
+        char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
+        int** greyPixels = V_Texture::read(filename);
+        GLuint Texture = V_Texture::load(greyPixels);
         
         unsigned char pick_col[3][100][100];
         glReadPixels(841 , 270 , 100 , 100 , GL_RGB , GL_UNSIGNED_BYTE , pick_col);
@@ -160,7 +162,6 @@ int main() {
                               0,                                // stride
                               (void*)0                          // array buffer offset
                               );
-        
         shader.update();
         
         

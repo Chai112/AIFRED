@@ -6,8 +6,6 @@
 //  Copyright © 2019 Chai112. All rights reserved.
 //
 
-#include "texture.hpp"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,18 +15,15 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <png.h>
 
-#define GL_TEXTURE_FILE "/Users/chaidhatchaimongkol/Downloads/uvtemplate.bmp"
-
-#define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
-#define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
-#define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
+#include "texture.hpp"
+using namespace V_Texture;
 
 int width, height;
 png_byte color_type;
 png_byte bit_depth;
 png_bytep *row_pointers;
 
-void V_Texture::read_png_file(char *filename) {
+void V_Texture::read_png_file(const char *filename) {
     FILE *fp = fopen(filename, "rb");
     
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -42,6 +37,7 @@ void V_Texture::read_png_file(char *filename) {
     png_init_io(png, fp);
     
     png_read_info(png, info);
+    
     
     width      = png_get_image_width(png, info);
     height     = png_get_image_height(png, info);
@@ -86,137 +82,44 @@ void V_Texture::read_png_file(char *filename) {
     fclose(fp);
 }
 
-GLuint V_Texture::load () {
+int** V_Texture::read(const char *filename)
+{
     
-    /*unsigned char header[124];
-    
-    FILE *fp;
-    
-    fp = fopen(GL_TEXTURE_FILE, "rb");
-    if (fp == NULL){
-        printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", GL_TEXTURE_FILE); getchar();
-        return 0;
-    }
-    
-    char filecode[4];
-    fread(filecode, 1, 4, fp);
-    if (strncmp(filecode, "DDS ", 4) != 0) {
-        fclose(fp);
-        return 0;
-    }
-    
-    fread(&header, 124, 1, fp);
-    
-    unsigned int height      = *(unsigned int*)&(header[8 ]);
-    unsigned int width         = *(unsigned int*)&(header[12]);
-    unsigned int linearSize     = *(unsigned int*)&(header[16]);
-    unsigned int mipMapCount = *(unsigned int*)&(header[24]);
-    unsigned int fourCC      = *(unsigned int*)&(header[80]);
-    
-    
-    unsigned char * buffer;
-    unsigned int bufsize;
-    bufsize = mipMapCount > 1 ? linearSize * 2 : linearSize;
-    buffer = (unsigned char*)malloc(bufsize * sizeof(unsigned char));
-    fread(buffer, 1, bufsize, fp);
-    fclose(fp);
-    
-    unsigned int components  = (fourCC == FOURCC_DXT1) ? 3 : 4;
-    unsigned int format;
-    switch(fourCC)
-    {
-        case FOURCC_DXT1:
-            format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-            break;
-        case FOURCC_DXT3:
-            format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-            break;
-        case FOURCC_DXT5:
-            format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-            break;
-        default:
-            free(buffer);
-            return 0;
-    }
-    
-    // Create one OpenGL texture
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-    
-    // "Bind" the newly created texture : all future texture functions will modify this texture
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-    
-    unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
-    unsigned int offset = 0;
-    
-    for (unsigned int level = 0; level < mipMapCount && (width || height); ++level)
-    {
-        unsigned int size = ((width+3)/4)*((height+3)/4)*blockSize;
-        glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
-                               0, size, buffer + offset);
-        
-        offset += size;
-        width  /= 2;
-        height /= 2;
-        
-        // Deal with Non-Power-Of-Two textures. This code is not included in the webpage to reduce clutter.
-        if(width < 1) width = 1;
-        if(height < 1) height = 1;
-        
-    }
-    
-    free(buffer);
-    
-    return textureID;*/
-    
-    // must be square of 2
-    int xs = 128;
-    int ys = 128;
-    
-    float pixels[xs][ys][3];
-    
-    
-    char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
     V_Texture::read_png_file(filename);
-    float greyPixels[128][128];
-    float greyPixelsOut[xs][ys];
+    int *greyPixels[V_Texture::xs];
+    for (int i=0; i<V_Texture::xs; i++)
+        greyPixels[i] = (int *)malloc(V_Texture::ys * sizeof(int));
     
     // load rgb
-    for (int x = 0; x < xs; x++)
+    for (int x = 0; x < V_Texture::xs; x++)
     {
         png_bytep row = row_pointers[x];
-        for (int y = 0; y < ys; y++)
+        for (int y = 0; y < V_Texture::ys; y++)
         {
-            png_bytep px = &(row[(ys - y) * 4]);
+            png_bytep px = &(row[(V_Texture::ys - y) * 4]);
             float r = px[0];
             float g = px[1];
             float b = px[2];
             greyPixels[x][y] = (r + g + b) / 3;
-            greyPixelsOut[x][y] = greyPixels[x][y];
         }
     }
-    // processing
-    for (int x = 0; x < xs; x++)
-    {
-        for (int y = 0; y < ys; y++)
-        {
-            // (note x = 1 so no conflict)
-            if (x > 0 && y > 0)
-            {
-                greyPixels[x][y] = greyPixels[x - 1][y] + greyPixels[x][y - 1] - greyPixels[x - 1][y - 1] + greyPixels[x][y];
-            }
-        }
-    }
-    printf("%f\n", V_Texture::sum(10,10,50,50, greyPixels) / 16);
+    printf("%d\n", V_Texture::sum(10,10,50,50, greyPixels) / 16);
+    
+    return greyPixels;
+}
+
+GLuint V_Texture::load(int **greyPixels)
+{
+    float pixels[V_Texture::xs][V_Texture::ys][3];
+    
     // output rgb
-    for (int x = 0; x < xs; x++)
+    for (int x = 0; x < V_Texture::xs; x++)
     {
-        for (int y = 0; y < ys; y++)
+        for (int y = 0; y < V_Texture::ys; y++)
         {
-            pixels[x][y][0] = greyPixelsOut[x][y] / 255;
-            pixels[x][y][1] = greyPixelsOut[x][y] / 255;
-            pixels[x][y][2] = greyPixelsOut[x][y] / 255;
+            pixels[x][y][0] = greyPixels[x][y] / 255;
+            pixels[x][y][1] = greyPixels[x][y] / 255;
+            pixels[x][y][2] = greyPixels[x][y] / 255;
         }
     }
     
@@ -227,13 +130,7 @@ GLuint V_Texture::load () {
     // "Bind" the newly created texture : all future texture functions will modify this texture
     glBindTexture(GL_TEXTURE_2D, textureID);
     
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, xs, ys, 0, GL_RGB, GL_FLOAT, pixels);
-    
-    /*int width, height;
-    unsigned char* image =
-    SOIL_load_image("img.png", &width, &height, 0, SOIL_LOAD_RGB);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, image);*/
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, V_Texture::xs, V_Texture::ys, 0, GL_RGB, GL_FLOAT, pixels);
     
     // Give the image to OpenGL
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -243,7 +140,7 @@ GLuint V_Texture::load () {
 }
 
 // width 0, height 0 is a 1x1 box
-float V_Texture::sum (int x, int y, int width, int height, float greyPixels[128][128])
+int V_Texture::sum (int x, int y, int width, int height, int **greyPixels)
 {
     return (greyPixels[x+width][y+height] - greyPixels[x+width][y-1] - greyPixels[x-1][y+width] + greyPixels[x-1][y-1]);
 }
