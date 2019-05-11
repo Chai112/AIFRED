@@ -122,8 +122,9 @@ int main() {
         GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
         
         char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
-        int** greyPixels = V_Texture::read(filename);
-        GLuint Texture = V_Texture::load(greyPixels);
+        float** greyPixels = V_Texture::loadPixels(filename);
+        greyPixels = facialDetection::process(greyPixels);
+        GLuint Texture = V_Texture::loadTexture(greyPixels);
         
         unsigned char pick_col[3][100][100];
         glReadPixels(841 , 270 , 100 , 100 , GL_RGB , GL_UNSIGNED_BYTE , pick_col);

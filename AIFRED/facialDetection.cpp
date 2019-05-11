@@ -10,7 +10,14 @@
 
 using namespace facialDetection;
 
-void facialDetection::b()
+float** facialDetection::process(float **pixels)
 {
-    printf("a");
+    
+    return pixels;
+}
+
+// width 0, height 0 is a 1x1 box
+int V_Texture::sum (int x, int y, int width, int height, int **greyPixels)
+{
+    return (greyPixels[x+width][y+height] - greyPixels[x+width][y-1] - greyPixels[x-1][y+width] + greyPixels[x-1][y-1]);
 }

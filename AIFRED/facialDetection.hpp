@@ -14,7 +14,8 @@
 namespace facialDetection
 {
     const int a = 0;
-    void b();
+    float** process(float **pixels);
+    int V_Texture::sum (int x, int y, int width, int height, int **greyPixels);
     /*    // processing
      for (int x = 0; x < xs; x++)
      {

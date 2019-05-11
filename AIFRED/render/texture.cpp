@@ -82,13 +82,12 @@ void V_Texture::read_png_file(const char *filename) {
     fclose(fp);
 }
 
-int** V_Texture::read(const char *filename)
+float** V_Texture::loadPixels(const char *filename)
 {
-    
     V_Texture::read_png_file(filename);
-    int *greyPixels[V_Texture::xs];
+    static float *greyPixels[V_Texture::xs];
     for (int i=0; i<V_Texture::xs; i++)
-        greyPixels[i] = (int *)malloc(V_Texture::ys * sizeof(int));
+        greyPixels[i] = (float *)malloc(V_Texture::ys * sizeof(float));
     
     // load rgb
     for (int x = 0; x < V_Texture::xs; x++)
@@ -103,12 +102,11 @@ int** V_Texture::read(const char *filename)
             greyPixels[x][y] = (r + g + b) / 3;
         }
     }
-    printf("%d\n", V_Texture::sum(10,10,50,50, greyPixels) / 16);
     
     return greyPixels;
 }
 
-GLuint V_Texture::load(int **greyPixels)
+GLuint V_Texture::loadTexture(float **greyPixels)
 {
     float pixels[V_Texture::xs][V_Texture::ys][3];
     
@@ -137,10 +135,4 @@ GLuint V_Texture::load(int **greyPixels)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     
     return GL_TEXTURE_2D;
-}
-
-// width 0, height 0 is a 1x1 box
-int V_Texture::sum (int x, int y, int width, int height, int **greyPixels)
-{
-    return (greyPixels[x+width][y+height] - greyPixels[x+width][y-1] - greyPixels[x-1][y+width] + greyPixels[x-1][y-1]);
 }

@@ -25,10 +25,9 @@ namespace V_Texture
     
     // Open the file
     void read_png_file(const char *filename);
-    int sum(int x, int y, int width, int height, int **greyPixels);
     
-    int** read(const char *filename);
-    GLuint load(int **greymap);
+    float** loadPixels(const char *filename);
+    GLuint loadTexture(float **greyPixels);
 };
 
 #endif /* visual_texture_hpp */
