@@ -7,6 +7,9 @@
 //
 
 #include "shader.hpp"
+#include "texture.hpp"
+
+using namespace V_Texture;
 
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
@@ -45,9 +48,8 @@ int V_Shader::init()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    GLFWmonitor* mon = glfwGetPrimaryMonitor();
     //const GLFWvidmode* vmode = glfwGetVideoMode(mon);
-    GLFWwindow* window = glfwCreateWindow(900, 900, "Hello Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(V_Texture::xs, V_Texture::ys, "Hello Triangle", NULL, NULL);
     if (!window) {
         fprintf(stderr, "ERROR: could not open window with GLFW3\n");
         glfwTerminate();

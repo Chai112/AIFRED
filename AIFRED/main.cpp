@@ -135,6 +135,7 @@ int main() {
         }*/
         
         greyPixels = V_Texture::loadPixels(filename);
+        greyPixels = facialDetection::process(greyPixels);
         Texture = V_Texture::loadTexture(greyPixels);
         
         
