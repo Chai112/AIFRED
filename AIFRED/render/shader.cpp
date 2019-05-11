@@ -9,12 +9,12 @@
 #include "shader.hpp"
 #include "texture.hpp"
 
-using namespace V_Texture;
+using namespace Visual::Texture;
 
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 
-int V_Shader::init()
+int Visual::Shader::init()
 {
     // start GL context and O/S window using the GLFW helper library
     if (!glfwInit()) {
@@ -49,14 +49,14 @@ int V_Shader::init()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     //const GLFWvidmode* vmode = glfwGetVideoMode(mon);
-    GLFWwindow* window = glfwCreateWindow(V_Texture::xs, V_Texture::ys, "Hello Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Visual::Texture::xs, Visual::Texture::ys, "Hello Triangle", NULL, NULL);
     if (!window) {
         fprintf(stderr, "ERROR: could not open window with GLFW3\n");
         glfwTerminate();
         return 1;
     }
     glfwMakeContextCurrent(window);
-    V_Shader::window = window;
+    Shader::window = window;
     
     // start GLEW extension handler
     glewExperimental = GL_TRUE;
@@ -82,7 +82,7 @@ int V_Shader::init()
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), points, GL_STATIC_DRAW);
-    V_Shader::vbo = vbo;
+    Shader::vbo = vbo;
     
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
@@ -90,25 +90,25 @@ int V_Shader::init()
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vao);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    V_Shader::vao = vao;
+    Shader::vao = vao;
     
     GLuint uvbuffer;
     glGenBuffers(1, &uvbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
-    V_Shader::vuv = uvbuffer;
+    Shader::vuv = uvbuffer;
     
-    V_Shader::vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(V_Shader::vs, 1, &(V_Shader::vertex_shader), NULL);
-    glCompileShader(V_Shader::vs);
-    V_Shader::fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(V_Shader::fs, 1, &(V_Shader::fragment_shader), NULL);
-    glCompileShader(V_Shader::fs);
+    Shader::vs = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(Shader::vs, 1, &(Shader::vertex_shader), NULL);
+    glCompileShader(Shader::vs);
+    Shader::fs = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(Shader::fs, 1, &(Shader::fragment_shader), NULL);
+    glCompileShader(Shader::fs);
     
-    V_Shader::shader_programme = glCreateProgram();
-    glAttachShader(V_Shader::shader_programme, V_Shader::fs);
-    glAttachShader(V_Shader::shader_programme, V_Shader::vs);
-    glLinkProgram(V_Shader::shader_programme);
+    Shader::shader_programme = glCreateProgram();
+    glAttachShader(Shader::shader_programme, Shader::fs);
+    glAttachShader(Shader::shader_programme, Shader::vs);
+    glLinkProgram(Shader::shader_programme);
     
     // tell GL to only draw onto a pixel if the shape is closer to the viewer
     glEnable(GL_DEPTH_TEST); // enable depth-testing
@@ -118,9 +118,9 @@ int V_Shader::init()
     return 0;
 }
 
-void V_Shader::update ()
+void Visual::Shader::update ()
 {
-    GLFWwindow* window = V_Shader::window;
+    GLFWwindow* window = Shader::window;
     // uncomment these lines if on Apple OS xMouse
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -135,8 +135,8 @@ void V_Shader::update ()
     glLoadIdentity();
     glOrtho(0,1024,768,0,100,-100);
     glMatrixMode(GL_MODELVIEW);
-    glUseProgram(V_Shader::shader_programme);
-    glBindVertexArray(V_Shader::vao);
+    glUseProgram(Shader::shader_programme);
+    glBindVertexArray(Shader::vao);
     
     glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
     // update other events like input handling

@@ -16,19 +16,19 @@
 #include <assert.h>
 
 #include "input/mouseInput.hpp"
-#include "facialDetection.hpp"
+#include "AIFRED/facialDetection.hpp"
 
 #include "render/texture.hpp"
 #include "render/shader.hpp"
 
 #include "debug.hpp"
 
-using namespace facialDetection;
-//using namespace V_Texture;
+using namespace AIFRED::facialDetection;
+using namespace Visual::Texture;
 
 MouseIn mouseIn;
 
-V_Shader shader;
+Visual::Shader shader;
 
 Debug debug;
 
@@ -115,10 +115,13 @@ int main() {
     GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
     
     char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
-    V_Texture::init(filename);
-    u_int8_t** greyPixels = V_Texture::loadPixels(filename);
-    greyPixels = facialDetection::process(greyPixels);
-    GLuint Texture = V_Texture::loadTexture(greyPixels);
+	
+    Visual::Texture::init(filename);
+	AIFRED::facialDetection::init();
+	
+    u_int8_t** greyPixels = Visual::Texture::loadPixels(filename);
+    greyPixels = AIFRED::facialDetection::process(greyPixels);
+    GLuint Texture = Visual::Texture::loadTexture(greyPixels);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -134,9 +137,9 @@ int main() {
             printf("a\n");
         }*/
         
-        greyPixels = V_Texture::loadPixels(filename);
-        greyPixels = facialDetection::process(greyPixels);
-        Texture = V_Texture::loadTexture(greyPixels);
+        greyPixels = Visual::Texture::loadPixels(filename);
+        greyPixels = AIFRED::facialDetection::process(greyPixels);
+        Texture = Visual::Texture::loadTexture(greyPixels);
         
         
         
@@ -171,7 +174,7 @@ int main() {
                               );
         shader.update();
         
-        //glDeleteTextures(1, &V_Texture::textureID);
+        //glDeleteTextures(1, &Visual::Texture::textureID);
         
         
         if (!init)
