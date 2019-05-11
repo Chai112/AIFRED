@@ -1,5 +1,5 @@
 //
-//  visual_texture.cpp
+//  Render_texture.cpp
 //  ESC
 //
 //  Created by Chaidhat Chaimongkol on 27/04/2019.
@@ -17,8 +17,8 @@
 
 #include "texture.hpp"
 
-using namespace Visual::Texture;
-using namespace Visual;
+using namespace Render::Texture;
+using namespace Render;
 
 int width, height;
 png_byte color_type;
@@ -33,13 +33,13 @@ FILE *fp;
 
 png_infop info;
 
-static u_int8_t *greyPixels[Visual::Texture::xs];
+static u_int8_t *greyPixels[Render::Texture::xs];
 
 
-void Visual::Texture::init(const char *initFilename)
+void Render::Texture::init(const char *initFilename)
 {
-    for (int i=0; i<Visual::Texture::xs; i++)
-        greyPixels[i] = (u_int8_t *)malloc(Visual::Texture::ys * sizeof(u_int8_t));
+    for (int i=0; i<Render::Texture::xs; i++)
+        greyPixels[i] = (u_int8_t *)malloc(Render::Texture::ys * sizeof(u_int8_t));
     
     /* texture init
      *
@@ -114,7 +114,7 @@ void Visual::Texture::init(const char *initFilename)
     }
 }
 
-void Visual::Texture::readPNG(const char *filename) {
+void Render::Texture::readPNG(const char *filename) {
     fp = fopen(filename, "rb");
     
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -131,17 +131,17 @@ void Visual::Texture::readPNG(const char *filename) {
     fclose(fp);
 }
 
-u_int8_t** Visual::Texture::loadPixels(const char *filename)
+u_int8_t** Render::Texture::loadPixels(const char *filename)
 {
-    Visual::Texture::readPNG(filename);
+    Render::Texture::readPNG(filename);
     
     // load rgb
-    for (int x = 0; x < Visual::Texture::xs; x++)
+    for (int x = 0; x < Render::Texture::xs; x++)
     {
         row = row_pointers[x];
-        for (int y = 0; y < Visual::Texture::ys; y++)
+        for (int y = 0; y < Render::Texture::ys; y++)
         {
-            px = &(row[(Visual::Texture::ys - y) * 4]);
+            px = &(row[(Render::Texture::ys - y) * 4]);
             float r = px[0];
             float g = px[1];
             float b = px[2];
@@ -152,14 +152,14 @@ u_int8_t** Visual::Texture::loadPixels(const char *filename)
     return greyPixels;
 }
 
-GLuint Visual::Texture::loadTexture(u_int8_t **greyPixels)
+GLuint Render::Texture::loadTexture(u_int8_t **greyPixels)
 {
-    float pixels[Visual::Texture::xs][Visual::Texture::ys][3];
+    float pixels[Render::Texture::xs][Render::Texture::ys][3];
     
     // output rgb
-    for (int x = 0; x < Visual::Texture::xs; x++)
+    for (int x = 0; x < Render::Texture::xs; x++)
     {
-        for (int y = 0; y < Visual::Texture::ys; y++)
+        for (int y = 0; y < Render::Texture::ys; y++)
         {
             pixels[x][y][0] = greyPixels[x][y] / 255.f;
             pixels[x][y][1] = greyPixels[x][y] / 255.f;
@@ -167,7 +167,7 @@ GLuint Visual::Texture::loadTexture(u_int8_t **greyPixels)
         }
     }
     
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, Visual::Texture::xs, Visual::Texture::ys, 0, GL_RGB, GL_FLOAT, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, Render::Texture::xs, Render::Texture::ys, 0, GL_RGB, GL_FLOAT, pixels);
     
     return GL_TEXTURE_2D;
 }

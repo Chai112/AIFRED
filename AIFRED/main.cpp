@@ -24,11 +24,11 @@
 #include "debug.hpp"
 
 using namespace AIFRED::facialDetection;
-using namespace Visual::Texture;
+using namespace Render::Texture;
 
 MouseIn mouseIn;
 
-Visual::Shader shader;
+Render::Shader shader;
 
 Debug debug;
 
@@ -40,45 +40,6 @@ float points[] = {
     0.0f,  0.5f,  0.0f,
     0.5f, -0.5f,  0.0f,
     -0.5f, -0.5f,  0.0f
-};
-
-static const GLfloat g_vertex_buffer_data[] = {
-    -1.0f,-1.0f,-1.0f, // triangle 1 : begin
-    -1.0f,-1.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f, // triangle 1 : end
-    1.0f, 1.0f,-1.0f, // triangle 2 : begin
-    -1.0f,-1.0f,-1.0f,
-    -1.0f, 1.0f,-1.0f, // triangle 2 : end
-    1.0f,-1.0f, 1.0f,
-    -1.0f,-1.0f,-1.0f,
-    1.0f,-1.0f,-1.0f,
-    1.0f, 1.0f,-1.0f,
-    1.0f,-1.0f,-1.0f,
-    -1.0f,-1.0f,-1.0f,
-    -1.0f,-1.0f,-1.0f,
-    -1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f,-1.0f,
-    1.0f,-1.0f, 1.0f,
-    -1.0f,-1.0f, 1.0f,
-    -1.0f,-1.0f,-1.0f,
-    -1.0f, 1.0f, 1.0f,
-    -1.0f,-1.0f, 1.0f,
-    1.0f,-1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f,-1.0f,-1.0f,
-    1.0f, 1.0f,-1.0f,
-    1.0f,-1.0f,-1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f,-1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f,-1.0f,
-    -1.0f, 1.0f,-1.0f,
-    1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f,-1.0f,
-    -1.0f, 1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f,
-    1.0f,-1.0f, 1.0f
 };
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -116,12 +77,12 @@ int main() {
     
     char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
 	
-    Visual::Texture::init(filename);
+    Render::Texture::init(filename);
 	AIFRED::facialDetection::init();
 	
-    u_int8_t** greyPixels = Visual::Texture::loadPixels(filename);
+    u_int8_t** greyPixels = Render::Texture::loadPixels(filename);
     greyPixels = AIFRED::facialDetection::process(greyPixels);
-    GLuint Texture = Visual::Texture::loadTexture(greyPixels);
+    GLuint Texture = Render::Texture::loadTexture(greyPixels);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -137,9 +98,9 @@ int main() {
             printf("a\n");
         }*/
         
-        greyPixels = Visual::Texture::loadPixels(filename);
+        greyPixels = Render::Texture::loadPixels(filename);
         greyPixels = AIFRED::facialDetection::process(greyPixels);
-        Texture = Visual::Texture::loadTexture(greyPixels);
+        Texture = Render::Texture::loadTexture(greyPixels);
         
         
         
@@ -174,7 +135,7 @@ int main() {
                               );
         shader.update();
         
-        //glDeleteTextures(1, &Visual::Texture::textureID);
+        //glDeleteTextures(1, &Render::Texture::textureID);
         
         
         if (!init)

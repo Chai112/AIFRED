@@ -9,12 +9,12 @@
 #include "shader.hpp"
 #include "texture.hpp"
 
-using namespace Visual::Texture;
+using namespace Render::Texture;
 
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 
-int Visual::Shader::init()
+int Render::Shader::init()
 {
     // start GL context and O/S window using the GLFW helper library
     if (!glfwInit()) {
@@ -49,7 +49,7 @@ int Visual::Shader::init()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     //const GLFWvidmode* vmode = glfwGetVideoMode(mon);
-    GLFWwindow* window = glfwCreateWindow(Visual::Texture::xs, Visual::Texture::ys, "Hello Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Render::Texture::xs, Render::Texture::ys, "Hello Triangle", NULL, NULL);
     if (!window) {
         fprintf(stderr, "ERROR: could not open window with GLFW3\n");
         glfwTerminate();
@@ -118,7 +118,7 @@ int Visual::Shader::init()
     return 0;
 }
 
-void Visual::Shader::update ()
+void Render::Shader::update ()
 {
     GLFWwindow* window = Shader::window;
     // uncomment these lines if on Apple OS xMouse

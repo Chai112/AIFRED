@@ -15,22 +15,22 @@
 
 
 using namespace AIFRED::facialDetection;
-using namespace Visual::Texture;
+using namespace Render::Texture;
 
-static u_int8_t *pixelsG[Visual::Texture::xs];
+static u_int8_t *pixelsG[Render::Texture::xs];
 
 void AIFRED::facialDetection::init()
 {
-    for (int i=0; i<Visual::Texture::xs; i++)
-        pixelsG[i] = (u_int8_t *)malloc(Visual::Texture::ys * sizeof(u_int8_t));
+    for (int i=0; i<Render::Texture::xs; i++)
+        pixelsG[i] = (u_int8_t *)malloc(Render::Texture::ys * sizeof(u_int8_t));
 }
 
 u_int8_t** AIFRED::facialDetection::process(u_int8_t **pixels)
 {
     
-    for (int x = 0; x < Visual::Texture::xs; x++)
+    for (int x = 0; x < Render::Texture::xs; x++)
     {
-        for (int y = 0; y < Visual::Texture::ys; y++)
+        for (int y = 0; y < Render::Texture::ys; y++)
         {
             // (note x = 1 so no conflict)
             if (x > 0 && y > 0)

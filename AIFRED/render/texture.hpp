@@ -1,19 +1,19 @@
 //
-//  visual_texture.hpp
+//  Render_texture.hpp
 //  ESC
 //
 //  Created by Chaidhat Chaimongkol on 27/04/2019.
 //  Copyright © 2019 Chai112. All rights reserved.
 //
 
-#ifndef visual_texture_hpp
-#define visual_texture_hpp
+#ifndef Render_texture_hpp
+#define Render_texture_hpp
 
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> // GLFW helper library
 
-namespace Visual
+namespace Render
 {
     namespace Texture
     {
@@ -34,4 +34,4 @@ namespace Visual
     }
 }
 
-#endif /* visual_texture_hpp */
+#endif /* Render_texture_hpp */
