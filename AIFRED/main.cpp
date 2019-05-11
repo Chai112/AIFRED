@@ -111,6 +111,15 @@ int main() {
 
     bool init = false;
     
+    // Get a handle for our "myTextureSampler" uniform
+    GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
+    
+    char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
+    V_Texture::init(filename);
+    u_int8_t** greyPixels = V_Texture::loadPixels(filename);
+    greyPixels = facialDetection::process(greyPixels);
+    GLuint Texture = V_Texture::loadTexture(greyPixels);
+    
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
             glfwSetWindowShouldClose(shader.window, 1);
@@ -118,20 +127,16 @@ int main() {
         
         glfwSetCursorPosCallback(shader.window, cursor_position_callback);
         
-        // Get a handle for our "myTextureSampler" uniform
-        GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
-        
-        char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
-        float** greyPixels = V_Texture::loadPixels(filename);
-        greyPixels = facialDetection::process(greyPixels);
-        GLuint Texture = V_Texture::loadTexture(greyPixels);
-        
-        unsigned char pick_col[3][100][100];
+        /*unsigned char pick_col[3][100][100];
         glReadPixels(841 , 270 , 100 , 100 , GL_RGB , GL_UNSIGNED_BYTE , pick_col);
         if (pick_col[0][0][0] + pick_col[1][0][0] + pick_col[2][0][0] == 0)
         {
             printf("a\n");
-        }
+        }*/
+        
+        greyPixels = V_Texture::loadPixels(filename);
+        Texture = V_Texture::loadTexture(greyPixels);
+        
         
         
         // Bind our texture in Texture Unit 0
@@ -164,6 +169,8 @@ int main() {
                               (void*)0                          // array buffer offset
                               );
         shader.update();
+        
+        //glDeleteTextures(1, &V_Texture::textureID);
         
         
         if (!init)

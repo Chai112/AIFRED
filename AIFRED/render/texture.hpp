@@ -24,10 +24,11 @@ namespace V_Texture
     const int ys = 128;
     
     // Open the file
-    void read_png_file(const char *filename);
+    void readPNG(const char *filename);
     
-    float** loadPixels(const char *filename);
-    GLuint loadTexture(float **greyPixels);
+    void init(const char *initFilename);
+    u_int8_t** loadPixels(const char *filename);
+    GLuint loadTexture(u_int8_t **greyPixels);
 };
 
 #endif /* visual_texture_hpp */
