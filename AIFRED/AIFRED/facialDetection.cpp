@@ -8,9 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "facialDetection.hpp"
-#include "texture.hpp"
 
+#include "facialDetection.hpp"
 #include "texture.hpp"
 
 
@@ -28,44 +27,27 @@ namespace AIFRED
             for (int i=0; i<Render::Texture::xs; i++)
                 pixelsG[i] = (u_int8_t *)malloc(Render::Texture::ys * sizeof(u_int8_t));
         }
-
-        u_int8_t** process(u_int8_t **pixels)
+        
+        gImage::gImage (int ixs, int iys) : xs(ixs), ys(iys)
         {
-            integralImage (pixels);
+            static u_int8_t* igreyMap[128];
+            for (int x=0; x<xs; x++)
+            {
+                igreyMap[x] = (u_int8_t *)malloc(ys * sizeof(u_int8_t));
+                for (int y=0; y<ys; y++)
+                    igreyMap[x][y] = 0;
+            }
+            greyMap = igreyMap;
+            printf("init %d", greyMap[0][0]);
+        }
+
+        void gImage::process()
+        {
+            //greyMap = makeIntegralImage (greyMap);
             printf("%d\n", sum(1,1,20,20));
-            return pixels;
         }
 
-        bool classifiers::A (int x, int y, int width, int height, float threshold)
-        {
-            width /= 2;
-            return (threshold < (sum(x, y, width, height) - sum(x + width, y, width, height))) ? true : false;
-            
-        }
-        
-        bool classifiers::B (int x, int y, int width, int height, float threshold)
-        {
-            height /= 2;
-            return (threshold < (sum(x, y, width, height) - sum(x, y + height, width, height))) ? true : false;
-            
-        }
-        
-        bool classifiers::C (int x, int y, int width, int height, float threshold)
-        {
-            width /= 3;
-            return (threshold < ((sum(x, y, width, height) + sum(x + (width * 2), y, width, height)) - sum(x + width, y, width, height))) ? true : false;
-            
-        }
-        
-        bool classifiers::D (int x, int y, int width, int height, float threshold)
-        {
-            height /= 2;
-            width /= 2;
-            return (threshold < ((sum(x, y, width, height) + sum(x + width, y + height, width, height)) - (sum(x + width, y, width, height) + sum(x, y + height, width, height)))) ? true : false;
-            
-        }
-
-        void integralImage (u_int8_t **pixels)
+        u_int8_t** gImage::makeIntegralImage (u_int8_t **pixels)
         {
             // integral image
             for (int x = 0; x < Render::Texture::xs; x++)
@@ -79,12 +61,47 @@ namespace AIFRED
                     }
                 }
             }
+            
+            return pixelsG;
         }
 
         // width 0, height 0 is a 1x1 box
         int sum (int x, int y, int width, int height)
         {
             return (pixelsG[x+width][y+height] - pixelsG[x+width][y-1] - pixelsG[x-1][y+width] + pixelsG[x-1][y-1]);
+        }
+        
+        namespace classifiers
+        {
+            
+            bool A (int x, int y, int width, int height, int threshold)
+            {
+                width /= 2;
+                return (threshold < (sum(x, y, width, height) - sum(x + width, y, width, height))) ? true : false;
+                
+            }
+            
+            bool B (int x, int y, int width, int height, int threshold)
+            {
+                height /= 2;
+                return (threshold < (sum(x, y, width, height) - sum(x, y + height, width, height))) ? true : false;
+                
+            }
+            
+            bool C (int x, int y, int width, int height, int threshold)
+            {
+                width /= 3;
+                return (threshold < ((sum(x, y, width, height) + sum(x + (width * 2), y, width, height)) - sum(x + width, y, width, height))) ? true : false;
+                
+            }
+            
+            bool D (int x, int y, int width, int height, int threshold)
+            {
+                height /= 2;
+                width /= 2;
+                return (threshold < ((sum(x, y, width, height) + sum(x + width, y + height, width, height)) - (sum(x + width, y, width, height) + sum(x, y + height, width, height)))) ? true : false;
+                
+            }
         }
     }
 }

@@ -5,15 +5,11 @@
 //  Created by Chaidhat Chaimongkol on 22/04/2019.
 //  Copyright © 2019 Chai112. All rights reserved.
 //
+#include <stdio.h>
+#include <assert.h>
 
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
-#include <stdio.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <time.h>
-#include <stdarg.h>
-#include <assert.h>
 
 #include "input/mouseInput.hpp"
 
@@ -23,6 +19,8 @@
 #include "render/shader.hpp"
 
 #include "debug.hpp"
+
+#define PNG_DIMENSION 128;
 
 using namespace AIFRED;
 using namespace Render;
@@ -74,9 +72,7 @@ int main() {
     Texture::init(filename);
 	FacialDetection::init();
 	
-    u_int8_t** greyPixels = Texture::loadPixels(filename);
-    greyPixels = FacialDetection::process(greyPixels);
-    GLuint Texture = Texture::loadTexture(greyPixels);
+	FacialDetection::gImage inImage(128, 128);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -91,10 +87,11 @@ int main() {
         {
             printf("a\n");
         }*/
-        
-        greyPixels = Texture::loadPixels(filename);
-        greyPixels = FacialDetection::process(greyPixels);
-        Texture = Texture::loadTexture(greyPixels);
+		
+		//printf("%d", inImage.greyMap[0][0]);
+        Texture::loadgImage(filename, inImage);
+		inImage.process();
+        GLuint Texture = Texture::loadTexture(inImage.greyMap);
         
         
         

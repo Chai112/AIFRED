@@ -41,8 +41,6 @@ namespace Render
         
         void init(const char *initFilename)
         {
-            for (int i=0; i<xs; i++)
-                greyPixels[i] = (u_int8_t *)malloc(ys * sizeof(u_int8_t));
             
             { // TEXTURE INIT
             
@@ -131,25 +129,23 @@ namespace Render
             fclose(fp);
         }
 
-        u_int8_t** loadPixels(const char *filename)
+        void loadgImage(const char *filename, FacialDetection::gImage& gImage)
         {
             readPNG(filename);
             
             // load rgb
-            for (int x = 0; x < xs; x++)
+            for (int x = 0; x < gImage.xs; x++)
             {
                 row = row_pointers[x];
-                for (int y = 0; y < ys; y++)
+                for (int y = 0; y < gImage.ys; y++)
                 {
                     px = &(row[(ys - y) * 4]);
                     float r = px[0];
                     float g = px[1];
                     float b = px[2];
-                    greyPixels[x][y] = (r + g + b) / 3;
+                    gImage.greyMap[x][y] = (r + g + b) / 3;
                 }
             }
-            
-            return greyPixels;
         }
 
         GLuint loadTexture(u_int8_t **greyPixels)

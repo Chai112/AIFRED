@@ -10,24 +10,37 @@
 #define facialDetection_hpp
 
 #include <stdio.h>
+#include <stdlib.h>
 
 namespace AIFRED
 {
     namespace FacialDetection
     {
-        void init();
-        u_int8_t** process(u_int8_t **pixels);
         
-        void integralImage(u_int8_t **pixels);
+        void init();
         int sum(int x, int y, int width, int height);
         
-        class classifiers
+        class gImage
         {
+            u_int8_t** makeIntegralImage(u_int8_t **pixels);
+            
         public:
-            bool A (int x, int y, int width, int height, float threshold);
-            bool B (int x, int y, int width, int height, float threshold);
-            bool C (int x, int y, int width, int height, float threshold);
-            bool D (int x, int y, int width, int height, float threshold);
+            int a;
+            const int xs, ys;
+            u_int8_t** greyMap;
+            int** integralImage;
+            
+            void process();
+            
+            gImage(int ixs, int iys);
+        };
+        
+        namespace classifiers
+        {
+            bool A (int x, int y, int width, int height, int threshold);
+            bool B (int x, int y, int width, int height, int threshold);
+            bool C (int x, int y, int width, int height, int threshold);
+            bool D (int x, int y, int width, int height, int threshold);
         };
     }
 }

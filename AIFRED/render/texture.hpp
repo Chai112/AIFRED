@@ -14,6 +14,10 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <png.h> // LibPNG
 
+#include "facialDetection.hpp"
+
+using namespace AIFRED;
+
 
 namespace Render
 {
@@ -31,7 +35,7 @@ namespace Render
         void readPNG(const char *filename);
         
         void init(const char *initFilename);
-        u_int8_t** loadPixels(const char *filename);
+        void loadgImage(const char *filename, FacialDetection::gImage& gImage);
         GLuint loadTexture(u_int8_t **greyPixels);
     }
 }
