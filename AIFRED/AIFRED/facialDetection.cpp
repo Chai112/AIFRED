@@ -14,14 +14,14 @@
 #include "texture.hpp"
 
 
-using namespace AIFRED::facialDetection;
+using namespace AIFRED::FacialDetection;
 using namespace Render::Texture;
 
 static u_int8_t *pixelsG[Render::Texture::xs];
 
 namespace AIFRED
 {
-    namespace facialDetection
+    namespace FacialDetection
     {
         void init()
         {
@@ -31,14 +31,38 @@ namespace AIFRED
 
         u_int8_t** process(u_int8_t **pixels)
         {
-            AIFRED::facialDetection::integralImage (pixels);
-            printf("%d\n", AIFRED::facialDetection::sum(1,1,20,20));
+            integralImage (pixels);
+            printf("%d\n", sum(1,1,20,20));
             return pixels;
         }
 
-        bool classifiers::A(int x, int y, int width, int height)
+        bool classifiers::A (int x, int y, int width, int height, float threshold)
         {
-            return true;
+            width /= 2;
+            return (threshold < (sum(x, y, width, height) - sum(x + width, y, width, height))) ? true : false;
+            
+        }
+        
+        bool classifiers::B (int x, int y, int width, int height, float threshold)
+        {
+            height /= 2;
+            return (threshold < (sum(x, y, width, height) - sum(x, y + height, width, height))) ? true : false;
+            
+        }
+        
+        bool classifiers::C (int x, int y, int width, int height, float threshold)
+        {
+            width /= 3;
+            return (threshold < ((sum(x, y, width, height) + sum(x + (width * 2), y, width, height)) - sum(x + width, y, width, height))) ? true : false;
+            
+        }
+        
+        bool classifiers::D (int x, int y, int width, int height, float threshold)
+        {
+            height /= 2;
+            width /= 2;
+            return (threshold < ((sum(x, y, width, height) + sum(x + width, y + height, width, height)) - (sum(x + width, y, width, height) + sum(x, y + height, width, height)))) ? true : false;
+            
         }
 
         void integralImage (u_int8_t **pixels)

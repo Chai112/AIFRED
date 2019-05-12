@@ -13,7 +13,7 @@
 
 namespace AIFRED
 {
-    namespace facialDetection
+    namespace FacialDetection
     {
         void init();
         u_int8_t** process(u_int8_t **pixels);
@@ -24,10 +24,10 @@ namespace AIFRED
         class classifiers
         {
         public:
-            bool A (int x, int y, int width, int height);
-            bool B (int x, int y, int width, int height);
-            bool C (int x, int y, int width, int height);
-            bool D (int x, int y, int width, int height);
+            bool A (int x, int y, int width, int height, float threshold);
+            bool B (int x, int y, int width, int height, float threshold);
+            bool C (int x, int y, int width, int height, float threshold);
+            bool D (int x, int y, int width, int height, float threshold);
         };
     }
 }

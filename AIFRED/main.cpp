@@ -16,6 +16,7 @@
 #include <assert.h>
 
 #include "input/mouseInput.hpp"
+
 #include "AIFRED/facialDetection.hpp"
 
 #include "render/texture.hpp"
@@ -23,10 +24,9 @@
 
 #include "debug.hpp"
 
-using namespace AIFRED::facialDetection;
-using namespace Render::Texture;
-
-MouseIn mouseIn;
+using namespace AIFRED;
+using namespace Render;
+//using namespace Input::Mouse;
 
 Render::Shader shader;
 
@@ -38,8 +38,8 @@ void glfw_error_callback(int error, const char* description) {
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    mouseIn.xPos = xpos;
-    mouseIn.yPos = ypos;
+	//Input::Mouse::xPos = xpos;
+    //Input::Mouse::yPos = ypos;
 }
 
 
@@ -60,8 +60,8 @@ int main() {
     if (shader.init() == 1)
         return 1;
     
-    if (mouseIn.init(shader.window) == 1)
-        return 1;
+    //if (Input::Mouse::init(shader.window) == 1)
+        //return 1;
     
 
     bool init = false;
@@ -71,12 +71,12 @@ int main() {
     
     char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
 	
-    Render::Texture::init(filename);
-	AIFRED::facialDetection::init();
+    Texture::init(filename);
+	FacialDetection::init();
 	
-    u_int8_t** greyPixels = Render::Texture::loadPixels(filename);
-    greyPixels = AIFRED::facialDetection::process(greyPixels);
-    GLuint Texture = Render::Texture::loadTexture(greyPixels);
+    u_int8_t** greyPixels = Texture::loadPixels(filename);
+    greyPixels = FacialDetection::process(greyPixels);
+    GLuint Texture = Texture::loadTexture(greyPixels);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -92,9 +92,9 @@ int main() {
             printf("a\n");
         }*/
         
-        greyPixels = Render::Texture::loadPixels(filename);
-        greyPixels = AIFRED::facialDetection::process(greyPixels);
-        Texture = Render::Texture::loadTexture(greyPixels);
+        greyPixels = Texture::loadPixels(filename);
+        greyPixels = FacialDetection::process(greyPixels);
+        Texture = Texture::loadTexture(greyPixels);
         
         
         

@@ -11,23 +11,24 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <glm/gtc/matrix_transform.hpp>
 
-double MouseIn::xMouse() {   return MouseIn::xPos / -100;    }
+namespace Input
+{
+    double Mouse::xMouse() const {   return xPos / -100;    }
 
-double MouseIn::yMouse() {   return MouseIn::yPos / -100;    }
+    double Mouse::yMouse() const {   return yPos / -100;    }
+    
+    // public coords
+    float Mouse::x() const {   return sinf(((-xMouse()-7)/7)*180*0.01745329252) * zl();  }
+    
+    float Mouse::y() const {   return yl();   }
+    
+    float Mouse::z() const {   return cosf(((-xMouse()-7)/7)*180*0.01745329252) * zl();  }
+    
+    int init (GLFWwindow* window) { //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        return 0;}
 
+    // private yMouse coords
+    float Mouse::yl() const {   return sinf(((yMouse()-4.5)/4.5)*180*0.01745329252);     }
 
-// private yMouse coords
-float MouseIn::yl() {   return sinf(((MouseIn::yMouse()-4.5)/4.5)*180*0.01745329252);     }
-
-float MouseIn::zl() {   return cosf(((-MouseIn::yMouse()-4.5)/4.5)*180*0.01745329252);    }
-
-
-// public coords
-float MouseIn::x() {   return sinf(((-MouseIn::xMouse()-7)/7)*180*0.01745329252) * MouseIn::zl();  }
-
-float MouseIn::y() {   return MouseIn::yl();   }
-
-float MouseIn::z() {   return cosf(((-MouseIn::xMouse()-7)/7)*180*0.01745329252) * MouseIn::zl();  }
-
-int MouseIn::init (GLFWwindow* window) { //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    return 0;}
+    float Mouse::zl() const {   return cosf(((-yMouse()-4.5)/4.5)*180*0.01745329252);    }
+}

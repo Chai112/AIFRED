@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> // GLFW helper library
+#include <png.h> // LibPNG
+
 
 namespace Render
 {

@@ -17,28 +17,28 @@
 
 #include "texture.hpp"
 
-using namespace Render::Texture;
 using namespace Render;
 
-int width, height;
-png_byte color_type;
-png_byte bit_depth;
-png_bytep *row_pointers;
-
-GLuint textureID;
-
-png_bytep row;
-png_bytep px;
-FILE *fp;
-
-png_infop info;
-
-static u_int8_t *greyPixels[Render::Texture::xs];
 
 namespace Render
 {
     namespace Texture
     {
+        int width, height;
+        png_byte color_type;
+        png_byte bit_depth;
+        png_bytep *row_pointers;
+        
+        GLuint textureID;
+        
+        png_bytep row;
+        png_bytep px;
+        FILE *fp;
+        
+        png_infop info;
+        
+        static u_int8_t *greyPixels[Render::Texture::xs];
+        
         void init(const char *initFilename)
         {
             for (int i=0; i<xs; i++)
