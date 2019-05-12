@@ -62,7 +62,7 @@ namespace Render
         GLFWwindow* window;
         
         int init ();
-        void update ();
+        void update () const;
     };
 }
 

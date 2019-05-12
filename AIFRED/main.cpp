@@ -36,12 +36,6 @@ void glfw_error_callback(int error, const char* description) {
     debug.gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }
 
-float points[] = {
-    0.0f,  0.5f,  0.0f,
-    0.5f, -0.5f,  0.0f,
-    -0.5f, -0.5f,  0.0f
-};
-
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
     mouseIn.xPos = xpos;
@@ -138,11 +132,7 @@ int main() {
         //glDeleteTextures(1, &Render::Texture::textureID);
         
         
-        if (!init)
-        {
-            init = true;
-            debug.gl_log("\nInitialised Successfully. %s %s \n", __DATE__, __TIME__);
-        }
+        if (!init) { init = true; debug.gl_log("\nInitialised Successfully. %s %s \n", __DATE__, __TIME__);}
     }
     
     // close GL context and any other GLFW resources

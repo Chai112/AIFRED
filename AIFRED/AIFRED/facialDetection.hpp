@@ -18,7 +18,17 @@ namespace AIFRED
         void init();
         u_int8_t** process(u_int8_t **pixels);
         
-        int sum (int x, int y, int width, int height);
+        void integralImage(u_int8_t **pixels);
+        int sum(int x, int y, int width, int height);
+        
+        class classifiers
+        {
+        public:
+            bool A (int x, int y, int width, int height);
+            bool B (int x, int y, int width, int height);
+            bool C (int x, int y, int width, int height);
+            bool D (int x, int y, int width, int height);
+        };
     }
 }
 
