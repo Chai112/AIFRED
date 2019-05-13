@@ -70,7 +70,6 @@ int main() {
     char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
 	
     Texture::init(filename);
-	FacialDetection::init();
 	
 	FacialDetection::gImage inImage(128, 128);
     
