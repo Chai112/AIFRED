@@ -35,8 +35,6 @@ namespace Render
         png_bytep px;
         FILE *fp;
         
-        png_infop info;
-        
         static u_int8_t *greyPixels[Render::Texture::xs];
         
         void init(const char *initFilename)
@@ -63,10 +61,10 @@ namespace Render
                 png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
                 if(!png) abort();
                 
-                info = png_create_info_struct(png);
+                png_infop info = png_create_info_struct(png);
                 if(!info) abort();
                 
-                //if(setjmp(png_jmpbuf(png))) abort();
+                if(setjmp(png_jmpbuf(png))) abort();
                 
                 png_init_io(png, fp);
                 
@@ -117,6 +115,11 @@ namespace Render
             
             png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
             if(!png) abort();
+            
+            png_infop info = png_create_info_struct(png);
+            if(!info) abort();
+            
+            if(setjmp(png_jmpbuf(png))) abort();
             
             png_init_io(png, fp);
             
