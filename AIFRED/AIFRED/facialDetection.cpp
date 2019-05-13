@@ -23,7 +23,8 @@ namespace AIFRED
     namespace FacialDetection
     {
         
-        gImage::gImage (int ixs, int iys) : xs(ixs), ys(iys)
+        // GreyImage Constructor
+        GreyImage::GreyImage(int ixs, int iys) : xs(ixs), ys(iys)
         {
             // make image
             static u_int8_t* igreyMap[PNG_DIMENSION];
@@ -39,19 +40,26 @@ namespace AIFRED
             integralImage = iintegralImage;
         }
         
-        gImage::~gImage ()
+        // GreyImage Destructor
+        GreyImage::~GreyImage()
         {
-            free(greyMap);
-            free(integralImage);
+            for (int x=0; x<xs; x++)
+            {
+                delete greyMap[x];
+                delete integralImage[x];
+            }
         }
 
-        void gImage::process()
+        // runtime processing
+        void GreyImage::process()
         {
             makeIntegralImage();
-            printf("%d\n", sum(1,1,20,20));
+            Classifiers cl;
+            printf("%d\n", cl.A(1,1,20,20,400,*this));
         }
 
-        void gImage::makeIntegralImage()
+        // creates integral image and assigns integral image.
+        void GreyImage::makeIntegralImage()
         {
             // integral image
             for (int x = 0; x < xs; x++)
@@ -68,37 +76,37 @@ namespace AIFRED
         }
 
         // width 0, height 0 is a 1x1 box
-        int gImage::sum (int x, int y, int width, int height)
+        int GreyImage::sum (int x, int y, int width, int height)
         {
             return (integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]);
         }
             
-        bool classifiers::A (int x, int y, int width, int height, int threshold, gImage& image)
+        bool Classifiers::A (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
             width /= 2;
-            return (threshold < (image.sum(x, y, width, height) - image.sum(x + width, y, width, height))) ? true : false;
+            return (threshold < (image.sum(x, y, width, height) - image.sum(x + width, y, width, height)));
             
         }
         
-        bool classifiers::B (int x, int y, int width, int height, int threshold, gImage& image)
+        bool Classifiers::B (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
             height /= 2;
-            return (threshold < (image.sum(x, y, width, height) - image.sum(x, y + height, width, height))) ? true : false;
+            return (threshold < (image.sum(x, y, width, height) - image.sum(x, y + height, width, height)));
             
         }
         
-        bool classifiers::C (int x, int y, int width, int height, int threshold, gImage& image)
+        bool Classifiers::C (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
             width /= 3;
-            return (threshold < ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - image.sum(x + width, y, width, height))) ? true : false;
+            return (threshold < ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - image.sum(x + width, y, width, height)));
             
         }
         
-        bool classifiers::D (int x, int y, int width, int height, int threshold, gImage& image)
+        bool Classifiers::D (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
             height /= 2;
             width /= 2;
-            return (threshold < ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height)))) ? true : false;
+            return (threshold < ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height))));
             
         }
     }

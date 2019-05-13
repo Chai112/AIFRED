@@ -17,7 +17,7 @@ namespace AIFRED
     namespace FacialDetection
     {
         
-        class gImage
+        class GreyImage
         {
             int sum(int x, int y, int width, int height);
             
@@ -29,18 +29,18 @@ namespace AIFRED
             void process();
             void makeIntegralImage();
             
-            gImage(int ixs, int iys);
-            ~gImage();
+            GreyImage(int ixs, int iys);
+            ~GreyImage();
             
-            friend struct classifiers;
+            friend struct Classifiers;
         };
         
-        struct classifiers
+        struct Classifiers
         {
-            static bool A (int x, int y, int width, int height, int threshold, gImage& image);
-            static bool B (int x, int y, int width, int height, int threshold, gImage& image);
-            static bool C (int x, int y, int width, int height, int threshold, gImage& image);
-            static bool D (int x, int y, int width, int height, int threshold, gImage& image);
+            static bool A (int x, int y, int width, int height, int threshold, GreyImage& image);
+            static bool B (int x, int y, int width, int height, int threshold, GreyImage& image);
+            static bool C (int x, int y, int width, int height, int threshold, GreyImage& image);
+            static bool D (int x, int y, int width, int height, int threshold, GreyImage& image);
         };
     }
 }

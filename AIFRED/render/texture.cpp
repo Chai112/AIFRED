@@ -132,21 +132,21 @@ namespace Render
             fclose(fp);
         }
 
-        void loadgImage(const char *filename, FacialDetection::gImage& gImage)
+        void loadGreyImage(const char *filename, FacialDetection::GreyImage& GreyImage)
         {
             readPNG(filename);
             
             // load rgb
-            for (int x = 0; x < gImage.xs; x++)
+            for (int x = 0; x < GreyImage.xs; x++)
             {
                 row = row_pointers[x];
-                for (int y = 0; y < gImage.ys; y++)
+                for (int y = 0; y < GreyImage.ys; y++)
                 {
                     px = &(row[(ys - y) * 4]);
                     float r = px[0];
                     float g = px[1];
                     float b = px[2];
-                    gImage.greyMap[x][y] = (r + g + b) / 3;
+                    GreyImage.greyMap[x][y] = (r + g + b) / 3;
                 }
             }
         }
