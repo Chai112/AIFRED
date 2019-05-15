@@ -98,7 +98,7 @@ namespace AIFRED
         bool Classifiers::C (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
             width /= 3;
-            return (threshold < ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - image.sum(x + width, y, width, height)));
+            return (threshold < ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - (image.sum(x + width, y, width, height) * 2)));
             
         }
         
@@ -107,6 +107,35 @@ namespace AIFRED
             height /= 2;
             width /= 2;
             return (threshold < ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height))));
+            
+        }
+        
+        int Classifiers::A (int x, int y, int width, int height, GreyImage& image)
+        {
+            width /= 2;
+            return (image.sum(x, y, width, height) - image.sum(x + width, y, width, height));
+            
+        }
+        
+        int Classifiers::B (int x, int y, int width, int height, GreyImage& image)
+        {
+            height /= 2;
+            return (image.sum(x, y, width, height) - image.sum(x, y + height, width, height));
+            
+        }
+        
+        int Classifiers::C (int x, int y, int width, int height, GreyImage& image)
+        {
+            width /= 3;
+            return ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - (image.sum(x + width, y, width, height) * 2));
+            
+        }
+        
+        int Classifiers::D (int x, int y, int width, int height, GreyImage& image)
+        {
+            height /= 2;
+            width /= 2;
+            return ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height)));
             
         }
     }

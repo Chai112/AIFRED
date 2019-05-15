@@ -41,6 +41,11 @@ namespace AIFRED
             static bool B (int x, int y, int width, int height, int threshold, GreyImage& image);
             static bool C (int x, int y, int width, int height, int threshold, GreyImage& image);
             static bool D (int x, int y, int width, int height, int threshold, GreyImage& image);
+            
+            static int A (int x, int y, int width, int height, GreyImage& image);
+            static int B (int x, int y, int width, int height, GreyImage& image);
+            static int C (int x, int y, int width, int height, GreyImage& image);
+            static int D (int x, int y, int width, int height, GreyImage& image);
         };
     }
 }
