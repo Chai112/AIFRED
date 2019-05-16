@@ -55,7 +55,7 @@ namespace AIFRED
         {
             makeIntegralImage();
             Classifiers cl;
-            printf("%d\n", cl.A(1,1,20,20,400,*this));
+            printf("%d\n", cl.A(1,1,20,20,*this));
         }
 
         // creates integral image and assigns integral image.
@@ -78,7 +78,7 @@ namespace AIFRED
         // width 0, height 0 is a 1x1 box
         int GreyImage::sum (int x, int y, int width, int height)
         {
-            return (integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]);
+            return (integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]) / (width * height);
         }
             
         bool Classifiers::A (int x, int y, int width, int height, int threshold, GreyImage& image)
