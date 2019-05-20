@@ -55,7 +55,7 @@ namespace AIFRED
         {
             makeIntegralImage();
             Classifiers cl;
-            printf("%d\n", cl.A(1,1,20,20,*this));
+            printf("%f\n", cl.A(1,1,9,10,*this));
         }
 
         // creates integral image and assigns integral image.
@@ -69,20 +69,26 @@ namespace AIFRED
                     // (note x = 1 so no conflict)
                     if (x > 0 && y > 0)
                     {
-                        integralImage[x][y] = greyMap[x - 1][y] + greyMap[x][y - 1] - greyMap[x - 1][y - 1] + greyMap[x][y];
+                        integralImage[x][y] = integralImage[x - 1][y] + integralImage[x][y - 1] - integralImage[x - 1][y - 1] + greyMap[x][y];
                     }
                 }
             }
         }
 
         // width 0, height 0 is a 1x1 box
-        int GreyImage::sum (int x, int y, int width, int height)
+        float GreyImage::sum (int x, int y, int width, int height)
         {
-            return (integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]) / (width * height);
+            width -= 1;
+            height -= 1;
+            return ((float)(integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]) / ((width + 1) * (height + 1)));
         }
+        
+        
             
         bool Classifiers::A (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
+            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
+                abort();
             width /= 2;
             return (threshold < (image.sum(x, y, width, height) - image.sum(x + width, y, width, height)));
             
@@ -90,6 +96,8 @@ namespace AIFRED
         
         bool Classifiers::B (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
+            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
+                abort();
             height /= 2;
             return (threshold < (image.sum(x, y, width, height) - image.sum(x, y + height, width, height)));
             
@@ -97,6 +105,8 @@ namespace AIFRED
         
         bool Classifiers::C (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
+            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
+                abort();
             width /= 3;
             return (threshold < ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - (image.sum(x + width, y, width, height) * 2)));
             
@@ -104,35 +114,45 @@ namespace AIFRED
         
         bool Classifiers::D (int x, int y, int width, int height, int threshold, GreyImage& image)
         {
+            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
+                abort();
             height /= 2;
             width /= 2;
             return (threshold < ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height))));
             
         }
         
-        int Classifiers::A (int x, int y, int width, int height, GreyImage& image)
+        float Classifiers::A (int x, int y, int width, int height, GreyImage& image)
         {
+            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
+                abort();
             width /= 2;
             return (image.sum(x, y, width, height) - image.sum(x + width, y, width, height));
             
         }
         
-        int Classifiers::B (int x, int y, int width, int height, GreyImage& image)
+        float Classifiers::B (int x, int y, int width, int height, GreyImage& image)
         {
+            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
+                abort();
             height /= 2;
             return (image.sum(x, y, width, height) - image.sum(x, y + height, width, height));
             
         }
         
-        int Classifiers::C (int x, int y, int width, int height, GreyImage& image)
+        float Classifiers::C (int x, int y, int width, int height, GreyImage& image)
         {
+            if (width % 3 >= 1 || height % 3 >= 1) // accept three numbers
+                abort();
             width /= 3;
             return ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - (image.sum(x + width, y, width, height) * 2));
             
         }
         
-        int Classifiers::D (int x, int y, int width, int height, GreyImage& image)
+        float Classifiers::D (int x, int y, int width, int height, GreyImage& image)
         {
+            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
+                abort();
             height /= 2;
             width /= 2;
             return ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height)));

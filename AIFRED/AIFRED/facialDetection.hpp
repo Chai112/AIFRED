@@ -19,7 +19,7 @@ namespace AIFRED
         
         class GreyImage
         {
-            int sum(int x, int y, int width, int height);
+            float sum(int x, int y, int width, int height);
             
         public:
             const int xs, ys;
@@ -42,10 +42,10 @@ namespace AIFRED
             static bool C (int x, int y, int width, int height, int threshold, GreyImage& image);
             static bool D (int x, int y, int width, int height, int threshold, GreyImage& image);
             
-            static int A (int x, int y, int width, int height, GreyImage& image);
-            static int B (int x, int y, int width, int height, GreyImage& image);
-            static int C (int x, int y, int width, int height, GreyImage& image);
-            static int D (int x, int y, int width, int height, GreyImage& image);
+            static float A (int x, int y, int width, int height, GreyImage& image);
+            static float B (int x, int y, int width, int height, GreyImage& image);
+            static float C (int x, int y, int width, int height, GreyImage& image);
+            static float D (int x, int y, int width, int height, GreyImage& image);
         };
     }
 }
