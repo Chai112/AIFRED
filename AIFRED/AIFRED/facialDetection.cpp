@@ -18,6 +18,8 @@
 using namespace AIFRED::FacialDetection;
 using namespace Render::Texture;
 
+int b = 0;
+
 namespace AIFRED
 {
     namespace FacialDetection
@@ -55,7 +57,26 @@ namespace AIFRED
         {
             makeIntegralImage();
             Classifiers cl;
-            printf("%f\n", cl.A(1,1,9,10,*this));
+            long a = 0;
+            for (int x = 0; x < PNG_DIMENSION; x++)
+            {
+                for (int y = 0; y < PNG_DIMENSION; y++)
+                {
+                    for (int w = 0; w < PNG_DIMENSION - x - 4; w += 4)
+                    {
+                        for (int h = 0; h < PNG_DIMENSION - y - 4; h += 4)
+                        {
+                            a = cl.A(x, y, w, h, *this);
+                            a = cl.B(x, y, w, h, *this);
+                            if (w % 3 == 0 && h % 3 == 0)
+                                a = cl.C(x, y, w, h, *this);
+                            a = cl.D(x, y, w, h, *this);
+                        }
+                    }
+                }
+            }
+            b += 1;
+            printf("%ld, %d\n",a, b);
         }
 
         // creates integral image and assigns integral image.
