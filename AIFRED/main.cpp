@@ -6,6 +6,7 @@
 //  Copyright © 2019 Chai112. All rights reserved.
 //
 #include <stdio.h>
+#include <string>
 #include <assert.h>
 
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
@@ -63,11 +64,12 @@ int main() {
     
 
     bool init = false;
+	int a = 0;
     
     // Get a handle for our "myTextureSampler" uniform
     GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
     
-    char *filename = "/Users/chaidhatchaimongkol/Downloads/t.png";
+    char *filename = "/Users/chaidhatchaimongkol/Downloads/tAAAZ";
 	
     Texture::init(filename);
 	
@@ -88,7 +90,14 @@ int main() {
         }*/
 		
 		//printf("%d", inImage.greyMap[0][0]);
-        Texture::loadGreyImage(filename, inImage);
+		a++;
+		char filenameNew[1024];
+		{
+			using namespace std;
+			string f = string(filename);
+			strcpy(filenameNew, (f + string(".png")).c_str());
+		}
+		Texture::loadGreyImage(filenameNew, inImage);
 		inImage.process();
         GLuint Texture = Texture::loadTexture(inImage.greyMap);
         

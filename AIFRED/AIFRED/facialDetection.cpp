@@ -57,26 +57,32 @@ namespace AIFRED
         {
             makeIntegralImage();
             Classifiers cl;
-            long a = 0;
-            for (int x = 0; x < PNG_DIMENSION; x++)
+            float a = 0;
+            if (b == 0)
             {
-                for (int y = 0; y < PNG_DIMENSION; y++)
+            for (int x = 4; x < PNG_DIMENSION - 4; x += 4)
+            {
+                for (int y = 4; y < PNG_DIMENSION - 4; y += 4)
                 {
-                    for (int w = 0; w < PNG_DIMENSION - x - 4; w += 4)
+                    for (int w = 2; w < PNG_DIMENSION - x - 5; w += 4)
                     {
-                        for (int h = 0; h < PNG_DIMENSION - y - 4; h += 4)
+                        for (int h = 2; h < PNG_DIMENSION - y - 5; h += 4)
                         {
                             a = cl.A(x, y, w, h, *this);
-                            a = cl.B(x, y, w, h, *this);
+                            printf("%f %d\n", a, b);
+                            b += 1;
+                            //printf("b: %f", cl.B(x, y, w, h, *this));
                             if (w % 3 == 0 && h % 3 == 0)
-                                a = cl.C(x, y, w, h, *this);
-                            a = cl.D(x, y, w, h, *this);
+                            {
+                                //printf("c: %f", cl.C(x, y, w, h, *this));
+                            }
+                            //printf("d: %f", cl.D(x, y, w, h, *this));
                         }
                     }
                 }
             }
+            }
             b += 1;
-            printf("%ld, %d\n",a, b);
         }
 
         // creates integral image and assigns integral image.
