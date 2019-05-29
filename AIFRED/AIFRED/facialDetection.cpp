@@ -11,6 +11,7 @@
 
 #include "facialDetection.hpp"
 #include "texture.hpp"
+#include "debug.hpp"
 
 #define PNG_DIMENSION 128
 
@@ -55,6 +56,7 @@ namespace AIFRED
         // runtime processing
         void GreyImage::process()
         {
+            
             makeIntegralImage();
             Classifiers cl;
             float a = 0;
@@ -69,7 +71,7 @@ namespace AIFRED
                         for (int h = 2; h < PNG_DIMENSION - y - 5; h += 4)
                         {
                             a = cl.A(x, y, w, h, *this);
-                            printf("%f %d\n", a, b);
+                            //printf("%f %d\n", a, b);
                             b += 1;
                             //printf("b: %f", cl.B(x, y, w, h, *this));
                             if (w % 3 == 0 && h % 3 == 0)
@@ -100,6 +102,13 @@ namespace AIFRED
                     }
                 }
             }
+        }
+        
+        Sum GreyImage::sumImage ()
+        {
+            Sum s;
+            s.average = 2.f;
+            return s;
         }
 
         // width 0, height 0 is a 1x1 box

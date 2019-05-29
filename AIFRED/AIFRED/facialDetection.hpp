@@ -12,10 +12,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "debug.hpp"
+
 namespace AIFRED
 {
     namespace FacialDetection
     {
+        struct Sum
+        {
+            float average;
+        };
         
         class GreyImage
         {
@@ -28,6 +34,7 @@ namespace AIFRED
             
             void process();
             void makeIntegralImage();
+            Sum sumImage();
             
             GreyImage(int ixs, int iys);
             ~GreyImage();

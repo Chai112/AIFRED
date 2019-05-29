@@ -42,7 +42,10 @@ bool Debug::gl_log(const char* message, ...) {
                 );
         return false;
     }
-    printf(message, argptr);
+    va_start(argptr, message);
+    vprintf(message, argptr);
+    va_end(argptr);
+    
     va_start(argptr, message);
     vfprintf(file, message, argptr);
     va_end(argptr);

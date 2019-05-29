@@ -69,9 +69,15 @@ int main() {
     // Get a handle for our "myTextureSampler" uniform
     GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
     
-    char *filename = "/Users/chaidhatchaimongkol/Downloads/tAAAZ";
+    char *filename = "/Users/chaidhatchaimongkol/Downloads/t";
 	
-    Texture::init(filename);
+	char filenameNew[1024];
+	{
+		using namespace std;
+		string f = string(filename);
+		strcpy(filenameNew, (f + string(".png")).c_str());
+	}
+    Texture::init(filenameNew);
 	
 	FacialDetection::GreyImage inImage(128, 128);
     
@@ -79,6 +85,7 @@ int main() {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
             glfwSetWindowShouldClose(shader.window, 1);
         }
+		
         
         glfwSetCursorPosCallback(shader.window, cursor_position_callback);
         
@@ -91,13 +98,16 @@ int main() {
 		
 		//printf("%d", inImage.greyMap[0][0]);
 		a++;
-		char filenameNew[1024];
+		if (a == 5)
+		{
+			glfwSetWindowShouldClose(shader.window, 1);
+		}
 		{
 			using namespace std;
 			string f = string(filename);
 			strcpy(filenameNew, (f + string(".png")).c_str());
 		}
-		Texture::loadGreyImage(filenameNew, inImage);
+		Texture::loadGreyImage("/Users/chaidhatchaimongkol/Downloads/t.png", inImage);
 		inImage.process();
         GLuint Texture = Texture::loadTexture(inImage.greyMap);
         
@@ -139,6 +149,9 @@ int main() {
         
         if (!init) { init = true; debug.gl_log("\nInitialised Successfully. %s %s \n", __DATE__, __TIME__);}
     }
+	debug.gl_log("\n");
+	debug.gl_log("Avg: %f\n", 1.f);
+	debug.gl_log("\nTerminate.\n");
     
     // close GL context and any other GLFW resources
     glfwTerminate();
