@@ -15,11 +15,11 @@
 
 #define PNG_DIMENSION 128
 
+int totalClassiferCount = 0;
+
 
 using namespace AIFRED::FacialDetection;
 using namespace Render::Texture;
-
-int b = 0;
 
 namespace AIFRED
 {
@@ -32,6 +32,7 @@ namespace AIFRED
             // make image
             static u_int8_t* igreyMap[PNG_DIMENSION];
             static int* iintegralImage[PNG_DIMENSION];
+            static Evaluation ievalClassifiers[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
             for (int x=0; x<xs; x++)
             {
                 igreyMap[x] = (u_int8_t *)malloc(ys * sizeof(u_int8_t));
@@ -41,6 +42,7 @@ namespace AIFRED
             // assign
             greyMap = igreyMap;
             integralImage = iintegralImage;
+            evalClassifiers = ievalClassifiers;
         }
         
         // GreyImage Destructor
@@ -60,8 +62,7 @@ namespace AIFRED
             makeIntegralImage();
             Classifiers cl;
             float a = 0;
-            if (b == 0)
-            {
+            totalClassiferCount = 0;
             for (int x = 4; x < PNG_DIMENSION - 4; x += 4)
             {
                 for (int y = 4; y < PNG_DIMENSION - 4; y += 4)
@@ -71,20 +72,16 @@ namespace AIFRED
                         for (int h = 2; h < PNG_DIMENSION - y - 5; h += 4)
                         {
                             a = cl.A(x, y, w, h, *this);
-                            //printf("%f %d\n", a, b);
-                            b += 1;
-                            //printf("b: %f", cl.B(x, y, w, h, *this));
+                            evalClassifiers[totalClassiferCount].faceHaarTotal = cl.A(x, y, w, h, *this);
+                            evalClassifiers[totalClassiferCount + 1].faceHaarTotal = cl.B(x, y, w, h, *this);
                             if (w % 3 == 0 && h % 3 == 0)
-                            {
-                                //printf("c: %f", cl.C(x, y, w, h, *this));
-                            }
-                            //printf("d: %f", cl.D(x, y, w, h, *this));
+                                evalClassifiers[totalClassiferCount + 2].faceHaarTotal = cl.C(x, y, w, h, *this);
+                            evalClassifiers[totalClassiferCount + 3].faceHaarTotal = cl.D(x, y, w, h, *this);
+                            totalClassiferCount += 4;
                         }
                     }
                 }
             }
-            }
-            b += 1;
         }
 
         // creates integral image and assigns integral image.
@@ -104,11 +101,36 @@ namespace AIFRED
             }
         }
         
-        Sum GreyImage::sumImage ()
+        void GreyImage::evaluateImage ()
         {
-            Sum s;
-            s.average = 2.f;
-            return s;
+            // find all classifier averages
+            // find best classifier
+            float highestFaceAverage = -256;
+            unsigned int hFAIndex = 0;
+            float highestNonFaceAverage = -256;
+            unsigned int hNFAIndex = 0;
+            for (int i = 0; i < totalClassiferCount; i++)
+            {
+                // find all classifier averages
+                Evaluation *e = &evalClassifiers[i];
+                e->faceHaarAverage = e->faceHaarTotal / (2 * totalClassiferCount);
+                e->nonFaceHaarAverage = e->nonFaceHaarTotal / (2 * totalClassiferCount);
+                
+                // find best classifier
+                if (highestFaceAverage < e->faceHaarAverage)
+                {
+                    highestFaceAverage = e->faceHaarAverage;
+                    hFAIndex = i;
+                }
+                
+                if (highestNonFaceAverage < e->nonFaceHaarAverage)
+                {
+                    highestNonFaceAverage = e->nonFaceHaarAverage;
+                    hNFAIndex = i;
+                }
+            }
+            
+            evalImage.bestEval = evalClassifiers[hFAIndex];
         }
 
         // width 0, height 0 is a 1x1 box

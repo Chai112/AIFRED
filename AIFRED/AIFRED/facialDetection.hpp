@@ -5,6 +5,10 @@
 //  Created by Chaidhat Chaimongkol on 09/05/2019.
 //  Copyright © 2019 Chai112. All rights reserved.
 //
+//  Viola-Jones paper
+//  AND
+//  https://medium.com/datadriveninvestor/understanding-and-implementing-the-viola-jones-image-classification-algorithm-85621f7fe20b
+//
 
 #ifndef facialDetection_hpp
 #define facialDetection_hpp
@@ -18,9 +22,24 @@ namespace AIFRED
 {
     namespace FacialDetection
     {
-        struct Sum
+        typedef float Percent;
+        
+        struct Evaluation
         {
-            float average;
+            float faceHaarTotal = 0;
+            float nonFaceHaarTotal = 0;
+            
+            Percent faceHaarAverage;
+            Percent faceCorrect;
+            
+            Percent nonFaceHaarAverage;
+            Percent nonFaceCorrect;
+            
+        };
+        
+        struct EvaluationImage
+        {
+            Evaluation bestEval;
         };
         
         class GreyImage
@@ -31,10 +50,12 @@ namespace AIFRED
             const int xs, ys;
             u_int8_t** greyMap;
             int** integralImage;
+            Evaluation* evalClassifiers;
+            EvaluationImage evalImage;
             
             void process();
             void makeIntegralImage();
-            Sum sumImage();
+            void evaluateImage();
             
             GreyImage(int ixs, int iys);
             ~GreyImage();

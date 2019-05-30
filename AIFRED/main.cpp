@@ -149,8 +149,12 @@ int main() {
         
         if (!init) { init = true; debug.gl_log("\nInitialised Successfully. %s %s \n", __DATE__, __TIME__);}
     }
+	inImage.evaluateImage();
+	debug.gl_log("\nFinished. Here's the results\n");
 	debug.gl_log("\n");
-	debug.gl_log("Avg: %f\n", 1.f);
+	debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.evalImage.bestEval.faceHaarAverage * 100);
+	debug.gl_log("Face Avg:\t%f %%\n", inImage.evalClassifiers[0].faceHaarAverage * 100);
+	debug.gl_log("Face Correct:\t%f %%\n", inImage.evalClassifiers[0].faceCorrect * 100);
 	debug.gl_log("\nTerminate.\n");
     
     // close GL context and any other GLFW resources
