@@ -98,7 +98,7 @@ int main() {
 		
 		//printf("%d", inImage.greyMap[0][0]);
 		a++;
-		if (a == 5)
+		if (a == 1)
 		{
 			glfwSetWindowShouldClose(shader.window, 1);
 		}
@@ -107,7 +107,7 @@ int main() {
 			string f = string(filename);
 			strcpy(filenameNew, (f + string(".png")).c_str());
 		}
-		Texture::loadGreyImage("/Users/chaidhatchaimongkol/Downloads/t.png", inImage);
+		Texture::loadGreyImage(filenameNew, inImage);
 		inImage.process();
         GLuint Texture = Texture::loadTexture(inImage.greyMap);
         
@@ -153,6 +153,12 @@ int main() {
 	debug.gl_log("\nFinished. Here's the results\n");
 	debug.gl_log("\n");
 	debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.evalImage.bestEval.faceHaarAverage * 100);
+	
+	debug.gl_log("Best x:\t%d\n", inImage.evalImage.bestEval.x);
+	debug.gl_log("Best y:\t%d\n", inImage.evalImage.bestEval.y);
+	debug.gl_log("Best w:\t%d\n", inImage.evalImage.bestEval.w);
+	debug.gl_log("Best h:\t%d\n", inImage.evalImage.bestEval.h);
+	
 	debug.gl_log("Face Avg:\t%f %%\n", inImage.evalClassifiers[0].faceHaarAverage * 100);
 	debug.gl_log("Face Correct:\t%f %%\n", inImage.evalClassifiers[0].faceCorrect * 100);
 	debug.gl_log("\nTerminate.\n");

@@ -31,12 +31,12 @@ namespace AIFRED
         {
             // make image
             static u_int8_t* igreyMap[PNG_DIMENSION];
-            static int* iintegralImage[PNG_DIMENSION];
+            static u_int64_t* iintegralImage[PNG_DIMENSION];
             static Evaluation ievalClassifiers[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
             for (int x=0; x<xs; x++)
             {
                 igreyMap[x] = (u_int8_t *)malloc(ys * sizeof(u_int8_t));
-                iintegralImage[x] = (int *)malloc(ys * sizeof(int));
+                iintegralImage[x] = (u_int64_t *)malloc(ys * sizeof(u_int64_t));
             }
             
             // assign
@@ -58,30 +58,91 @@ namespace AIFRED
         // runtime processing
         void GreyImage::process()
         {
-            
             makeIntegralImage();
+            u_int64_t c = 0;
+            for (int x = 0; x < PNG_DIMENSION; x++)
+            {
+                for (int y = 0; y < PNG_DIMENSION; y++)
+                {
+                    c+=sum(2,2,2,2);
+                }
+            }
+            printf("c: %d\n", c);
             Classifiers cl;
             float a = 0;
             totalClassiferCount = 0;
-            for (int x = 4; x < PNG_DIMENSION - 4; x += 4)
+            // allocate all evaluations
+            int xIncrement = 2;
+            int yIncrement = 2;
+            int wIncrement = 4;
+            int hIncrement = 4;
+            
+            for (int x = 4; x < PNG_DIMENSION - xIncrement - 1; x += xIncrement)
             {
-                for (int y = 4; y < PNG_DIMENSION - 4; y += 4)
+                for (int y = 4; y < PNG_DIMENSION - yIncrement - 1; y += yIncrement)
                 {
-                    for (int w = 2; w < PNG_DIMENSION - x - 5; w += 4)
+                    for (int w = 2; w < (PNG_DIMENSION / 3)  - x; w += wIncrement)
                     {
-                        for (int h = 2; h < PNG_DIMENSION - y - 5; h += 4)
+                        for (int h = 2; h < (PNG_DIMENSION / 3)  -  y; h += hIncrement)
                         {
-                            a = cl.A(x, y, w, h, *this);
-                            evalClassifiers[totalClassiferCount].faceHaarTotal = cl.A(x, y, w, h, *this);
-                            evalClassifiers[totalClassiferCount + 1].faceHaarTotal = cl.B(x, y, w, h, *this);
-                            if (w % 3 == 0 && h % 3 == 0)
-                                evalClassifiers[totalClassiferCount + 2].faceHaarTotal = cl.C(x, y, w, h, *this);
-                            evalClassifiers[totalClassiferCount + 3].faceHaarTotal = cl.D(x, y, w, h, *this);
-                            totalClassiferCount += 4;
+                            for (int i = 0; i < 4; i++)
+                            {
+                                evalClassifiers[totalClassiferCount].x = x;
+                                evalClassifiers[totalClassiferCount].y = y;
+                                evalClassifiers[totalClassiferCount].w = w;
+                                evalClassifiers[totalClassiferCount].h = h;
+                                
+                                evalClassifiers[totalClassiferCount].type = totalClassiferCount % 4 + 1;
+                                
+                                totalClassiferCount++;
+                            }
                         }
                     }
                 }
             }
+            printf("tcc: %d\n", totalClassiferCount);
+            
+            c = 0;
+            // set all evaluations
+            for (int i = 0; i < totalClassiferCount; i += 4)
+            {
+                Evaluation* e = &evalClassifiers[i];
+                e->faceHaarTotal = cl.A(e->x, e->y, e->w, e->h, *this);
+                c+=e->faceHaarTotal;
+                
+                e = &evalClassifiers[i + 1];
+                e->faceHaarTotal = cl.B(e->x, e->y, e->w, e->h, *this);
+                c+=e->faceHaarTotal;
+                
+                e = &evalClassifiers[i + 2];
+                if (e->w % 3 == 0 && e->h % 3 == 0)
+                e->faceHaarTotal = cl.C(e->x, e->y, e->w, e->h, *this);
+                c+=e->faceHaarTotal;
+                
+                e = &evalClassifiers[i + 3];
+                e->faceHaarTotal = cl.D(e->x, e->y, e->w, e->h, *this);
+                c=e->faceHaarTotal;
+            }
+            
+            /*int x = 70;
+            int y = 20;
+            int w = 2;
+            int h = 20;*/
+            printf("asd: %f\n", cl.A(4, 4, 32, 2, *this) / 255);
+            printf("asd: %f\n", sum(2,1,60,1));
+            printf("asd: %f\n", sum(62,1,60,1));
+            /*w-=1;
+            h-=1;
+            u_int64_t ixy = integralImage[x+w][y+h];
+            u_int64_t ix = integralImage[x+w][y-1];
+            u_int64_t iy = integralImage[x-1][y+h];
+            u_int64_t i = integralImage[x-1][y-1];
+            printf("asd: %llu\n", ixy - ix - iy + i);
+            printf("asd: %llu\n", ix);
+            printf("asd: %llu\n", iy);
+            printf("asd: %llu\n", i);*/
+            
+            //return ((float)(integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]) / ((width + 1) * (height + 1)));
         }
 
         // creates integral image and assigns integral image.
@@ -96,6 +157,13 @@ namespace AIFRED
                     if (x > 0 && y > 0)
                     {
                         integralImage[x][y] = integralImage[x - 1][y] + integralImage[x][y - 1] - integralImage[x - 1][y - 1] + greyMap[x][y];
+                        if (integralImage[x][y] >= ULLONG_MAX - 1)
+                            abort();
+                    }
+                    else
+                    {
+                        // padding
+                        integralImage[x][y] = 0;
                     }
                 }
             }
@@ -105,32 +173,45 @@ namespace AIFRED
         {
             // find all classifier averages
             // find best classifier
-            float highestFaceAverage = -256;
+            float highestFaceAverage = 0;
             unsigned int hFAIndex = 0;
-            float highestNonFaceAverage = -256;
+            float highestNonFaceAverage = 0;
             unsigned int hNFAIndex = 0;
             for (int i = 0; i < totalClassiferCount; i++)
             {
                 // find all classifier averages
                 Evaluation *e = &evalClassifiers[i];
-                e->faceHaarAverage = e->faceHaarTotal / (2 * totalClassiferCount);
-                e->nonFaceHaarAverage = e->nonFaceHaarTotal / (2 * totalClassiferCount);
+                
+                // this is wrong
+                e->faceHaarAverage = e->faceHaarTotal / 255;
+                //e->faceHaarAverage = e->faceHaarTotal / (2 * totalClassiferCount);
+                //e->nonFaceHaarAverage = e->nonFaceHaarTotal / (2 * totalClassiferCount);
                 
                 // find best classifier
-                if (highestFaceAverage < e->faceHaarAverage)
+                if (highestFaceAverage < GreyImage::abs(e->faceHaarAverage))
                 {
-                    highestFaceAverage = e->faceHaarAverage;
+                    highestFaceAverage = GreyImage::abs(e->faceHaarAverage);
                     hFAIndex = i;
                 }
                 
-                if (highestNonFaceAverage < e->nonFaceHaarAverage)
+                if (highestNonFaceAverage < GreyImage::abs(e->nonFaceHaarAverage))
                 {
-                    highestNonFaceAverage = e->nonFaceHaarAverage;
+                    highestNonFaceAverage = GreyImage::abs(e->nonFaceHaarAverage);
                     hNFAIndex = i;
                 }
             }
             
             evalImage.bestEval = evalClassifiers[hFAIndex];
+            printf("beatype %d", evalImage.bestEval.type);
+            printf("asdjjk %f", evalImage.bestEval.faceHaarTotal);
+        }
+        
+        float GreyImage::abs (float in)
+        {
+            if (in < 0)
+                return (in * -1);
+            
+            return in;
         }
 
         // width 0, height 0 is a 1x1 box
@@ -138,7 +219,13 @@ namespace AIFRED
         {
             width -= 1;
             height -= 1;
-            return ((float)(integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]) / ((width + 1) * (height + 1)));
+            u_int64_t ixy = integralImage[x+width][y+height];
+            u_int64_t ix = integralImage[x+width][y-1];
+            u_int64_t iy = integralImage[x-1][y+height];
+            u_int64_t i = integralImage[x-1][y-1];
+            width += 1;
+            height += 1;
+            return ((float)(ixy - ix - iy + i) / (width * height));
         }
         
         
@@ -182,37 +269,24 @@ namespace AIFRED
         
         float Classifiers::A (int x, int y, int width, int height, GreyImage& image)
         {
-            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
-                abort();
-            width /= 2;
             return (image.sum(x, y, width, height) - image.sum(x + width, y, width, height));
             
         }
         
         float Classifiers::B (int x, int y, int width, int height, GreyImage& image)
         {
-            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
-                abort();
-            height /= 2;
             return (image.sum(x, y, width, height) - image.sum(x, y + height, width, height));
             
         }
         
         float Classifiers::C (int x, int y, int width, int height, GreyImage& image)
         {
-            if (width % 3 >= 1 || height % 3 >= 1) // accept three numbers
-                abort();
-            width /= 3;
             return ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - (image.sum(x + width, y, width, height) * 2));
             
         }
         
         float Classifiers::D (int x, int y, int width, int height, GreyImage& image)
         {
-            if (width % 2 == 1 || height % 2 == 1) // accept even numbers
-                abort();
-            height /= 2;
-            width /= 2;
             return ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height)));
             
         }

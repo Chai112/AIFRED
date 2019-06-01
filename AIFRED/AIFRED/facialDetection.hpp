@@ -26,14 +26,24 @@ namespace AIFRED
         
         struct Evaluation
         {
-            float faceHaarTotal = 0;
-            float nonFaceHaarTotal = 0;
+            
             
             Percent faceHaarAverage;
             Percent faceCorrect;
             
             Percent nonFaceHaarAverage;
             Percent nonFaceCorrect;
+            
+            float faceHaarTotal = 0;
+            float nonFaceHaarTotal = 0;
+            
+            int x = 0;
+            int y = 0;
+            
+            int w = 0;
+            int h = 0;
+            
+            int type = 0;
             
         };
         
@@ -45,11 +55,12 @@ namespace AIFRED
         class GreyImage
         {
             float sum(int x, int y, int width, int height);
+            float abs(float in);
             
         public:
             const int xs, ys;
             u_int8_t** greyMap;
-            int** integralImage;
+            u_int64_t** integralImage;
             Evaluation* evalClassifiers;
             EvaluationImage evalImage;
             
