@@ -32,7 +32,7 @@ namespace AIFRED
             // make image
             static u_int8_t* igreyMap[PNG_DIMENSION];
             static u_int64_t* iintegralImage[PNG_DIMENSION];
-            static Evaluation ievalClassifiers[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
+            static Feature ievalFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
             for (int x=0; x<xs; x++)
             {
                 igreyMap[x] = (u_int8_t *)malloc(ys * sizeof(u_int8_t));
@@ -42,7 +42,7 @@ namespace AIFRED
             // assign
             greyMap = igreyMap;
             integralImage = iintegralImage;
-            evalClassifiers = ievalClassifiers;
+            imageFeatures = ievalFeatures;
         }
         
         // GreyImage Destructor
@@ -59,17 +59,7 @@ namespace AIFRED
         void GreyImage::process()
         {
             makeIntegralImage();
-            u_int64_t c = 0;
-            for (int x = 0; x < PNG_DIMENSION; x++)
-            {
-                for (int y = 0; y < PNG_DIMENSION; y++)
-                {
-                    c+=sum(2,2,2,2);
-                }
-            }
-            printf("c: %d\n", c);
             Classifiers cl;
-            float a = 0;
             totalClassiferCount = 0;
             // allocate all evaluations
             int xIncrement = 2;
@@ -87,12 +77,12 @@ namespace AIFRED
                         {
                             for (int i = 0; i < 4; i++)
                             {
-                                evalClassifiers[totalClassiferCount].x = x;
-                                evalClassifiers[totalClassiferCount].y = y;
-                                evalClassifiers[totalClassiferCount].w = w;
-                                evalClassifiers[totalClassiferCount].h = h;
+                                imageFeatures[totalClassiferCount].x = x;
+                                imageFeatures[totalClassiferCount].y = y;
+                                imageFeatures[totalClassiferCount].w = w;
+                                imageFeatures[totalClassiferCount].h = h;
                                 
-                                evalClassifiers[totalClassiferCount].type = totalClassiferCount % 4 + 1;
+                                imageFeatures[totalClassiferCount].type = totalClassiferCount % 4 + 1;
                                 
                                 totalClassiferCount++;
                             }
@@ -100,49 +90,23 @@ namespace AIFRED
                     }
                 }
             }
-            printf("tcc: %d\n", totalClassiferCount);
             
-            c = 0;
             // set all evaluations
             for (int i = 0; i < totalClassiferCount; i += 4)
             {
-                Evaluation* e = &evalClassifiers[i];
+                Feature* e = &imageFeatures[i];
                 e->faceHaarTotal = cl.A(e->x, e->y, e->w, e->h, *this);
-                c+=e->faceHaarTotal;
                 
-                e = &evalClassifiers[i + 1];
+                e = &imageFeatures[i + 1];
                 e->faceHaarTotal = cl.B(e->x, e->y, e->w, e->h, *this);
-                c+=e->faceHaarTotal;
                 
-                e = &evalClassifiers[i + 2];
+                e = &imageFeatures[i + 2];
                 if (e->w % 3 == 0 && e->h % 3 == 0)
-                e->faceHaarTotal = cl.C(e->x, e->y, e->w, e->h, *this);
-                c+=e->faceHaarTotal;
+                    e->faceHaarTotal = cl.C(e->x, e->y, e->w, e->h, *this);
                 
-                e = &evalClassifiers[i + 3];
+                e = &imageFeatures[i + 3];
                 e->faceHaarTotal = cl.D(e->x, e->y, e->w, e->h, *this);
-                c=e->faceHaarTotal;
             }
-            
-            /*int x = 70;
-            int y = 20;
-            int w = 2;
-            int h = 20;*/
-            printf("asd: %f\n", cl.A(4, 4, 32, 2, *this) / 255);
-            printf("asd: %f\n", sum(2,1,60,1));
-            printf("asd: %f\n", sum(62,1,60,1));
-            /*w-=1;
-            h-=1;
-            u_int64_t ixy = integralImage[x+w][y+h];
-            u_int64_t ix = integralImage[x+w][y-1];
-            u_int64_t iy = integralImage[x-1][y+h];
-            u_int64_t i = integralImage[x-1][y-1];
-            printf("asd: %llu\n", ixy - ix - iy + i);
-            printf("asd: %llu\n", ix);
-            printf("asd: %llu\n", iy);
-            printf("asd: %llu\n", i);*/
-            
-            //return ((float)(integralImage[x+width][y+height] - integralImage[x+width][y-1] - integralImage[x-1][y+width] + integralImage[x-1][y-1]) / ((width + 1) * (height + 1)));
         }
 
         // creates integral image and assigns integral image.
@@ -180,12 +144,11 @@ namespace AIFRED
             for (int i = 0; i < totalClassiferCount; i++)
             {
                 // find all classifier averages
-                Evaluation *e = &evalClassifiers[i];
+                Feature *e = &imageFeatures[i];
                 
                 // this is wrong
                 e->faceHaarAverage = e->faceHaarTotal / 255;
-                //e->faceHaarAverage = e->faceHaarTotal / (2 * totalClassiferCount);
-                //e->nonFaceHaarAverage = e->nonFaceHaarTotal / (2 * totalClassiferCount);
+                e->nonFaceHaarAverage = e->nonFaceHaarTotal / 255;
                 
                 // find best classifier
                 if (highestFaceAverage < GreyImage::abs(e->faceHaarAverage))
@@ -201,9 +164,7 @@ namespace AIFRED
                 }
             }
             
-            evalImage.bestEval = evalClassifiers[hFAIndex];
-            printf("beatype %d", evalImage.bestEval.type);
-            printf("asdjjk %f", evalImage.bestEval.faceHaarTotal);
+            imageFeaturesEval.bestFeature = imageFeatures[hFAIndex];
         }
         
         float GreyImage::abs (float in)

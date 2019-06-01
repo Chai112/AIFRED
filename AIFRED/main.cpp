@@ -152,15 +152,15 @@ int main() {
 	inImage.evaluateImage();
 	debug.gl_log("\nFinished. Here's the results\n");
 	debug.gl_log("\n");
-	debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.evalImage.bestEval.faceHaarAverage * 100);
+	debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.imageFeaturesEval.bestFeature.faceHaarAverage * 100);
 	
-	debug.gl_log("Best x:\t%d\n", inImage.evalImage.bestEval.x);
-	debug.gl_log("Best y:\t%d\n", inImage.evalImage.bestEval.y);
-	debug.gl_log("Best w:\t%d\n", inImage.evalImage.bestEval.w);
-	debug.gl_log("Best h:\t%d\n", inImage.evalImage.bestEval.h);
+	debug.gl_log("Best x:\t%d\n", inImage.imageFeaturesEval.bestFeature.x);
+	debug.gl_log("Best y:\t%d\n", inImage.imageFeaturesEval.bestFeature.y);
+	debug.gl_log("Best w:\t%d\n", inImage.imageFeaturesEval.bestFeature.w);
+	debug.gl_log("Best h:\t%d\n", inImage.imageFeaturesEval.bestFeature.h);
 	
-	debug.gl_log("Face Avg:\t%f %%\n", inImage.evalClassifiers[0].faceHaarAverage * 100);
-	debug.gl_log("Face Correct:\t%f %%\n", inImage.evalClassifiers[0].faceCorrect * 100);
+	debug.gl_log("Face Avg:\t%f %%\n", inImage.imageFeatures[0].faceHaarAverage * 100);
+	debug.gl_log("Face Correct:\t%f %%\n", inImage.imageFeatures[0].faceCorrect * 100);
 	debug.gl_log("\nTerminate.\n");
     
     // close GL context and any other GLFW resources

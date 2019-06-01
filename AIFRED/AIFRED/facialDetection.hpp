@@ -24,7 +24,7 @@ namespace AIFRED
     {
         typedef float Percent;
         
-        struct Evaluation
+        struct Feature
         {
             
             
@@ -47,9 +47,9 @@ namespace AIFRED
             
         };
         
-        struct EvaluationImage
+        struct FeatureImage
         {
-            Evaluation bestEval;
+            Feature bestFeature;
         };
         
         class GreyImage
@@ -61,8 +61,8 @@ namespace AIFRED
             const int xs, ys;
             u_int8_t** greyMap;
             u_int64_t** integralImage;
-            Evaluation* evalClassifiers;
-            EvaluationImage evalImage;
+            Feature* imageFeatures;
+            FeatureImage imageFeaturesEval;
             
             void process();
             void makeIntegralImage();
