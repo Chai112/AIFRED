@@ -148,7 +148,13 @@ namespace Render
                     float b = px[2];
                     
                     // x and y are flipped here because of pixel arrangement of the png loader
-                    GreyImage.greyMap[GreyImage.ys - 1 - y][GreyImage.xs - 1 - x] = (r + g + b) / 3;
+                    GreyImage.greyMap[GreyImage.ys - 1 - y][x] = (r + g + b) / 3;
+                    
+                    // debug
+                    if ((r + g + b) / 3 == 255)
+                    {
+                        GreyImage.greyMap[GreyImage.ys - 1 - y][x] = 254;
+                    }
                 }
             }
         }
@@ -162,9 +168,19 @@ namespace Render
             {
                 for (int y = 0; y < ys; y++)
                 {
-                    pixels[ys-y - 1][xs-x - 1][0] = greyPixels[x][y] / 255.f;
-                    pixels[ys-y - 1][xs-x - 1][1] = greyPixels[x][y] / 255.f;
-                    pixels[ys-y - 1][xs-x - 1][2] = greyPixels[x][y] / 255.f;
+                    if (greyPixels[x][y] == 255) // debug
+                    { // debug
+                        pixels[y][xs-x - 1][0] = 1; // debug
+                        pixels[y][xs-x - 1][1] = 0; // debug
+                        pixels[y][xs-x - 1][2] = 0;
+                    } // debug
+                    else // debug
+                    { // debug
+                    pixels[y][xs-x - 1][0] = greyPixels[x][y] / 255.f;
+                    pixels[y][xs-x - 1][1] = greyPixels[x][y] / 255.f;
+                    pixels[y][xs-x - 1][2] = greyPixels[x][y] / 255.f;
+                        
+                    } // debug
                 }
             }
             

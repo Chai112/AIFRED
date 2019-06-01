@@ -100,7 +100,8 @@ int main() {
 		a++;
 		if (a == 1)
 		{
-			glfwSetWindowShouldClose(shader.window, 1);
+			//glfwSetWindowShouldClose(shader.window, 1);
+			
 		}
 		{
 			using namespace std;
@@ -154,6 +155,7 @@ int main() {
 	debug.gl_log("\n");
 	debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.imageFeaturesEval.bestFeature.faceHaarAverage * 100);
 	
+	debug.gl_log("Best type:\t%d\n", inImage.imageFeaturesEval.bestFeature.type);
 	debug.gl_log("Best x:\t%d\n", inImage.imageFeaturesEval.bestFeature.x);
 	debug.gl_log("Best y:\t%d\n", inImage.imageFeaturesEval.bestFeature.y);
 	debug.gl_log("Best w:\t%d\n", inImage.imageFeaturesEval.bestFeature.w);

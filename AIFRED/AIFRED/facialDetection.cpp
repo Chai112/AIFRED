@@ -71,9 +71,9 @@ namespace AIFRED
             {
                 for (int y = 4; y < PNG_DIMENSION - yIncrement - 1; y += yIncrement)
                 {
-                    for (int w = 2; w < (PNG_DIMENSION / 3)  - x; w += wIncrement)
+                    for (int w = 2; w < (PNG_DIMENSION - x) / 3; w += wIncrement)
                     {
-                        for (int h = 2; h < (PNG_DIMENSION / 3)  -  y; h += hIncrement)
+                        for (int h = 2; h < (PNG_DIMENSION - y) / 3; h += hIncrement)
                         {
                             for (int i = 0; i < 4; i++)
                             {
@@ -91,6 +91,8 @@ namespace AIFRED
                 }
             }
             
+            printf("asdf: %f\n", cl.A(58, 4, 12, 2,*this));
+            
             // set all evaluations
             for (int i = 0; i < totalClassiferCount; i += 4)
             {
@@ -107,6 +109,8 @@ namespace AIFRED
                 e = &imageFeatures[i + 3];
                 e->faceHaarTotal = cl.D(e->x, e->y, e->w, e->h, *this);
             }
+            
+            evaluateImage();
         }
 
         // creates integral image and assigns integral image.
@@ -165,6 +169,53 @@ namespace AIFRED
             }
             
             imageFeaturesEval.bestFeature = imageFeatures[hFAIndex];
+            
+            greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y] = 255;
+            if (imageFeatures[hFAIndex].type == 1)
+            {
+                for (int w = 0; w < imageFeatures[hFAIndex].w * 2; w++)
+                {
+                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+                }
+                for (int w = 0; w < imageFeatures[hFAIndex].h; w++)
+                {
+                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+                }
+            }
+            if (imageFeatures[hFAIndex].type == 2)
+            {
+                for (int w = 0; w < imageFeatures[hFAIndex].w; w++)
+                {
+                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+                }
+                for (int w = 0; w < imageFeatures[hFAIndex].h * 2; w++)
+                {
+                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+                }
+            }
+            if (imageFeatures[hFAIndex].type == 3)
+            {
+                for (int w = 0; w < imageFeatures[hFAIndex].w * 3; w++)
+                {
+                    if ((imageFeatures[hFAIndex].x + w) % 2 == 0)
+                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+                }
+                for (int w = 0; w < imageFeatures[hFAIndex].h; w++)
+                {
+                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+                }
+            }
+            if (imageFeatures[hFAIndex].type == 4)
+            {
+                for (int w = 0; w < imageFeatures[hFAIndex].w * 2; w++)
+                {
+                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+                }
+                for (int w = 0; w < imageFeatures[hFAIndex].h * 2; w++)
+                {
+                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+                }
+            }
         }
         
         float GreyImage::abs (float in)
