@@ -45,6 +45,45 @@ namespace AIFRED
             imageFeatures = ievalFeatures;
         }
         
+        void GreyImage::initSetFeatures(int imxs, int imys)
+        {
+            mxs = imxs;
+            mys = imys;
+            totalClassiferCount = 0;
+            // allocate all evaluations
+            const int xIncrement = 2;
+            const int yIncrement = 2;
+            const int wIncrement = 4;
+            const int hIncrement = 4;
+            
+            // uses mxs and mys as image can be cropped.
+            for (int x = 4; x < mxs - xIncrement - 1; x += xIncrement)
+            {
+                for (int y = 4; y < mys - yIncrement - 1; y += yIncrement)
+                {
+                    for (int w = 2; w < (mxs - x) / 3; w += wIncrement)
+                    {
+                        for (int h = 2; h < (mys - y) / 3; h += hIncrement)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                imageFeatures[totalClassiferCount].x = x;
+                                imageFeatures[totalClassiferCount].y = y;
+                                imageFeatures[totalClassiferCount].w = w;
+                                imageFeatures[totalClassiferCount].h = h;
+                                
+                                imageFeatures[totalClassiferCount].type = totalClassiferCount % 4 + 1;
+                                
+                                totalClassiferCount++;
+                                
+                                greyMap[x][y] = 255;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         // GreyImage Destructor
         GreyImage::~GreyImage()
         {
@@ -60,57 +99,23 @@ namespace AIFRED
         {
             makeIntegralImage();
             Classifiers cl;
-            totalClassiferCount = 0;
-            // allocate all evaluations
-            int xIncrement = 2;
-            int yIncrement = 2;
-            int wIncrement = 4;
-            int hIncrement = 4;
-            
-            for (int x = 4; x < PNG_DIMENSION - xIncrement - 1; x += xIncrement)
-            {
-                for (int y = 4; y < PNG_DIMENSION - yIncrement - 1; y += yIncrement)
-                {
-                    for (int w = 2; w < (PNG_DIMENSION - x) / 3; w += wIncrement)
-                    {
-                        for (int h = 2; h < (PNG_DIMENSION - y) / 3; h += hIncrement)
-                        {
-                            for (int i = 0; i < 4; i++)
-                            {
-                                imageFeatures[totalClassiferCount].x = x;
-                                imageFeatures[totalClassiferCount].y = y;
-                                imageFeatures[totalClassiferCount].w = w;
-                                imageFeatures[totalClassiferCount].h = h;
-                                
-                                imageFeatures[totalClassiferCount].type = totalClassiferCount % 4 + 1;
-                                
-                                totalClassiferCount++;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            printf("asdf: %f\n", cl.A(58, 4, 12, 2,*this));
             
             // set all evaluations
             for (int i = 0; i < totalClassiferCount; i += 4)
             {
                 Feature* e = &imageFeatures[i];
-                e->faceHaarTotal = cl.A(e->x, e->y, e->w, e->h, *this);
+                e->faceHaarTotal += cl.A(e->x, e->y, e->w, e->h, *this);
                 
                 e = &imageFeatures[i + 1];
-                e->faceHaarTotal = cl.B(e->x, e->y, e->w, e->h, *this);
+                e->faceHaarTotal += cl.B(e->x, e->y, e->w, e->h, *this);
                 
                 e = &imageFeatures[i + 2];
                 if (e->w % 3 == 0 && e->h % 3 == 0)
-                    e->faceHaarTotal = cl.C(e->x, e->y, e->w, e->h, *this);
+                    e->faceHaarTotal += cl.C(e->x, e->y, e->w, e->h, *this);
                 
                 e = &imageFeatures[i + 3];
-                e->faceHaarTotal = cl.D(e->x, e->y, e->w, e->h, *this);
+                e->faceHaarTotal += cl.D(e->x, e->y, e->w, e->h, *this);
             }
-            
-            evaluateImage();
         }
 
         // creates integral image and assigns integral image.
@@ -125,7 +130,7 @@ namespace AIFRED
                     if (x > 0 && y > 0)
                     {
                         integralImage[x][y] = integralImage[x - 1][y] + integralImage[x][y - 1] - integralImage[x - 1][y - 1] + greyMap[x][y];
-                        if (integralImage[x][y] >= ULLONG_MAX - 1)
+                        if (integralImage[x][y] >= ULLONG_MAX - 1) // is it overloading?
                             abort();
                     }
                     else
@@ -137,7 +142,7 @@ namespace AIFRED
             }
         }
         
-        void GreyImage::evaluateImage ()
+        void GreyImage::evaluateImage (int iteration)
         {
             // find all classifier averages
             // find best classifier
@@ -151,8 +156,8 @@ namespace AIFRED
                 Feature *e = &imageFeatures[i];
                 
                 // this is wrong
-                e->faceHaarAverage = e->faceHaarTotal / 255;
-                e->nonFaceHaarAverage = e->nonFaceHaarTotal / 255;
+                e->faceHaarAverage = e->faceHaarTotal / 255 / iteration;
+                e->nonFaceHaarAverage = e->nonFaceHaarTotal / 255 / iteration;
                 
                 // find best classifier
                 if (highestFaceAverage < GreyImage::abs(e->faceHaarAverage))

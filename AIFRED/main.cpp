@@ -69,17 +69,13 @@ int main() {
     // Get a handle for our "myTextureSampler" uniform
     GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
     
-    char *filename = "/Users/chaidhatchaimongkol/Downloads/t";
+	char *filename = "/Users/chaidhatchaimongkol/Downloads/t"; // exclude .png
 	
 	char filenameNew[1024];
-	{
-		using namespace std;
-		string f = string(filename);
-		strcpy(filenameNew, (f + string(".png")).c_str());
-	}
-    Texture::init(filenameNew);
+    Texture::init("/Users/chaidhatchaimongkol/Downloads/t.png");
 	
 	FacialDetection::GreyImage inImage(128, 128);
+	inImage.initSetFeatures(100, 128); // crop image
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -98,19 +94,24 @@ int main() {
 		
 		//printf("%d", inImage.greyMap[0][0]);
 		a++;
-		if (a == 1)
+		// training data size
+		if (a > 2)
 		{
 			//glfwSetWindowShouldClose(shader.window, 1);
 			
 		}
+		else
 		{
 			using namespace std;
 			string f = string(filename);
-			strcpy(filenameNew, (f + string(".png")).c_str());
+			printf("%d\n", a);
+			strcpy(filenameNew, (f + to_string(a) + string(".png")).c_str());
+			
+			Texture::loadGreyImage(filenameNew, inImage);
+			inImage.process();
+			inImage.evaluateImage(a);
 		}
-		Texture::loadGreyImage(filenameNew, inImage);
-		inImage.process();
-        GLuint Texture = Texture::loadTexture(inImage.greyMap);
+		GLuint Texture = Texture::loadTexture(inImage.greyMap);
         
         
         
@@ -150,7 +151,7 @@ int main() {
         
         if (!init) { init = true; debug.gl_log("\nInitialised Successfully. %s %s \n", __DATE__, __TIME__);}
     }
-	inImage.evaluateImage();
+	inImage.evaluateImage(a);
 	debug.gl_log("\nFinished. Here's the results\n");
 	debug.gl_log("\n");
 	debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.imageFeaturesEval.bestFeature.faceHaarAverage * 100);

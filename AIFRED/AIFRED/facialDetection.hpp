@@ -59,6 +59,7 @@ namespace AIFRED
             
         public:
             const int xs, ys;
+            int mxs, mys; // modifiable for image to be cropped
             u_int8_t** greyMap;
             u_int64_t** integralImage;
             Feature* imageFeatures;
@@ -66,9 +67,10 @@ namespace AIFRED
             
             void process();
             void makeIntegralImage();
-            void evaluateImage();
+            void evaluateImage(int iteration);
             
             GreyImage(int ixs, int iys);
+            void initSetFeatures(int imxs, int imys);
             ~GreyImage();
             
             friend struct Classifiers;

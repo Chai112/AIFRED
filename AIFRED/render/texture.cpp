@@ -172,7 +172,7 @@ namespace Render
                     { // debug
                         pixels[y][xs-x - 1][0] = 1; // debug
                         pixels[y][xs-x - 1][1] = 0; // debug
-                        pixels[y][xs-x - 1][2] = 0;
+                        pixels[y][xs-x - 1][2] = 0; // debug
                     } // debug
                     else // debug
                     { // debug
