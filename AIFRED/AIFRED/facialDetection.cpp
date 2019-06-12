@@ -150,14 +150,16 @@ namespace AIFRED
             unsigned int hFAIndex = 0;
             float highestNonFaceAverage = 0;
             unsigned int hNFAIndex = 0;
+
+            
             for (int i = 0; i < totalClassiferCount; i++)
             {
                 // find all classifier averages
                 Feature *e = &imageFeatures[i];
                 
                 // this is wrong
-                e->faceHaarAverage = e->faceHaarTotal / 255 / iteration;
-                e->nonFaceHaarAverage = e->nonFaceHaarTotal / 255 / iteration;
+                e->faceHaarAverage = e->faceHaarTotal / iteration;
+				e->nonFaceHaarAverage = e->nonFaceHaarTotal / iteration;
                 
                 // find best classifier
                 if (highestFaceAverage < GreyImage::abs(e->faceHaarAverage))
@@ -171,56 +173,18 @@ namespace AIFRED
                     highestNonFaceAverage = GreyImage::abs(e->nonFaceHaarAverage);
                     hNFAIndex = i;
                 }
+                
             }
             
-            imageFeaturesEval.bestFeature = imageFeatures[hFAIndex];
-            
-            greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y] = 255;
-            if (imageFeatures[hFAIndex].type == 1)
-            {
-                for (int w = 0; w < imageFeatures[hFAIndex].w * 2; w++)
-                {
-                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
-                }
-                for (int w = 0; w < imageFeatures[hFAIndex].h; w++)
-                {
-                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
-                }
-            }
-            if (imageFeatures[hFAIndex].type == 2)
-            {
-                for (int w = 0; w < imageFeatures[hFAIndex].w; w++)
-                {
-                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
-                }
-                for (int w = 0; w < imageFeatures[hFAIndex].h * 2; w++)
-                {
-                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
-                }
-            }
-            if (imageFeatures[hFAIndex].type == 3)
-            {
-                for (int w = 0; w < imageFeatures[hFAIndex].w * 3; w++)
-                {
-                    if ((imageFeatures[hFAIndex].x + w) % 2 == 0)
-                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
-                }
-                for (int w = 0; w < imageFeatures[hFAIndex].h; w++)
-                {
-                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
-                }
-            }
-            if (imageFeatures[hFAIndex].type == 4)
-            {
-                for (int w = 0; w < imageFeatures[hFAIndex].w * 2; w++)
-                {
-                    greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
-                }
-                for (int w = 0; w < imageFeatures[hFAIndex].h * 2; w++)
-                {
-                    greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
-                }
-            }
+            imageFeaturesEval.featuresSorted = imageFeatures;
+			
+			int outTotal = totalClassiferCount;
+			prune(imageFeaturesEval.featuresSorted, totalClassiferCount, outTotal, 0.5f);
+			printf("%d\n", outTotal);
+            //sort(imageFeaturesEval.featuresSorted, totalClassiferCount);
+			//printf("asd %d", totalClassiferCount);
+			
+			draw(hFAIndex);
         }
         
         float GreyImage::abs (float in)
@@ -230,6 +194,120 @@ namespace AIFRED
             
             return in;
         }
+        
+        void GreyImage::sort(Feature *features, int length)
+        {
+            printf("ads\n");
+            bool repeat = true;
+            int j = 0;
+			while (repeat)
+            {
+                printf("a %d\n", j);
+                repeat = false;
+                for (int i = 0; i < length; i++)
+                {
+                    float *f = &features[i].faceHaarAverage;
+                    float *fp = &features[i - 1].faceHaarAverage;
+					if (*f != 0)
+					{
+						if (*f > *fp)
+						{
+							repeat = true;
+							float ft = *f;
+							*f = *fp;
+							*fp = ft;
+						}
+					}
+					else
+					{
+						i++;
+					}
+                }
+                j++;
+            }
+        }
+		
+		void GreyImage::prune(Feature *features, int length, int &outTotal, Percent threshold)
+		{
+			// find avg
+			float highest = 0;
+			float lowest = 0;
+			float j = 0;
+			for (int i = 0; i < length; i++)
+			{
+				float *f = &features[i].faceHaarAverage;
+				j += *f;
+				if (*f > highest)
+					highest = *f;
+				if (*f < lowest)
+					lowest = *f;
+			}
+			//float avg = GreyImage::abs(j / length);
+			highest *= threshold;
+			lowest *= threshold;
+			
+			// prune
+			int i = 0;
+			for (int i = 0; i < length; i++)
+			{
+				float *f = &features[i].faceHaarAverage;
+				if (*f > lowest && *f < highest)
+				{
+					*f = 0;
+					outTotal--;
+				}
+			}
+		}
+		
+		void GreyImage::draw (int hFAIndex)
+		{
+			greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y] = 255;
+			if (imageFeatures[hFAIndex].type == 1)
+			{
+				for (int w = 0; w < imageFeatures[hFAIndex].w * 2; w++)
+				{
+					greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+				}
+				for (int w = 0; w < imageFeatures[hFAIndex].h; w++)
+				{
+					greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+				}
+			}
+			if (imageFeatures[hFAIndex].type == 2)
+			{
+				for (int w = 0; w < imageFeatures[hFAIndex].w; w++)
+				{
+					greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+				}
+				for (int w = 0; w < imageFeatures[hFAIndex].h * 2; w++)
+				{
+					greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+				}
+			}
+			if (imageFeatures[hFAIndex].type == 3)
+			{
+				for (int w = 0; w < imageFeatures[hFAIndex].w * 3; w++)
+				{
+					if ((imageFeatures[hFAIndex].x + w) % 2 == 0)
+						greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+				}
+				for (int w = 0; w < imageFeatures[hFAIndex].h; w++)
+				{
+					greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+				}
+			}
+			if (imageFeatures[hFAIndex].type == 4)
+			{
+				for (int w = 0; w < imageFeatures[hFAIndex].w * 2; w++)
+				{
+					greyMap[imageFeatures[hFAIndex].x + w][imageFeatures[hFAIndex].y] = 255;
+				}
+				for (int w = 0; w < imageFeatures[hFAIndex].h * 2; w++)
+				{
+					greyMap[imageFeatures[hFAIndex].x][imageFeatures[hFAIndex].y + w] = 255;
+				}
+			}
+		}
 
         // width 0, height 0 is a 1x1 box
         float GreyImage::sum (int x, int y, int width, int height)

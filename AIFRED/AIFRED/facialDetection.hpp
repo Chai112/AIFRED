@@ -49,13 +49,16 @@ namespace AIFRED
         
         struct FeatureImage
         {
-            Feature bestFeature;
+            Feature *featuresSorted;
         };
         
         class GreyImage
         {
             float sum(int x, int y, int width, int height);
             float abs(float in);
+            void sort(Feature *features, int length);
+			void prune(Feature *features, int length, int &outPruned, Percent threshold);
+			void draw(int hFAIndex);
             
         public:
             const int xs, ys;

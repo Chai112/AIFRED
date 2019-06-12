@@ -69,7 +69,7 @@ int main() {
     // Get a handle for our "myTextureSampler" uniform
     GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
     
-	char *filename = "/Users/chaidhatchaimongkol/Downloads/t"; // exclude .png
+	char *filename = "/Users/chaidhatchaimongkol/Desktop/_final/face"; // exclude .png
 	
 	char filenameNew[1024];
     Texture::init("/Users/chaidhatchaimongkol/Downloads/t.png");
@@ -95,7 +95,7 @@ int main() {
 		//printf("%d", inImage.greyMap[0][0]);
 		a++;
 		// training data size
-		if (a > 2)
+		if (a > 200)
 		{
 			//glfwSetWindowShouldClose(shader.window, 1);
 			
@@ -154,13 +154,13 @@ int main() {
 	inImage.evaluateImage(a);
 	debug.gl_log("\nFinished. Here's the results\n");
 	debug.gl_log("\n");
-	debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.imageFeaturesEval.bestFeature.faceHaarAverage * 100);
+	/*debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.imageFeaturesEval.featuresSorted[0].faceHaarAverage * 100);
 	
-	debug.gl_log("Best type:\t%d\n", inImage.imageFeaturesEval.bestFeature.type);
-	debug.gl_log("Best x:\t%d\n", inImage.imageFeaturesEval.bestFeature.x);
-	debug.gl_log("Best y:\t%d\n", inImage.imageFeaturesEval.bestFeature.y);
-	debug.gl_log("Best w:\t%d\n", inImage.imageFeaturesEval.bestFeature.w);
-	debug.gl_log("Best h:\t%d\n", inImage.imageFeaturesEval.bestFeature.h);
+	debug.gl_log("Best type:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].type);
+	debug.gl_log("Best x:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].x);
+	debug.gl_log("Best y:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].y);
+	debug.gl_log("Best w:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].w);
+	debug.gl_log("Best h:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].h);*/
 	
 	debug.gl_log("Face Avg:\t%f %%\n", inImage.imageFeatures[0].faceHaarAverage * 100);
 	debug.gl_log("Face Correct:\t%f %%\n", inImage.imageFeatures[0].faceCorrect * 100);
