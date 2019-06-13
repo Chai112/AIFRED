@@ -109,7 +109,7 @@ int main() {
 			
 			Texture::loadGreyImage(filenameNew, inImage);
 			inImage.process();
-			inImage.evaluateImage(a);
+			inImage.evaluateImage(a, false);
 		}
 		GLuint Texture = Texture::loadTexture(inImage.greyMap);
         
@@ -151,7 +151,7 @@ int main() {
         
         if (!init) { init = true; debug.gl_log("\nInitialised Successfully. %s %s \n", __DATE__, __TIME__);}
     }
-	inImage.evaluateImage(a);
+	inImage.evaluateImage(a, true);
 	debug.gl_log("\nFinished. Here's the results\n");
 	debug.gl_log("\n");
 	/*debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.imageFeaturesEval.featuresSorted[0].faceHaarAverage * 100);

@@ -142,7 +142,7 @@ namespace AIFRED
             }
         }
         
-        void GreyImage::evaluateImage (int iteration)
+        void GreyImage::evaluateImage (int iteration, bool b_sort)
         {
             // find all classifier averages
             // find best classifier
@@ -181,7 +181,8 @@ namespace AIFRED
 			int outTotal = totalClassiferCount;
 			prune(imageFeaturesEval.featuresSorted, totalClassiferCount, outTotal, 0.5f);
 			printf("%d\n", outTotal);
-            //sort(imageFeaturesEval.featuresSorted, totalClassiferCount);
+			if (b_sort)
+            	sort(imageFeaturesEval.featuresSorted, totalClassiferCount);
 			//printf("asd %d", totalClassiferCount);
 			
 			draw(hFAIndex);
