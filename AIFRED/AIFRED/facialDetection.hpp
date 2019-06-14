@@ -57,7 +57,7 @@ namespace AIFRED
             float sum(int x, int y, int width, int height);
             float abs(float in);
             void sort(Feature *features, int length);
-			void prune(Feature *features, int length, int &outPruned, Percent threshold);
+			void prune(Feature *features, int length, int &out, Percent threshold);
 			void draw(int hFAIndex);
             
         public:
