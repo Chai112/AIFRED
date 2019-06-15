@@ -71,6 +71,9 @@ namespace AIFRED
             void process();
             void makeIntegralImage();
             void evaluateImage(int iteration, bool b_sort);
+			
+			Percent evaluate();
+			int scan();
             
             GreyImage(int ixs, int iys);
             void initSetFeatures(int imxs, int imys);

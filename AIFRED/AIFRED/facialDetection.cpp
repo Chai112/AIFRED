@@ -16,6 +16,7 @@
 #define PNG_DIMENSION 128
 
 int totalClassiferCount = 0;
+int outLength = 0;
 
 
 using namespace AIFRED::FacialDetection;
@@ -182,7 +183,7 @@ namespace AIFRED
             
             imageFeaturesEval.featuresSorted = imageFeatures;
 			
-			int outLength = 0;
+			outLength = 0;
 			static Feature outFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
 			prune(imageFeaturesEval.featuresSorted, totalClassiferCount, outFeatures, outLength, 0.5f);
 			printf("%d\n", outLength);
@@ -199,6 +200,30 @@ namespace AIFRED
 			
         }
 		
+		
+		
+		Percent GreyImage::evaluate()
+		{
+			Percent j = 0;
+			for (int i = 0; i < outLength; i++)
+			{
+				Feature f = imageFeaturesEval.featuresSorted[i];
+				Classifiers cl;
+				if (f.type == 1)
+					j += cl.A(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+			
+				if (f.type == 2)
+					j += cl.B(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+			
+				if (f.type == 3)
+					j += cl.C(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+			
+				if (f.type == 4)
+					j += cl.D(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+			}
+			printf("eval: %f\n", j);
+			return j;
+		}
 		
 		
 		

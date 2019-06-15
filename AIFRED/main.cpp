@@ -31,7 +31,7 @@ Render::Shader shader;
 
 Debug debug;
 
-const bool autoTerminate = true; // true for debug/visual environment
+const bool autoTerminate = false; // false for debug/visual environment
 const int totalImages = 200; // images to be processed
 
 void glfw_error_callback(int error, const char* description) {
@@ -67,6 +67,10 @@ int main() {
     
 
     bool init = false;
+	bool end = false;
+	float avgEval = 0;
+	float highest = 0, lowest = 0;
+	int ihighest = 0, ilowest = 0;
 	int a = 0;
     
     // Get a handle for our "myTextureSampler" uniform
@@ -100,6 +104,25 @@ int main() {
 		// training data size
 		if (a > totalImages)
 		{
+			if (!end)
+			{
+				Texture::loadGreyImage("/Users/chaidhatchaimongkol/Downloads/t4.png", inImage);
+				inImage.process();
+				float e = inImage.evaluate();
+				printf("avg %f\n", avgEval / (totalImages - 1));
+				printf("h %f %d\n", highest, ihighest);
+				printf("l %f %d\n", lowest, ilowest);
+				
+				if (e > -50000 && e < 20000)
+				{
+					printf("\n\n that's a face!\n");
+				}
+				else
+				{
+					printf("\n\n that's NOT a face!\n");
+				}
+			}
+			end = true;
 			if (autoTerminate)
 				glfwSetWindowShouldClose(shader.window, 1);
 			
@@ -113,7 +136,26 @@ int main() {
 			
 			Texture::loadGreyImage(filenameNew, inImage);
 			inImage.process();
-			inImage.evaluateImage(a, true);
+			float e = 0;
+			if (a != 60)
+			{
+				inImage.evaluateImage(a, true);
+				e = inImage.evaluate();
+			}
+			if (e > 20000 || e < -50000)
+				printf("wow\n");
+			avgEval += e;
+			if (e > highest)
+			{
+				highest = e;
+				ihighest = a;
+			}
+			if (e < lowest)
+			{
+				lowest = e;
+				ilowest = a;
+			}
+			
 		}
 		GLuint Texture = Texture::loadTexture(inImage.greyMap);
         
