@@ -56,9 +56,9 @@ namespace AIFRED
         {
             float sum(int x, int y, int width, int height);
             float abs(float in);
-            void sort(Feature *features, int length);
-			void prune(Feature *features, int length, int &out, Percent threshold);
-			void draw(int hFAIndex);
+            Feature* sort(Feature *features, int length);
+			void prune(Feature *features, int length, Feature *outFeatures, int &outLength, Percent threshold);
+			void draw(Feature target);
             
         public:
             const int xs, ys;

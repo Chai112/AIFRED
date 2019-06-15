@@ -31,6 +31,9 @@ Render::Shader shader;
 
 Debug debug;
 
+const bool autoTerminate = true; // true for debug/visual environment
+const int totalImages = 200; // images to be processed
+
 void glfw_error_callback(int error, const char* description) {
     debug.gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }
@@ -95,9 +98,10 @@ int main() {
 		//printf("%d", inImage.greyMap[0][0]);
 		a++;
 		// training data size
-		if (a > 200)
+		if (a > totalImages)
 		{
-			//glfwSetWindowShouldClose(shader.window, 1);
+			if (autoTerminate)
+				glfwSetWindowShouldClose(shader.window, 1);
 			
 		}
 		else
@@ -109,7 +113,7 @@ int main() {
 			
 			Texture::loadGreyImage(filenameNew, inImage);
 			inImage.process();
-			inImage.evaluateImage(a, false);
+			inImage.evaluateImage(a, true);
 		}
 		GLuint Texture = Texture::loadTexture(inImage.greyMap);
         
@@ -154,13 +158,16 @@ int main() {
 	inImage.evaluateImage(a, true);
 	debug.gl_log("\nFinished. Here's the results\n");
 	debug.gl_log("\n");
-	/*debug.gl_log("Best Eval Avg:\t%f %%\n", inImage.imageFeaturesEval.featuresSorted[0].faceHaarAverage * 100);
 	
-	debug.gl_log("Best type:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].type);
-	debug.gl_log("Best x:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].x);
-	debug.gl_log("Best y:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].y);
-	debug.gl_log("Best w:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].w);
-	debug.gl_log("Best h:\t%d\n", inImage.imageFeaturesEval.featuresSorted[0].h);*/
+	using namespace AIFRED::FacialDetection;
+	Feature bestEval = inImage.imageFeaturesEval.featuresSorted[1];
+	debug.gl_log("Best Eval Avg:\t%f\n", bestEval.faceHaarAverage);
+	
+	debug.gl_log("Best type:\t%d\n", bestEval.type);
+	debug.gl_log("Best x:\t%d\n", bestEval.x);
+	debug.gl_log("Best y:\t%d\n", bestEval.y);
+	debug.gl_log("Best w:\t%d\n", bestEval.w);
+	debug.gl_log("Best h:\t%d\n", bestEval.h);
 	
 	debug.gl_log("Face Avg:\t%f %%\n", inImage.imageFeatures[0].faceHaarAverage * 100);
 	debug.gl_log("Face Correct:\t%f %%\n", inImage.imageFeatures[0].faceCorrect * 100);
