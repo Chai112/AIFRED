@@ -189,7 +189,7 @@ namespace AIFRED
 			if (b_sort)
 			{
             	imageFeaturesEval.featuresSorted = sort(outFeatures, outLength);
-				for (int i = 0; i < 100; i++) draw(imageFeaturesEval.featuresSorted[i]);
+				for (int i = 0; i < outLength; i++) draw(imageFeaturesEval.featuresSorted[i]);
 			}
 			else
 			{
@@ -226,12 +226,10 @@ namespace AIFRED
         
         Feature* GreyImage::sort(Feature *features, int length)
         {
-            printf("ads\n");
             bool repeat = true;
             int j = 0;
 			while (repeat)
             {
-                printf("a %d\n", j);
                 repeat = false;
                 for (int i = 1; i < length; i++)
                 {

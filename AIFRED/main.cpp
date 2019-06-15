@@ -160,7 +160,7 @@ int main() {
 	debug.gl_log("\n");
 	
 	using namespace AIFRED::FacialDetection;
-	Feature bestEval = inImage.imageFeaturesEval.featuresSorted[1];
+	Feature bestEval = inImage.imageFeaturesEval.featuresSorted[0];
 	debug.gl_log("Best Eval Avg:\t%f\n", bestEval.faceHaarAverage);
 	
 	debug.gl_log("Best type:\t%d\n", bestEval.type);
