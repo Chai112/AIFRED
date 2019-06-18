@@ -51,6 +51,12 @@ namespace AIFRED
         {
             Feature *featuresSorted;
         };
+		
+		struct Eval
+		{
+			Percent evalPerc;
+			Percent failPerc;
+		};
         
         class GreyImage
         {
@@ -72,7 +78,7 @@ namespace AIFRED
             void makeIntegralImage();
             void evaluateImage(int iteration, bool b_sort);
 			
-			Percent evaluate();
+			Eval evaluate();
 			int scan();
             
             GreyImage(int ixs, int iys);

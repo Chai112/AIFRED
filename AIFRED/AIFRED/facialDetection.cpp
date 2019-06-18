@@ -202,27 +202,63 @@ namespace AIFRED
 		
 		
 		
-		Percent GreyImage::evaluate()
+		Eval GreyImage::evaluate()
 		{
+			for (int i = 0; i < outLength; i++) draw(imageFeaturesEval.featuresSorted[i]);
+			
 			Percent j = 0;
+			float fa = 0;
+			Percent threshold = 0.5f;
 			for (int i = 0; i < outLength; i++)
 			{
 				Feature f = imageFeaturesEval.featuresSorted[i];
 				Classifiers cl;
 				if (f.type == 1)
-					j += cl.A(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+				{
+					float e = cl.A(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					if (GreyImage::abs(e) < threshold * 128)
+					{
+						fa++;
+						j += e;
+					}
+				}
 			
 				if (f.type == 2)
-					j += cl.B(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
-			
+				{
+					float e = cl.B(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					if (GreyImage::abs(e) < threshold * 128)
+						{
+							fa++;
+							j += e;
+						}
+				}
+				
 				if (f.type == 3)
-					j += cl.C(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
-			
+				{
+					float e = cl.C(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					if (GreyImage::abs(e) < threshold * 128)
+					{fa++;
+						j += e;
+					}
+				}
+				
 				if (f.type == 4)
-					j += cl.D(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+				{
+					float e = cl.D(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					if (GreyImage::abs(e) < threshold * 128)
+					{fa++;
+						j += e;
+					}
+				}
 			}
-			printf("eval: %f\n", j);
-			return j;
+			printf("eval: %f\n", j / outLength);
+			printf("eval:  %f\n", (fa));
+			
+			Eval eval;
+			eval.evalPerc = j / outLength;
+			eval.failPerc = fa;
+			
+			return eval;
 		}
 		
 		

@@ -68,6 +68,7 @@ int main() {
 
     bool init = false;
 	bool end = false;
+	int fa = 0;
 	float avgEval = 0;
 	float highest = 0, lowest = 0;
 	int ihighest = 0, ilowest = 0;
@@ -100,20 +101,22 @@ int main() {
         }*/
 		
 		//printf("%d", inImage.greyMap[0][0]);
-		a++;
 		// training data size
 		if (a > totalImages)
 		{
 			if (!end)
 			{
-				Texture::loadGreyImage("/Users/chaidhatchaimongkol/Downloads/t4.png", inImage);
+				using namespace AIFRED::FacialDetection;
+				Texture::loadGreyImage("/Users/chaidhatchaimongkol/Downloads/t4 copy 18.png", inImage);
 				inImage.process();
-				float e = inImage.evaluate();
-				printf("avg %f\n", avgEval / (totalImages - 1));
+				Eval ev = inImage.evaluate();
+				float e = ev.failPerc;
+				printf("avg %f\n", avgEval / (a - fa));
 				printf("h %f %d\n", highest, ihighest);
-				printf("l %f %d\n", lowest, ilowest);
+				printf("l %f %d %d\n", lowest, ilowest, fa);
 				
-				if (e > -50000 && e < 20000)
+				//if (e > -50000 && e < 20000)
+				if (e < 500)
 				{
 					printf("\n\n that's a face!\n");
 				}
@@ -129,18 +132,32 @@ int main() {
 		}
 		else
 		{
+			
 			using namespace std;
+			using namespace AIFRED::FacialDetection;
 			string f = string(filename);
-			printf("%d\n", a);
+			printf("%d %d\n", a, fa);
 			strcpy(filenameNew, (f + to_string(a) + string(".png")).c_str());
 			
 			Texture::loadGreyImage(filenameNew, inImage);
 			inImage.process();
 			float e = 0;
-			if (a != 60)
+			if (a != 60 && a != 3)
 			{
 				inImage.evaluateImage(a, true);
-				e = inImage.evaluate();
+				Eval ev = inImage.evaluate();
+				float ef = ev.failPerc;
+				float ee = ev.evalPerc;
+				if (ef >= 500 || ee > 10)
+				{
+					e = 0;
+					printf("wow");
+					fa++;
+				}
+				else
+				{
+					e = ee;
+				}
 			}
 			if (e > 20000 || e < -50000)
 				printf("wow\n");
@@ -155,6 +172,7 @@ int main() {
 				lowest = e;
 				ilowest = a;
 			}
+			a++;
 			
 		}
 		GLuint Texture = Texture::loadTexture(inImage.greyMap);

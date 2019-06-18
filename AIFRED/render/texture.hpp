@@ -36,6 +36,7 @@ namespace Render
         
         void init(const char *initFilename);
         void loadGreyImage(const char *filename, FacialDetection::GreyImage& GreyImage);
+		void scaleGreyImage(int scaleX);
         GLuint loadTexture(u_int8_t **greyPixels);
     }
 }
