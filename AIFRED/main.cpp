@@ -104,19 +104,27 @@ int main() {
 		// training data size
 		if (a > totalImages)
 		{
-			if (!end)
+			if (!end
+				&& a < 300)
 			{
-				using namespace AIFRED::FacialDetection;
-				Texture::loadGreyImage("/Users/chaidhatchaimongkol/Downloads/t4 copy 18.png", inImage);
-				inImage.process();
-				Eval ev = inImage.evaluate();
+					using namespace std;
+					using namespace AIFRED::FacialDetection;
+					string f = string("/Users/chaidhatchaimongkol/Desktop/_final/nonface");
+					printf("%d %d\n", a, fa);
+					strcpy(filenameNew, (f + to_string(a - totalImages - 1) + string(".png")).c_str());
+								printf("%s", filenameNew);
+					
+					using namespace AIFRED::FacialDetection;
+					Texture::loadGreyImage(filenameNew, inImage);
+					inImage.process();
+					Eval ev = inImage.evaluate();
 				float e = ev.failPerc;
 				printf("avg %f\n", avgEval / (a - fa));
 				printf("h %f %d\n", highest, ihighest);
 				printf("l %f %d %d\n", lowest, ilowest, fa);
 				
 				//if (e > -50000 && e < 20000)
-				if (e < 500)
+				if (e < 450)
 				{
 					printf("\n\n that's a face!\n");
 				}
@@ -124,8 +132,9 @@ int main() {
 				{
 					printf("\n\n that's NOT a face!\n");
 				}
+				a++;
 			}
-			end = true;
+			//end = true;
 			if (autoTerminate)
 				glfwSetWindowShouldClose(shader.window, 1);
 			
