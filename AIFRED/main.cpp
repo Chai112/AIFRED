@@ -97,7 +97,6 @@ int main() {
 	
 	FacialDetection::GreyImage inImage(128, 128);
 	inImage.initSetFeatures(100, 128); // crop image
-	GLuint Texture = Texture::loadTexture(inImage.greyMap);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -205,7 +204,7 @@ int main() {
 			
 		}
 		//Texture = Texture::loadTexture(inImage.greyMap);
-		Texture = Texture::loadImage(image);
+		GLuint Texture = Texture::loadImage(image);
         
         
         

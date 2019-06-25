@@ -51,7 +51,7 @@ namespace Render
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         
         //const GLFWvidmode* vmode = glfwGetVideoMode(mon);
-        GLFWwindow* window = glfwCreateWindow(Render::Texture::xs, Render::Texture::ys, "Hello Triangle", NULL, NULL);
+        GLFWwindow* window = glfwCreateWindow(128, 128, "Hello Triangle", NULL, NULL);
         if (!window) {
             fprintf(stderr, "ERROR: could not open window with GLFW3\n");
             glfwTerminate();
