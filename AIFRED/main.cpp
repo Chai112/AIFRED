@@ -77,13 +77,27 @@ int main() {
     // Get a handle for our "myTextureSampler" uniform
     GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
     
-	char *filename = "/Users/chaidhatchaimongkol/Desktop/_final/face"; // exclude .png
+	//char *filename = "/Users/chaidhatchaimongkol/Desktop/_final/face"; // exclude .png
+	char *home = getenv("HOME");
+	const char *filename = "/Desktop/_final/face";
+	//printf("%s%s\n", home, filename);
 	
 	char filenameNew[1024];
-    Texture::init("/Users/chaidhatchaimongkol/Downloads/t.png");
+    //Texture::init("/Users/chaidhatchaimongkol/Downloads/t.png");
+	
+	using namespace std;
+	string ff = string(filename);
+	printf("%d %d\n", 1, fa);
+	strcpy(filenameNew, (home + ff + to_string(1) + string(".png")).c_str());
+	
+	Texture::Image image = Texture::createImage(filenameNew);
+	
+	//Texture::Image iage("/Users/chaidhatchaimongkol/Downloads/t.png");
+	//GLuint Texture = Texture::loadImage(iage);
 	
 	FacialDetection::GreyImage inImage(128, 128);
 	inImage.initSetFeatures(100, 128); // crop image
+	GLuint Texture = Texture::loadTexture(inImage.greyMap);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -102,6 +116,11 @@ int main() {
 		
 		//printf("%d", inImage.greyMap[0][0]);
 		// training data size
+		//Texture::Image image("/Users/chaidhatchaimongkol/Downloads/t.png");
+		//Texture::Image image = Texture::createImage("/Users/chaidhatchaimongkol/Downloads/t.png");
+		image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
+		printf("%d\n", a);
+		a++;
 		if (a > totalImages)
 		{
 			if (!end
@@ -109,13 +128,14 @@ int main() {
 			{
 					using namespace std;
 					using namespace AIFRED::FacialDetection;
-					string f = string("/Users/chaidhatchaimongkol/Desktop/_final/nonface");
+					string f = string("/Desktop/_final/nonface");
 					printf("%d %d\n", a, fa);
-					strcpy(filenameNew, (f + to_string(a - totalImages - 1) + string(".png")).c_str());
+					strcpy(filenameNew, (home + f + to_string(a - totalImages - 1) + string(".png")).c_str());
 								printf("%s", filenameNew);
 					
 					using namespace AIFRED::FacialDetection;
-					Texture::loadGreyImage(filenameNew, inImage);
+				image.loadPNG(filenameNew);
+					//Texture::loadGreyImage(filenameNew, inImage);
 					inImage.process();
 					Eval ev = inImage.evaluate();
 				float e = ev.failPerc;
@@ -141,14 +161,14 @@ int main() {
 		}
 		else
 		{
-			
 			using namespace std;
 			using namespace AIFRED::FacialDetection;
 			string f = string(filename);
 			printf("%d %d\n", a, fa);
-			strcpy(filenameNew, (f + to_string(a) + string(".png")).c_str());
+			strcpy(filenameNew, (home + f + to_string(a) + string(".png")).c_str());
 			
-			Texture::loadGreyImage(filenameNew, inImage);
+			//Texture::loadGreyImage(filenameNew, inImage);
+			image.loadPNG(filenameNew);
 			inImage.process();
 			float e = 0;
 			if (a != 60 && a != 3)
@@ -184,7 +204,8 @@ int main() {
 			a++;
 			
 		}
-		GLuint Texture = Texture::loadTexture(inImage.greyMap);
+		//Texture = Texture::loadTexture(inImage.greyMap);
+		Texture = Texture::loadImage(image);
         
         
         
