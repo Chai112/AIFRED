@@ -17,12 +17,19 @@
 #include <stdlib.h>
 
 #include "debug.hpp"
+#include "texture.hpp"
 
 namespace AIFRED
 {
     namespace FacialDetection
     {
         typedef float Percent;
+		
+		struct GImage : Render::Texture::Image
+		{
+			using Render::Texture::Image::Image;
+			void setGImage(Image &image);
+		};
         
         struct Feature
         {
@@ -57,7 +64,8 @@ namespace AIFRED
 			Percent evalPerc;
 			Percent failPerc;
 		};
-        
+		
+		
         class GreyImage
         {
             float sum(int x, int y, int width, int height);
@@ -67,9 +75,12 @@ namespace AIFRED
 			void draw(Feature target);
             
         public:
-            const int xs, ys;
+            const int sizeX, sizeY;
             int mxs, mys; // modifiable for image to be cropped
             u_int8_t** greyMap;
+			
+			//void loadPNG(const char *filename);
+			
             u_int64_t** integralImage;
             Feature* imageFeatures;
             FeatureImage imageFeaturesEval;

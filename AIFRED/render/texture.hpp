@@ -14,10 +14,6 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <png.h> // LibPNG
 
-#include "facialDetection.hpp"
-
-using namespace AIFRED;
-
 namespace Render
 {
     namespace Texture
@@ -38,7 +34,6 @@ namespace Render
 		
 		struct Image
 		{
-		public:
 			const int sizeX, sizeY;
 			
 			Image();
@@ -56,6 +51,7 @@ namespace Render
 		Image createImage(const char *initFilename);
 		GLuint loadImage(Image &inImage);
     }
+	
 }
 
 #endif /* Render_texture_hpp */

@@ -26,18 +26,21 @@ namespace AIFRED
 {
     namespace FacialDetection
     {
-        
+		void GImage::setGImage(Image &image)
+		{
+			data = image.data;
+		}
         // GreyImage Constructor
-        GreyImage::GreyImage(int ixs, int iys) : xs(ixs), ys(iys)
+        GreyImage::GreyImage(int inSizeX, int inSizeY) : sizeX(inSizeX), sizeY(inSizeY)
         {
             // make image
             static u_int8_t* igreyMap[PNG_DIMENSION];
             static u_int64_t* iintegralImage[PNG_DIMENSION];
             static Feature ievalFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
-            for (int x=0; x<xs; x++)
+            for (int x=0; x<sizeX; x++)
             {
-                igreyMap[x] = (u_int8_t *)malloc(ys * sizeof(u_int8_t));
-                iintegralImage[x] = (u_int64_t *)malloc(ys * sizeof(u_int64_t));
+                igreyMap[x] = (u_int8_t *)malloc(sizeY * sizeof(u_int8_t));
+                iintegralImage[x] = (u_int64_t *)malloc(sizeY * sizeof(u_int64_t));
             }
             
             // assign
@@ -49,7 +52,7 @@ namespace AIFRED
 		// GreyImage Destructor
 		GreyImage::~GreyImage()
 		{
-			for (int x=0; x<xs; x++)
+			for (int x=0; x<sizeX; x++)
 			{
 				delete greyMap[x];
 				delete integralImage[x];
@@ -121,14 +124,15 @@ namespace AIFRED
                 e->faceHaarTotal += cl.D(e->x, e->y, e->w, e->h, *this);
             }
         }
+		
 
         // creates integral image and assigns integral image.
         void GreyImage::makeIntegralImage()
         {
             // integral image
-            for (int x = 0; x < xs; x++)
+            for (int x = 0; x < sizeX; x++)
             {
-                for (int y = 0; y < ys; y++)
+                for (int y = 0; y < sizeY; y++)
                 {
                     // (note x = 1 so no conflict)
                     if (x > 0 && y > 0)

@@ -92,6 +92,11 @@ int main() {
 	
 	Texture::Image image = Texture::createImage(filenameNew);
 	
+	AIFRED::FacialDetection::GImage g = AIFRED::FacialDetection::GImage(image.sizeX,image.sizeY);
+	g.setGImage(image);
+	
+	
+	
 	//Texture::Image iage("/Users/chaidhatchaimongkol/Downloads/t.png");
 	//GLuint Texture = Texture::loadImage(iage);
 	
