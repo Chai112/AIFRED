@@ -25,11 +25,10 @@ namespace AIFRED
     {
         typedef float Percent;
 		
-		struct GImage : Render::Texture::Image
-		{
-			using Render::Texture::Image::Image;
-			void setGImage(Image &image);
-		};
+			// wrote myself :D no help
+		template<typename T>
+		void arrayHeapAllocate(T ***var, const int x, const int y);
+		
         
         struct Feature
         {
@@ -66,6 +65,20 @@ namespace AIFRED
 		};
 		
 		
+		struct AIFREDImage : Render::Texture::Image
+		{
+			
+			AIFREDImage(Render::Texture::Image &image); // for image input
+			~AIFREDImage();
+			
+			int scan;
+			
+			Render::Texture::colourByte** greyMap;
+			u_int64_t** integralImage;
+			Feature* imageFeatures;
+		};
+		
+		
         class GreyImage
         {
             float sum(int x, int y, int width, int height);
@@ -73,25 +86,26 @@ namespace AIFRED
             Feature* sort(Feature *features, int length);
 			void prune(Feature *features, int length, Feature *outFeatures, int &outLength, Percent threshold);
 			void draw(Feature target);
+			
+			void makeIntegralImage();
             
         public:
             const int sizeX, sizeY;
             int mxs, mys; // modifiable for image to be cropped
-            u_int8_t** greyMap;
+			
+			Render::Texture::colourByte** greyMap;
 			
 			//void loadPNG(const char *filename);
 			
             u_int64_t** integralImage;
             Feature* imageFeatures;
             FeatureImage imageFeaturesEval;
-            
+			
             void process();
-            void makeIntegralImage();
             void evaluateImage(int iteration, bool b_sort);
 			
 			Eval evaluate();
-			int scan();
-            
+			
             GreyImage(int ixs, int iys);
             void initSetFeatures(int imxs, int imys);
             ~GreyImage();

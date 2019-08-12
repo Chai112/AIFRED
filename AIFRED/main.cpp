@@ -76,29 +76,25 @@ int main() {
     
     // Get a handle for our "myTextureSampler" uniform
     GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
-    
-	//char *filename = "/Users/chaidhatchaimongkol/Desktop/_final/face"; // exclude .png
+
 	char *home = getenv("HOME");
 	const char *filename = "/Desktop/_final/face";
-	//printf("%s%s\n", home, filename);
+	
 	
 	char filenameNew[1024];
-    //Texture::init("/Users/chaidhatchaimongkol/Downloads/t.png");
-	
-	using namespace std;
-	string ff = string(filename);
-	printf("%d %d\n", 1, fa);
-	strcpy(filenameNew, (home + ff + to_string(1) + string(".png")).c_str());
+	{
+		using namespace std;
+		string ff = string(filename);
+		printf("%d %d\n", 1, fa);
+		strcpy(filenameNew, (home + ff + to_string(1) + string(".png")).c_str());
+	}
 	
 	Texture::Image image = Texture::createImage(filenameNew);
 	
-	AIFRED::FacialDetection::GImage g = AIFRED::FacialDetection::GImage(image.sizeX,image.sizeY);
-	g.setGImage(image);
+	// create new GImage (to be processed)
+	AIFRED::FacialDetection::AIFREDImage AIFREDImage = AIFRED::FacialDetection::AIFREDImage(image);
 	
 	
-	
-	//Texture::Image iage("/Users/chaidhatchaimongkol/Downloads/t.png");
-	//GLuint Texture = Texture::loadImage(iage);
 	
 	FacialDetection::GreyImage inImage(128, 128);
 	inImage.initSetFeatures(100, 128); // crop image
@@ -125,88 +121,90 @@ int main() {
 		image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
 		printf("%d\n", a);
 		a++;
-		if (a > totalImages)
-		{
-			if (!end
-				&& a < 300)
-			{
-					using namespace std;
-					using namespace AIFRED::FacialDetection;
-					string f = string("/Desktop/_final/nonface");
-					printf("%d %d\n", a, fa);
-					strcpy(filenameNew, (home + f + to_string(a - totalImages - 1) + string(".png")).c_str());
-								printf("%s", filenameNew);
-					
-					using namespace AIFRED::FacialDetection;
-				image.loadPNG(filenameNew);
-					//Texture::loadGreyImage(filenameNew, inImage);
-					inImage.process();
-					Eval ev = inImage.evaluate();
-				float e = ev.failPerc;
-				printf("avg %f\n", avgEval / (a - fa));
-				printf("h %f %d\n", highest, ihighest);
-				printf("l %f %d %d\n", lowest, ilowest, fa);
-				
-				//if (e > -50000 && e < 20000)
-				if (e < 450)
-				{
-					printf("\n\n that's a face!\n");
-				}
-				else
-				{
-					printf("\n\n that's NOT a face!\n");
-				}
-				a++;
-			}
-			//end = true;
-			if (autoTerminate)
-				glfwSetWindowShouldClose(shader.window, 1);
-			
-		}
-		else
+		
 		{
 			using namespace std;
 			using namespace AIFRED::FacialDetection;
-			string f = string(filename);
-			printf("%d %d\n", a, fa);
-			strcpy(filenameNew, (home + f + to_string(a) + string(".png")).c_str());
 			
-			//Texture::loadGreyImage(filenameNew, inImage);
-			image.loadPNG(filenameNew);
-			inImage.process();
-			float e = 0;
-			if (a != 60 && a != 3)
+			if (a > totalImages)
 			{
-				inImage.evaluateImage(a, true);
-				Eval ev = inImage.evaluate();
-				float ef = ev.failPerc;
-				float ee = ev.evalPerc;
-				if (ef >= 500 || ee > 10)
+				if (!end
+					&& a < 300)
 				{
-					e = 0;
-					printf("wow");
-					fa++;
+					string f = string("/Desktop/_final/nonface");
+					printf("%d %d\n", a, fa);
+					strcpy(filenameNew, (home + f + to_string(a - totalImages - 1) + string(".png")).c_str());
+					printf("%s", filenameNew);
+					
+					image.loadPNG(filenameNew);
+					//Texture::loadGreyImage(filenameNew, inImage);
+					inImage.process();
+					Eval ev = inImage.evaluate();
+					float e = ev.failPerc;
+					printf("avg %f\n", avgEval / (a - fa));
+					printf("h %f %d\n", highest, ihighest);
+					printf("l %f %d %d\n", lowest, ilowest, fa);
+					
+					//if (e > -50000 && e < 20000)
+					if (e < 450)
+					{
+						printf("\n\n that's a face!\n");
+					}
+					else
+					{
+						printf("\n\n that's NOT a face!\n");
+					}
+					a++;
 				}
-				else
+				//end = true;
+				if (autoTerminate)
+					glfwSetWindowShouldClose(shader.window, 1);
+				
+			}
+			else
+			{
+				string f = string(filename);
+				printf("%d %d\n", a, fa);
+				strcpy(filenameNew, (home + f + to_string(a) + string(".png")).c_str());
+				
+				//Texture::loadGreyImage(filenameNew, inImage);
+				image.loadPNG(filenameNew);
+				inImage.process();
+
+				float e = 0;
+				if (a != 60 && a != 3)
 				{
-					e = ee;
+					inImage.evaluateImage(a, true);
+					Eval ev = inImage.evaluate();
+					float ef = ev.failPerc;
+					float ee = ev.evalPerc;
+					if (ef >= 500 || ee > 10)
+					{
+						e = 0;
+						printf("wow");
+						fa++;
+					}
+					else
+					{
+						e = ee;
+					}
 				}
+				if (e > 20000 || e < -50000)
+					printf("wow\n");
+				avgEval += e;
+				if (e > highest)
+				{
+					highest = e;
+					ihighest = a;
+				}
+				if (e < lowest)
+				{
+					lowest = e;
+					ilowest = a;
+				}
+				a++;
+				
 			}
-			if (e > 20000 || e < -50000)
-				printf("wow\n");
-			avgEval += e;
-			if (e > highest)
-			{
-				highest = e;
-				ihighest = a;
-			}
-			if (e < lowest)
-			{
-				lowest = e;
-				ilowest = a;
-			}
-			a++;
-			
 		}
 		//Texture = Texture::loadTexture(inImage.greyMap);
 		GLuint Texture = Texture::loadImage(image);
