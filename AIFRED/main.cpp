@@ -92,7 +92,7 @@ int main() {
 	Texture::Image image = Texture::createImage(filenameNew);
 	
 	// create new GImage (to be processed)
-	AIFRED::FacialDetection::AIFREDImage AIFREDImage = AIFRED::FacialDetection::AIFREDImage(image);
+	AIFRED::FacialDetection::FDScanner MainImage = AIFRED::FacialDetection::FDScanner(image);
 	
 	
 	
@@ -120,6 +120,7 @@ int main() {
 		//Texture::Image image = Texture::createImage("/Users/chaidhatchaimongkol/Downloads/t.png");
 		image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
 		printf("%d\n", a);
+		printf("%s\n", __TIME__);
 		a++;
 		
 		{
@@ -138,7 +139,7 @@ int main() {
 					
 					image.loadPNG(filenameNew);
 					//Texture::loadGreyImage(filenameNew, inImage);
-					inImage.process();
+					inImage.process(true);
 					Eval ev = inImage.evaluate();
 					float e = ev.failPerc;
 					printf("avg %f\n", avgEval / (a - fa));
@@ -169,7 +170,7 @@ int main() {
 				
 				//Texture::loadGreyImage(filenameNew, inImage);
 				image.loadPNG(filenameNew);
-				inImage.process();
+				inImage.process(true);
 
 				float e = 0;
 				if (a != 60 && a != 3)

@@ -64,18 +64,26 @@ namespace AIFRED
 			Percent failPerc;
 		};
 		
-		
-		struct AIFREDImage : Render::Texture::Image
+		struct FDModel
 		{
 			
-			AIFREDImage(Render::Texture::Image &image); // for image input
-			~AIFREDImage();
+		};
+		
+		// Facial Detection Scanner
+		class FDScanner : Render::Texture::Image
+		{
+			void makeIntegralImage();
+		public:
+			FDScanner();
+			FDScanner(Render::Texture::Image &image);
+			~FDScanner();
 			
-			int scan;
+			void loadImg(Render::Texture::Image &image);
+			Eval *scan(FDModel inModel);
+			
 			
 			Render::Texture::colourByte** greyMap;
 			u_int64_t** integralImage;
-			Feature* imageFeatures;
 		};
 		
 		
@@ -101,11 +109,12 @@ namespace AIFRED
             Feature* imageFeatures;
             FeatureImage imageFeaturesEval;
 			
-            void process();
+            void process(bool f_makeIntegralImage);
             void evaluateImage(int iteration, bool b_sort);
 			
 			Eval evaluate();
 			
+			GreyImage(Render::Texture::Image &image);
             GreyImage(int ixs, int iys);
             void initSetFeatures(int imxs, int imys);
             ~GreyImage();

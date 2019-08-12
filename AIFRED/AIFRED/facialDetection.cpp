@@ -31,7 +31,6 @@ namespace AIFRED
 		void arrayHeapAllocate(T ***var, const int x, const int y)
 		{
 			T **tempVar = new T*[x];
-			printf("arrayalloc %d\n", x);
 			for (int i = 0; i < x; i++)
 				tempVar[i] = new T[y];
 			
@@ -39,49 +38,15 @@ namespace AIFRED
 
 		}
 		using namespace Render::Texture;
-		AIFREDImage::AIFREDImage(Image &image) : Image(image.sizeX, image.sizeY)
+		FDScanner::FDScanner(Image &image) : Image(image.sizeX, image.sizeY)
 		{
-			//arrayHeapAllocate<int> (greyMap, sizeX, sizeY);
 			
 			// create greyMap as 2D array
 			arrayHeapAllocate<colourByte> (&greyMap, sizeX, sizeY);
 			// create integral image as 2D array
 			arrayHeapAllocate<u_int64_t> (&integralImage, sizeX, sizeY);
-			
-			// create greyMap as 2D array
-			/*greyMap = new colourByte*[sizeX];
-			for (int i = 0; i < sizeX; i++)
-				greyMap[i] = new colourByte[sizeY];
-			
-			// create intergral image as 2D array
-			integralImage = new u_int64_t*[sizeX];
-			for (int i = 0; i < sizeX; i++)
-				integralImage[i] = new u_int64_t[sizeY];*/
-			
-			// cleanup
-			/*for (int i = 0; i < sizeX; i++)
-				delete [] data[i];
-			
-			delete [] data;
-			
-			data = image.data;*/
-			
-			// make image
-			/*static u_int8_t* igreyMap[PNG_DIMENSION];
-			static u_int64_t* iintegralImage[PNG_DIMENSION];
-			static Feature ievalFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
-			for (int x=0; x<sizeX; x++)
-			{
-				igreyMap[x] = (u_int8_t *)malloc(sizeY * sizeof(u_int8_t));
-				iintegralImage[x] = (u_int64_t *)malloc(sizeY * sizeof(u_int64_t));
-			}
-			
-				// assign
-			greyMap = igreyMap;
-			integralImage = iintegralImage;
-			imageFeatures = ievalFeatures;*/
 		}
-		AIFREDImage::~AIFREDImage()
+		FDScanner::~FDScanner()
 		{
 			
 		}
@@ -167,8 +132,9 @@ namespace AIFRED
         }
 
         // runtime processing
-        void GreyImage::process()
+        void GreyImage::process(bool f_makeIntegralImage)
         {
+			if (f_makeIntegralImage)
             makeIntegralImage();
             Classifiers cl;
             
