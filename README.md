@@ -1,5 +1,5 @@
 # AIFRED
-Artificial Intelligence Facial Recognition, Emotion and Detection - or just a cool acronym\
+**Artificial Intelligence Facial Recognition, Emotion and Detection** or just a cool acronym.\
 Written in 🌊++ and currently attempts to detects and recognises faces.
 
 ## Facial Detection   🌲==👱🏼‍♀️?
@@ -15,7 +15,7 @@ Uses [Facebook's Deepface paper](https://www.cs.toronto.edu/~ranzato/publication
 Facial alignment & representation & verification is done with my software.\
 Uses Deep Learning and Convolutional Neural Networks for representation.
 
-## Facial Identification 🧔== {👩🏻,🧔🏽,👱🏼‍♀️}?    🔍
+## Facial Identification 🧔🏽== {👩🏻,🧔🏽,👱🏼‍♀️}?    🔍
 
 Currently not finished.\
 Identification is done by repeatedly verifying faces.
