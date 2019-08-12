@@ -15,7 +15,7 @@ Uses [Facebook's Deepface paper](https://www.cs.toronto.edu/~ranzato/publication
 Facial alignment & representation & verification is done with my software.\
 Uses Deep Learning and Convolutional Neural Networks for representation.
 
-## Facial Identification 🧔🏽== {👩🏻,🧔🏽,👱🏼‍♀️}?    🔍
+## Facial Identification 🧔🏽== {👩🏻,🧔🏽,👱🏼‍♀️}?
 
 Currently not finished.\
 Identification is done by repeatedly verifying faces.
