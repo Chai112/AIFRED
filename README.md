@@ -10,12 +10,12 @@ Uses [Viola-Jones' paper](https://www.cs.cmu.edu/~efros/courses/LBMV07/Papers/vi
 ## Facial Recognition & Verification   🧔🏽== 👱🏼‍♀️?
 
 Currently being worked on.\
-Uses [Facebook's Deepface paper](https://www.cs.toronto.edu/~ranzato/publications/taigman_cvpr14.pdf) as inspiration.
-2D fiducial landmarking points given by [OpenFace](https://github.com/TadasBaltrusaitis/OpenFace) (required external software).
+Uses [Facebook's Deepface paper](https://www.cs.toronto.edu/~ranzato/publications/taigman_cvpr14.pdf) as inspiration.\
+2D fiducial landmarking points given by [OpenFace](https://github.com/TadasBaltrusaitis/OpenFace) (required external software).\
 Facial alignment & representation & verification is done with my software.\
 Uses Deep Learning and Convolutional Neural Networks for representation.
 
-## Facial Identification 👱🏼‍♀️== {👩🏻,🧔🏽,👱🏼‍♀️}?    🔍
+## Facial Identification 🧔== {👩🏻,🧔🏽,👱🏼‍♀️}?    🔍
 
 Currently not finished.\
 Identification is done by repeatedly verifying faces.
