@@ -261,24 +261,27 @@ namespace AIFRED
 			
 			Percent j = 0;
 			float fa = 0;
-			Percent threshold = 0.5f;
+			Percent threshold = .5f;
 			for (int i = 0; i < outLength; i++)
 			{
 				Feature f = imageFeaturesEval.featuresSorted[i];
 				Classifiers cl;
 				if (f.type == 1)
 				{
-					float e = cl.A(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					
+					float e = FDSingleScanner::abs(cl.A(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
 					if (FDSingleScanner::abs(e) < threshold * 128)
 					{
 						fa++;
 						j += e;
 					}
+					
+					
 				}
 			
 				if (f.type == 2)
 				{
-					float e = cl.B(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					float e = FDSingleScanner::abs(cl.B(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
 					if (FDSingleScanner::abs(e) < threshold * 128)
 						{
 							fa++;
@@ -288,7 +291,7 @@ namespace AIFRED
 				
 				if (f.type == 3)
 				{
-					float e = cl.C(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					float e = FDSingleScanner::abs(cl.C(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
 					if (FDSingleScanner::abs(e) < threshold * 128)
 					{fa++;
 						j += e;
@@ -297,7 +300,7 @@ namespace AIFRED
 				
 				if (f.type == 4)
 				{
-					float e = cl.D(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
+					float e = FDSingleScanner::abs(cl.D(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
 					if (FDSingleScanner::abs(e) < threshold * 128)
 					{fa++;
 						j += e;
@@ -451,6 +454,33 @@ namespace AIFRED
 					greyMap[target.x][target.y + w] = 255;
 				}
 			}
+		}
+		
+		Render::Texture::ColourRGB **FDSingleScanner::toImage()
+		{
+			using namespace Render::Texture;
+			ColourRGB **pixels = nullptr;
+			
+			pixels = (ColourRGB**)malloc(sizeof(ColourRGB) * sizeX * sizeY);
+			for(int y = 0; y < sizeY; y++)
+				pixels[y] = (ColourRGB*)malloc(sizeof(ColourRGB) * sizeX);
+			for (int x = 0; x < sizeX; x++)
+			{
+				for (int y = 0; y < sizeY; y++)
+				{
+					pixels[x][y].R = greyMap[x][y];
+					pixels[x][y].G = greyMap[x][y];
+					pixels[x][y].B = greyMap[x][y];
+						
+					if (greyMap[x][y] == 255)
+					{
+						pixels[x][y].R = 255;
+						pixels[x][y].G = 0;
+						pixels[x][y].B = 0;
+					}
+				}
+			}
+			return pixels;
 		}
         
 		

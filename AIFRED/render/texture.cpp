@@ -70,7 +70,7 @@ namespace Render
 		
 		colourByte ColourRGB::getGrayscale()
 		{
-			return R + G + B / 3;
+			return ((R + G + B) / 3);
 		}
 		
 		Image::Image(int inSizeX, int inSizeY) : sizeX(inSizeX),  sizeY(inSizeY) 	// manual init
@@ -273,20 +273,11 @@ namespace Render
 				for (int y = 0; y < sizeY; y++)
 				{
 					int xn = sizeX-x-1;
-					if (2 == 255) // debug
-					{ // debug
-						pixels[y][xn][0] = 1; // debug
-						pixels[y][xn][1] = 0; // debug
-						pixels[y][xn][2] = 0; // debug
-					} // debug
-					else // debug
-					{ // debug
 						 pixels[y][xn][0] = inImage.data[x][y].R / 255.f;
 						 pixels[y][xn][1] = inImage.data[x][y].G / 255.f;
 						 pixels[y][xn][2] = inImage.data[x][y].B / 255.f;
 					
 						
-					} // debug
 				}
 			}
 			

@@ -122,6 +122,8 @@ namespace AIFRED
             void evaluateImage(int iteration, bool b_sort); // called at the end of training
 			Eval evaluate(Render::Texture::colourByte** igreyMap); // called during every comparison
 			
+			Render::Texture::ColourRGB **toImage();
+			
             FDSingleScanner(int inSizeX, int inSizeY);
 			//crop
 			FDSingleScanner(int inSizeX, int inSizeY, int cropMxs, int cropMys);

@@ -136,7 +136,6 @@ int main(int argc, const char *argv[]) {
         }*/
 		
 
-		image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
 		printf("face %d\n", a);
 		printf("%f at %f fps\n", timer.getTime(), (a-200) / timer.getTime());
 		a++;
@@ -152,6 +151,7 @@ int main(int argc, const char *argv[]) {
 				{
 					if (a == totalImages + 1)
 					{
+						inImage.evaluateImage(a, true);
 						printf("\n\n---SUMMARY 1---\n\n");
 						printf("avg %f\n", avgEval / (a - fa));
 						printf("h %f %d\n", highest, ihighest);
@@ -160,19 +160,19 @@ int main(int argc, const char *argv[]) {
 						fa = 0;
 						highest = 0;
 						ihighest = 0;
-						lowest = 0;
+						lowest = 1000000;
 						ilowest = 0;
 						
 					}
 					
-					image.loadPNG(loadFilename(fileDirFace, a - totalImages - 1));
+					image.loadPNG(loadFilename(fileDirNonFace, a - totalImages - 1));
 					Eval ev = inImage.evaluate(image.toFDSingleScanner());
 					float efail = ev.failPerc;
 					float esucc = ev.evalPerc;
 					
 					float e = esucc;
 					//if (e > -50000 && e < 20000)
-					if (efail <= 500 && esucc > -8)
+					if (esucc < 16)
 					{
 						printf("that's a face! %f %f\n", efail, esucc);
 						fa++;
@@ -214,7 +214,7 @@ int main(int argc, const char *argv[]) {
 						printf("l %f %d %d\n", lowest, ilowest, fa);
 					}
 				
-					
+					image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
 					inImage.evaluate(image.toFDSingleScanner());
 				}
 				//end = true;
@@ -262,6 +262,7 @@ int main(int argc, const char *argv[]) {
 			}
 		}
 		//Texture = Texture::loadTexture(inImage.greyMap);
+		image.data = inImage.toImage();
 		GLuint Texture = Render::Texture::loadImage(image);
         
         
