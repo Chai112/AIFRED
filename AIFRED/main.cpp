@@ -12,8 +12,6 @@
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 
-#include "input/mouseInput.hpp"
-
 #include "AIFRED/facialDetection.hpp"
 
 #include "render/texture.hpp"
@@ -23,14 +21,9 @@
 
 #define PNG_DIMENSION 128;
 
-using namespace AIFRED;
-using namespace Render;
-//using namespace Input::Mouse;
-
 Render::Shader shader;
 
 Debug debug;
-
 const bool autoTerminate = false; // false for debug/visual environment
 const int totalImages = 200; // images to be processed
 
@@ -38,11 +31,6 @@ void glfw_error_callback(int error, const char* description) {
     debug.gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }
 
-static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	//Input::Mouse::xPos = xpos;
-    //Input::Mouse::yPos = ypos;
-}
 
 
 int main() {
@@ -61,9 +49,6 @@ int main() {
     
     if (shader.init() == 1)
         return 1;
-    
-    //if (Input::Mouse::init(shader.window) == 1)
-        //return 1;
     
 
     bool init = false;
@@ -89,14 +74,14 @@ int main() {
 		strcpy(filenameNew, (home + ff + to_string(1) + string(".png")).c_str());
 	}
 	
-	Texture::Image image = Texture::createImage(filenameNew);
+	Render::Texture::Image image = Render::Texture::createImage(filenameNew);
 	
 	// create new GImage (to be processed)
 	AIFRED::FacialDetection::FDScanner MainImage = AIFRED::FacialDetection::FDScanner(image);
 	
 	
 	
-	FacialDetection::GreyImage inImage(128, 128);
+	AIFRED::FacialDetection::GreyImage inImage(128, 128);
 	inImage.initSetFeatures(100, 128); // crop image
     
     while(!glfwWindowShouldClose(shader.window)) {
@@ -105,8 +90,6 @@ int main() {
         }
 		
         
-        glfwSetCursorPosCallback(shader.window, cursor_position_callback);
-        
         /*unsigned char pick_col[3][100][100];
         glReadPixels(841 , 270 , 100 , 100 , GL_RGB , GL_UNSIGNED_BYTE , pick_col);
         if (pick_col[0][0][0] + pick_col[1][0][0] + pick_col[2][0][0] == 0)
@@ -114,10 +97,7 @@ int main() {
             printf("a\n");
         }*/
 		
-		//printf("%d", inImage.greyMap[0][0]);
-		// training data size
-		//Texture::Image image("/Users/chaidhatchaimongkol/Downloads/t.png");
-		//Texture::Image image = Texture::createImage("/Users/chaidhatchaimongkol/Downloads/t.png");
+
 		image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
 		printf("%d\n", a);
 		printf("%s\n", __TIME__);
@@ -208,7 +188,7 @@ int main() {
 			}
 		}
 		//Texture = Texture::loadTexture(inImage.greyMap);
-		GLuint Texture = Texture::loadImage(image);
+		GLuint Texture = Render::Texture::loadImage(image);
         
         
         
