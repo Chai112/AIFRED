@@ -38,6 +38,18 @@ namespace Render
 		
 		bool initialisedTexture = false;
 		
+			// wrote myself :D no help
+		template<typename T>
+		void arrayHeapAllocate(T ***var, const int x, const int y)
+		{
+			T **tempVar = new T*[x];
+			for (int i = 0; i < x; i++)
+				tempVar[i] = new T[y];
+			
+			*var = tempVar;
+			
+		}
+		
 		ColourRGB::ColourRGB()
 		{
 			R = 0;
@@ -54,6 +66,11 @@ namespace Render
 		
 		ColourRGB::~ColourRGB()
 		{
+		}
+		
+		colourByte ColourRGB::getGrayscale()
+		{
+			return R + G + B / 3;
 		}
 		
 		Image::Image(int inSizeX, int inSizeY) : sizeX(inSizeX),  sizeY(inSizeY) 	// manual init
@@ -169,6 +186,24 @@ namespace Render
 				delete row_pointers[y];
 			
 			delete row_pointers;
+		}
+		
+		colourByte **Image::toGreyImage()
+		{
+			colourByte **pixels = nullptr;
+			
+			pixels = (colourByte**)malloc(sizeof(colourByte) * sizeX * sizeY);
+			for(int y = 0; y < sizeY; y++)
+				pixels[y] = (colourByte*)malloc(sizeof(colourByte) * sizeX);
+			for (int x = 0; x < sizeX; x++)
+			{
+				for (int y = 0; y < sizeY; y++)
+				{
+					ColourRGB pix = data[x][y];
+					pixels[x][y] = data[x][y].getGrayscale();
+				}
+			}
+			return pixels;
 		}
 		
 		void initTexture()

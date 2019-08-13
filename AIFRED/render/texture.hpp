@@ -20,6 +20,10 @@ namespace Render
     {
 		typedef u_int8_t colourByte;
 		
+			// wrote myself :D no help
+		template<typename T>
+		void arrayHeapAllocate(T ***var, const int x, const int y);
+		
 		struct ColourRGB
 		{
 			colourByte R, G, B;
@@ -42,6 +46,7 @@ namespace Render
 			
 			void loadPNG(const char *filename);
 			void scaleImage(const int sizeX, const int sizeY);
+			colourByte **toGreyImage();
 			
 			ColourRGB **data;
 		};

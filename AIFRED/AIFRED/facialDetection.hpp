@@ -89,6 +89,13 @@ namespace AIFRED
 		
         class GreyImage
         {
+			void initSetFeatures(int imxs, int imys);
+			void init();
+			
+			void process();
+			
+			int outLength;
+			
             float sum(int x, int y, int width, int height);
             float abs(float in);
             Feature* sort(Feature *features, int length);
@@ -96,6 +103,8 @@ namespace AIFRED
 			void draw(Feature target);
 			
 			void makeIntegralImage();
+			
+			const bool integralImageProvided;
             
         public:
             const int sizeX, sizeY;
@@ -103,20 +112,19 @@ namespace AIFRED
 			
 			Render::Texture::colourByte** greyMap;
 			
-			//void loadPNG(const char *filename);
-			
             u_int64_t** integralImage;
             Feature* imageFeatures;
             FeatureImage imageFeaturesEval;
 			
-            void process(bool f_makeIntegralImage);
-            void evaluateImage(int iteration, bool b_sort);
+			void process(Render::Texture::colourByte** igreyMap);
+			void process(u_int64_t ** iintegralImage); // called every training sample
 			
-			Eval evaluate();
+            void evaluateImage(int iteration, bool b_sort); // called at the end of training
+			Eval evaluate(); // called during every comparison
 			
-			GreyImage(Render::Texture::Image &image);
-            GreyImage(int ixs, int iys);
-            void initSetFeatures(int imxs, int imys);
+            GreyImage(int inSizeX, int inSizeY);
+			//crop
+			GreyImage(int inSizeX, int inSizeY, int cropMxs, int cropMys);
             ~GreyImage();
             
             friend struct Classifiers;

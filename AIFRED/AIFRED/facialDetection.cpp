@@ -16,7 +16,6 @@
 #define PNG_DIMENSION 128
 
 int totalClassiferCount = 0;
-int outLength = 0;
 
 
 using namespace AIFRED::FacialDetection;
@@ -52,31 +51,33 @@ namespace AIFRED
 		}
 		
 		
+			
         // GreyImage Constructor
-        GreyImage::GreyImage(int inSizeX, int inSizeY) : sizeX(inSizeX), sizeY(inSizeY)
+        GreyImage::GreyImage(int inSizeX, int inSizeY) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
         {
+			init();
+			initSetFeatures(sizeX, sizeY);
+        }
+		
+			// GreyImage Constructor
+		GreyImage::GreyImage(int inSizeX, int inSizeY, int cropMxs, int cropMys) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
+		{
+			init();
+			initSetFeatures(cropMxs, cropMys);
+		}
+		
+		void GreyImage::init()
+		{
 			static Feature ievalFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
-            /*// make image
-            static u_int8_t* igreyMap[PNG_DIMENSION];
-            static u_int64_t* iintegralImage[PNG_DIMENSION];
-            static Feature ievalFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
-            for (int x=0; x<sizeX; x++)
-            {
-                igreyMap[x] = (u_int8_t *)malloc(sizeY * sizeof(u_int8_t));
-                iintegralImage[x] = (u_int64_t *)malloc(sizeY * sizeof(u_int64_t));
-            }
-            
-            // assign
-            greyMap = igreyMap;
-            integralImage = iintegralImage;*/
 			
 				// create greyMap as 2D array
+			
 			arrayHeapAllocate<colourByte> (&greyMap, sizeX, sizeY);
 				// create integral image as 2D array
 			arrayHeapAllocate<u_int64_t> (&integralImage, sizeX, sizeY);
-
-            imageFeatures = ievalFeatures;
-        }
+			
+			imageFeatures = ievalFeatures;
+		}
 		
 		// GreyImage Destructor
 		GreyImage::~GreyImage()
@@ -86,6 +87,8 @@ namespace AIFRED
 				delete greyMap[x];
 				delete integralImage[x];
 			}
+			delete greyMap;
+			delete integralImage;
 		}
 		
 		
@@ -131,11 +134,9 @@ namespace AIFRED
             }
         }
 
-        // runtime processing
-        void GreyImage::process(bool f_makeIntegralImage)
+        // runtime processing, analyses the features
+        void GreyImage::process()
         {
-			if (f_makeIntegralImage)
-            makeIntegralImage();
             Classifiers cl;
             
             // set all evaluations
@@ -155,6 +156,21 @@ namespace AIFRED
                 e->faceHaarTotal += cl.D(e->x, e->y, e->w, e->h, *this);
             }
         }
+		
+		// runtime processing
+		void GreyImage::process(Render::Texture::colourByte** igreyMap)
+		{
+			greyMap = igreyMap;
+			makeIntegralImage();
+			process();
+		}
+		
+		// runtime processing
+		void GreyImage::process(u_int64_t ** iintegralImage)
+		{
+			integralImage = iintegralImage;
+			process();
+		}
 		
 
         // creates integral image and assigns integral image.
@@ -285,8 +301,8 @@ namespace AIFRED
 					}
 				}
 			}
-			printf("eval: %f\n", j / outLength);
-			printf("eval:  %f\n", (fa));
+			printf("   eval: %f\n", j / outLength);
+			printf("   eval:  %f\n", (fa));
 			
 			Eval eval;
 			eval.evalPerc = j / outLength;

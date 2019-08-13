@@ -7,6 +7,8 @@
 //
 #include <stdio.h>
 #include <string>
+#include <cstdio>
+#include <ctime>
 #include <assert.h>
 
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
@@ -31,24 +33,73 @@ void glfw_error_callback(int error, const char* description) {
     debug.gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }
 
+void initRendering(GLuint &TextureID)
+{
+	assert(debug.restart_gl_log());
+	// start GL context and O/S window using the GLFW helper library
+	debug.gl_log("starting GLFW\n%s\n", glfwGetVersionString());
+	// register the error call-back function that we wrote, above
+	glfwSetErrorCallback(glfw_error_callback);
+	
+	// uncomment these lines if on Apple OS xMouse
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	
+	// init shaders
+	shader.init();
+	
+	// Get a handle for our "myTextureSampler" uniform
+	TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
+}
+
+typedef std::string fileDirectory;
+
+fileDirectory initFileDir(std::string filename)
+{
+	char *home = getenv("HOME");
+	
+	static char filenameNew[1024];
+	{
+		using namespace std;
+		strcpy(filenameNew, (home + filename).c_str());
+	}
+	
+	return filenameNew;
+}
+const char* loadFilename(fileDirectory iFileDir, int index)
+{
+	return (iFileDir + std::to_string(index) + std::string(".png")).c_str();
+}
+
+class Timer
+{
+	std::clock_t timer;
+public:
+	Timer()
+	{
+		timer = std::clock();
+	}
+	void reset()
+	{
+		timer = std::clock();
+	}
+	float getTime ()
+	{
+		return ( std::clock() - timer ) / (double) CLOCKS_PER_SEC;
+	}
+};
 
 
-int main() {
-    assert(debug.restart_gl_log());
-    // start GL context and O/S window using the GLFW helper library
-    debug.gl_log("starting GLFW\n%s\n", glfwGetVersionString());
-    // register the error call-back function that we wrote, above
-    glfwSetErrorCallback(glfw_error_callback);
-    
-    // uncomment these lines if on Apple OS xMouse
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    if (shader.init() == 1)
-        return 1;
+
+int main(int argc, const char *argv[]) {
+	Timer timer;
+	
+	GLuint TextureID;
+	initRendering(TextureID);
+	
     
 
     bool init = false;
@@ -58,31 +109,18 @@ int main() {
 	float highest = 0, lowest = 0;
 	int ihighest = 0, ilowest = 0;
 	int a = 0;
-    
-    // Get a handle for our "myTextureSampler" uniform
-    GLuint TextureID  = glGetUniformLocation(shader.shader_programme, "myTextureSampler");
-
-	char *home = getenv("HOME");
-	const char *filename = "/Desktop/_final/face";
 	
+	fileDirectory fileDirFace = initFileDir("/Desktop/_final/face");
+	fileDirectory fileDirNonFace = initFileDir("/Desktop/_final/nonface");
 	
-	char filenameNew[1024];
-	{
-		using namespace std;
-		string ff = string(filename);
-		printf("%d %d\n", 1, fa);
-		strcpy(filenameNew, (home + ff + to_string(1) + string(".png")).c_str());
-	}
-	
-	Render::Texture::Image image = Render::Texture::createImage(filenameNew);
+	Render::Texture::Image image = Render::Texture::createImage(loadFilename(fileDirFace, 1));
 	
 	// create new GImage (to be processed)
 	AIFRED::FacialDetection::FDScanner MainImage = AIFRED::FacialDetection::FDScanner(image);
 	
 	
 	
-	AIFRED::FacialDetection::GreyImage inImage(128, 128);
-	inImage.initSetFeatures(100, 128); // crop image
+	AIFRED::FacialDetection::GreyImage inImage(128, 128, 100, 128);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -99,8 +137,8 @@ int main() {
 		
 
 		image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
-		printf("%d\n", a);
-		printf("%s\n", __TIME__);
+		printf("face %d\n", a);
+		printf("%f at %f fps\n", timer.getTime(), (a-200) / timer.getTime());
 		a++;
 		
 		{
@@ -112,14 +150,8 @@ int main() {
 				if (!end
 					&& a < 300)
 				{
-					string f = string("/Desktop/_final/nonface");
-					printf("%d %d\n", a, fa);
-					strcpy(filenameNew, (home + f + to_string(a - totalImages - 1) + string(".png")).c_str());
-					printf("%s", filenameNew);
 					
-					image.loadPNG(filenameNew);
-					//Texture::loadGreyImage(filenameNew, inImage);
-					inImage.process(true);
+					image.loadPNG(loadFilename(fileDirNonFace, a - totalImages - 1));
 					Eval ev = inImage.evaluate();
 					float e = ev.failPerc;
 					printf("avg %f\n", avgEval / (a - fa));
@@ -137,6 +169,14 @@ int main() {
 					}
 					a++;
 				}
+				else
+				{
+					if (a == 301)
+						timer.reset();
+				
+					
+					inImage.evaluate();
+				}
 				//end = true;
 				if (autoTerminate)
 					glfwSetWindowShouldClose(shader.window, 1);
@@ -144,22 +184,18 @@ int main() {
 			}
 			else
 			{
-				string f = string(filename);
-				printf("%d %d\n", a, fa);
-				strcpy(filenameNew, (home + f + to_string(a) + string(".png")).c_str());
 				
-				//Texture::loadGreyImage(filenameNew, inImage);
-				image.loadPNG(filenameNew);
-				inImage.process(true);
+				image.loadPNG(loadFilename(fileDirFace, a));
+				inImage.process(image.toGreyImage());
 
 				float e = 0;
 				if (a != 60 && a != 3)
 				{
 					inImage.evaluateImage(a, true);
 					Eval ev = inImage.evaluate();
-					float ef = ev.failPerc;
-					float ee = ev.evalPerc;
-					if (ef >= 500 || ee > 10)
+					float efail = ev.failPerc;
+					float esucc = ev.evalPerc;
+					if (efail >= 500 || esucc > 10)
 					{
 						e = 0;
 						printf("wow");
@@ -167,7 +203,7 @@ int main() {
 					}
 					else
 					{
-						e = ee;
+						e = esucc;
 					}
 				}
 				if (e > 20000 || e < -50000)
