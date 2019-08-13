@@ -52,21 +52,21 @@ namespace AIFRED
 		
 		
 			
-        // GreyImage Constructor
-        GreyImage::GreyImage(int inSizeX, int inSizeY) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
+        // FDSingleScanner Constructor
+        FDSingleScanner::FDSingleScanner(int inSizeX, int inSizeY) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
         {
 			init();
 			initSetFeatures(sizeX, sizeY);
         }
 		
-			// GreyImage Constructor
-		GreyImage::GreyImage(int inSizeX, int inSizeY, int cropMxs, int cropMys) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
+			// FDSingleScanner Constructor
+		FDSingleScanner::FDSingleScanner(int inSizeX, int inSizeY, int cropMxs, int cropMys) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
 		{
 			init();
 			initSetFeatures(cropMxs, cropMys);
 		}
 		
-		void GreyImage::init()
+		void FDSingleScanner::init()
 		{
 			static Feature ievalFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
 			
@@ -79,8 +79,8 @@ namespace AIFRED
 			imageFeatures = ievalFeatures;
 		}
 		
-		// GreyImage Destructor
-		GreyImage::~GreyImage()
+		// FDSingleScanner Destructor
+		FDSingleScanner::~FDSingleScanner()
 		{
 			for (int x=0; x<sizeX; x++)
 			{
@@ -94,7 +94,7 @@ namespace AIFRED
 		
 		
         
-        void GreyImage::initSetFeatures(int imxs, int imys)
+        void FDSingleScanner::initSetFeatures(int imxs, int imys)
         {
             mxs = imxs;
             mys = imys;
@@ -135,7 +135,7 @@ namespace AIFRED
         }
 
         // runtime processing, analyses the features
-        void GreyImage::process()
+        void FDSingleScanner::process()
         {
             Classifiers cl;
             
@@ -158,7 +158,7 @@ namespace AIFRED
         }
 		
 		// runtime processing
-		void GreyImage::process(Render::Texture::colourByte** igreyMap)
+		void FDSingleScanner::process(Render::Texture::colourByte** igreyMap)
 		{
 			greyMap = igreyMap;
 			makeIntegralImage();
@@ -166,7 +166,7 @@ namespace AIFRED
 		}
 		
 		// runtime processing
-		void GreyImage::process(u_int64_t ** iintegralImage)
+		void FDSingleScanner::process(u_int64_t ** iintegralImage)
 		{
 			integralImage = iintegralImage;
 			process();
@@ -174,7 +174,7 @@ namespace AIFRED
 		
 
         // creates integral image and assigns integral image.
-        void GreyImage::makeIntegralImage()
+        void FDSingleScanner::makeIntegralImage()
         {
             // integral image
             for (int x = 0; x < sizeX; x++)
@@ -198,7 +198,7 @@ namespace AIFRED
         }
 		
 		// does evaluation of image classifiers
-        void GreyImage::evaluateImage (int iteration, bool b_sort)
+        void FDSingleScanner::evaluateImage (int iteration, bool b_sort)
         {
             // find all classifier averages
             // find best classifier
@@ -217,15 +217,15 @@ namespace AIFRED
 				e->nonFaceHaarAverage = e->nonFaceHaarTotal / iteration;
                 
                 // find best classifier
-                if (highestFaceAverage < GreyImage::abs(e->faceHaarAverage))
+                if (highestFaceAverage < FDSingleScanner::abs(e->faceHaarAverage))
                 {
-                    highestFaceAverage = GreyImage::abs(e->faceHaarAverage);
+                    highestFaceAverage = FDSingleScanner::abs(e->faceHaarAverage);
                     hFAIndex = i;
                 }
                 
-                if (highestNonFaceAverage < GreyImage::abs(e->nonFaceHaarAverage))
+                if (highestNonFaceAverage < FDSingleScanner::abs(e->nonFaceHaarAverage))
                 {
-                    highestNonFaceAverage = GreyImage::abs(e->nonFaceHaarAverage);
+                    highestNonFaceAverage = FDSingleScanner::abs(e->nonFaceHaarAverage);
                     hNFAIndex = i;
                 }
                 
@@ -236,7 +236,7 @@ namespace AIFRED
 			outLength = 0;
 			static Feature outFeatures[PNG_DIMENSION * PNG_DIMENSION * PNG_DIMENSION];
 			prune(imageFeaturesEval.featuresSorted, totalClassiferCount, outFeatures, outLength, 0.5f);
-			printf("%d\n", outLength);
+			//printf("%d\n", outLength);
 			if (b_sort)
 			{
             	imageFeaturesEval.featuresSorted = sort(outFeatures, outLength);
@@ -252,7 +252,7 @@ namespace AIFRED
 		
 		
 		
-		Eval GreyImage::evaluate()
+		Eval FDSingleScanner::evaluate()
 		{
 			for (int i = 0; i < outLength; i++) draw(imageFeaturesEval.featuresSorted[i]);
 			
@@ -266,7 +266,7 @@ namespace AIFRED
 				if (f.type == 1)
 				{
 					float e = cl.A(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
-					if (GreyImage::abs(e) < threshold * 128)
+					if (FDSingleScanner::abs(e) < threshold * 128)
 					{
 						fa++;
 						j += e;
@@ -276,7 +276,7 @@ namespace AIFRED
 				if (f.type == 2)
 				{
 					float e = cl.B(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
-					if (GreyImage::abs(e) < threshold * 128)
+					if (FDSingleScanner::abs(e) < threshold * 128)
 						{
 							fa++;
 							j += e;
@@ -286,7 +286,7 @@ namespace AIFRED
 				if (f.type == 3)
 				{
 					float e = cl.C(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
-					if (GreyImage::abs(e) < threshold * 128)
+					if (FDSingleScanner::abs(e) < threshold * 128)
 					{fa++;
 						j += e;
 					}
@@ -295,14 +295,14 @@ namespace AIFRED
 				if (f.type == 4)
 				{
 					float e = cl.D(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage;
-					if (GreyImage::abs(e) < threshold * 128)
+					if (FDSingleScanner::abs(e) < threshold * 128)
 					{fa++;
 						j += e;
 					}
 				}
 			}
-			printf("   eval: %f\n", j / outLength);
-			printf("   eval:  %f\n", (fa));
+			//printf("   eval: %f\n", j / outLength);
+			//printf("   eval:  %f\n", (fa));
 			
 			Eval eval;
 			eval.evalPerc = j / outLength;
@@ -314,7 +314,7 @@ namespace AIFRED
 		
 		
 		// width 0, height 0 is a 1x1 box
-		float GreyImage::sum (int x, int y, int width, int height)
+		float FDSingleScanner::sum (int x, int y, int width, int height)
 		{
 			width -= 1;
 			height -= 1;
@@ -327,7 +327,7 @@ namespace AIFRED
 			return ((float)(ixy - ix - iy + i) / (width * height));
 		}
         
-        float GreyImage::abs (float in)
+        float FDSingleScanner::abs (float in)
         {
             if (in < 0)
                 return (in * -1);
@@ -335,7 +335,7 @@ namespace AIFRED
             return in;
         }
         
-        Feature* GreyImage::sort(Feature *features, int length)
+        Feature* FDSingleScanner::sort(Feature *features, int length)
         {
             bool repeat = true;
             int j = 0;
@@ -369,7 +369,7 @@ namespace AIFRED
         }
 		
 		
-		void GreyImage::prune(Feature *features, int length, Feature *outFeatures, int &outLength, Percent threshold)
+		void FDSingleScanner::prune(Feature *features, int length, Feature *outFeatures, int &outLength, Percent threshold)
 		{
 			// find avg
 			float highest = 0;
@@ -384,7 +384,7 @@ namespace AIFRED
 				if (*f < lowest)
 					lowest = *f;
 			}
-			//float avg = GreyImage::abs(j / length);
+			//float avg = FDSingleScanner::abs(j / length);
 			highest *= threshold;
 			lowest *= threshold;
 			
@@ -401,7 +401,7 @@ namespace AIFRED
 			}
 		}
 		
-		void GreyImage::draw (Feature target)
+		void FDSingleScanner::draw (Feature target)
 		{
 			greyMap[target.x][target.y] = 255;
 			if (target.type == 1)
@@ -454,7 +454,7 @@ namespace AIFRED
 		
 		// classifiers
 		
-		bool Classifiers::A (int x, int y, int width, int height, int threshold, GreyImage& image)
+		bool Classifiers::A (int x, int y, int width, int height, int threshold, FDSingleScanner& image)
 		{
 			if (width % 2 == 1 || height % 2 == 1) // accept even numbers
 				abort();
@@ -463,7 +463,7 @@ namespace AIFRED
 			
 		}
 		
-		bool Classifiers::B (int x, int y, int width, int height, int threshold, GreyImage& image)
+		bool Classifiers::B (int x, int y, int width, int height, int threshold, FDSingleScanner& image)
 		{
 			if (width % 2 == 1 || height % 2 == 1) // accept even numbers
 				abort();
@@ -472,7 +472,7 @@ namespace AIFRED
 			
 		}
 		
-		bool Classifiers::C (int x, int y, int width, int height, int threshold, GreyImage& image)
+		bool Classifiers::C (int x, int y, int width, int height, int threshold, FDSingleScanner& image)
 		{
 			if (width % 2 == 1 || height % 2 == 1) // accept even numbers
 				abort();
@@ -481,7 +481,7 @@ namespace AIFRED
 			
 		}
 		
-		bool Classifiers::D (int x, int y, int width, int height, int threshold, GreyImage& image)
+		bool Classifiers::D (int x, int y, int width, int height, int threshold, FDSingleScanner& image)
 		{
 			if (width % 2 == 1 || height % 2 == 1) // accept even numbers
 				abort();
@@ -491,25 +491,25 @@ namespace AIFRED
 			
 		}
 		
-		float Classifiers::A (int x, int y, int width, int height, GreyImage& image)
+		float Classifiers::A (int x, int y, int width, int height, FDSingleScanner& image)
 		{
 			return (image.sum(x, y, width, height) - image.sum(x + width, y, width, height));
 			
 		}
 		
-		float Classifiers::B (int x, int y, int width, int height, GreyImage& image)
+		float Classifiers::B (int x, int y, int width, int height, FDSingleScanner& image)
 		{
 			return (image.sum(x, y, width, height) - image.sum(x, y + height, width, height));
 			
 		}
 		
-		float Classifiers::C (int x, int y, int width, int height, GreyImage& image)
+		float Classifiers::C (int x, int y, int width, int height, FDSingleScanner& image)
 		{
 			return ((image.sum(x, y, width, height) + image.sum(x + (width * 2), y, width, height)) - (image.sum(x + width, y, width, height) * 2));
 			
 		}
 		
-		float Classifiers::D (int x, int y, int width, int height, GreyImage& image)
+		float Classifiers::D (int x, int y, int width, int height, FDSingleScanner& image)
 		{
 			return ((image.sum(x, y, width, height) + image.sum(x + width, y + height, width, height)) - (image.sum(x + width, y, width, height) + image.sum(x, y + height, width, height)));
 			

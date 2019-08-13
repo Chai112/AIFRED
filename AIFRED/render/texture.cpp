@@ -188,7 +188,7 @@ namespace Render
 			delete row_pointers;
 		}
 		
-		colourByte **Image::toGreyImage()
+		colourByte **Image::toFDSingleScanner()
 		{
 			colourByte **pixels = nullptr;
 			

@@ -46,7 +46,7 @@ namespace Render
 			
 			void loadPNG(const char *filename);
 			void scaleImage(const int sizeX, const int sizeY);
-			colourByte **toGreyImage();
+			colourByte **toFDSingleScanner();
 			
 			ColourRGB **data;
 		};

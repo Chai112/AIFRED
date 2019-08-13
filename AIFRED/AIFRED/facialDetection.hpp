@@ -87,7 +87,7 @@ namespace AIFRED
 		};
 		
 		
-        class GreyImage
+        class FDSingleScanner
         {
 			void initSetFeatures(int imxs, int imys);
 			void init();
@@ -122,25 +122,25 @@ namespace AIFRED
             void evaluateImage(int iteration, bool b_sort); // called at the end of training
 			Eval evaluate(); // called during every comparison
 			
-            GreyImage(int inSizeX, int inSizeY);
+            FDSingleScanner(int inSizeX, int inSizeY);
 			//crop
-			GreyImage(int inSizeX, int inSizeY, int cropMxs, int cropMys);
-            ~GreyImage();
+			FDSingleScanner(int inSizeX, int inSizeY, int cropMxs, int cropMys);
+            ~FDSingleScanner();
             
             friend struct Classifiers;
         };
         
         struct Classifiers
         {
-            static bool A (int x, int y, int width, int height, int threshold, GreyImage& image);
-            static bool B (int x, int y, int width, int height, int threshold, GreyImage& image);
-            static bool C (int x, int y, int width, int height, int threshold, GreyImage& image);
-            static bool D (int x, int y, int width, int height, int threshold, GreyImage& image);
+            static bool A (int x, int y, int width, int height, int threshold, FDSingleScanner& image);
+            static bool B (int x, int y, int width, int height, int threshold, FDSingleScanner& image);
+            static bool C (int x, int y, int width, int height, int threshold, FDSingleScanner& image);
+            static bool D (int x, int y, int width, int height, int threshold, FDSingleScanner& image);
             
-            static float A (int x, int y, int width, int height, GreyImage& image);
-            static float B (int x, int y, int width, int height, GreyImage& image);
-            static float C (int x, int y, int width, int height, GreyImage& image);
-            static float D (int x, int y, int width, int height, GreyImage& image);
+            static float A (int x, int y, int width, int height, FDSingleScanner& image);
+            static float B (int x, int y, int width, int height, FDSingleScanner& image);
+            static float C (int x, int y, int width, int height, FDSingleScanner& image);
+            static float D (int x, int y, int width, int height, FDSingleScanner& image);
         };
     }
 }

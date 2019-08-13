@@ -120,7 +120,7 @@ int main(int argc, const char *argv[]) {
 	
 	
 	
-	AIFRED::FacialDetection::GreyImage inImage(128, 128, 100, 128);
+	AIFRED::FacialDetection::FDSingleScanner inImage(128, 128, 100, 128);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -186,7 +186,7 @@ int main(int argc, const char *argv[]) {
 			{
 				
 				image.loadPNG(loadFilename(fileDirFace, a));
-				inImage.process(image.toGreyImage());
+				inImage.process(image.toFDSingleScanner());
 
 				float e = 0;
 				if (a != 60 && a != 3)
