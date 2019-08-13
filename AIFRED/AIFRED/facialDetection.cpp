@@ -252,8 +252,11 @@ namespace AIFRED
 		
 		
 		
-		Eval FDSingleScanner::evaluate()
+		Eval FDSingleScanner::evaluate(Render::Texture::colourByte** igreyMap)
 		{
+			greyMap = igreyMap;
+			makeIntegralImage();
+			
 			for (int i = 0; i < outLength; i++) draw(imageFeaturesEval.featuresSorted[i]);
 			
 			Percent j = 0;
@@ -364,7 +367,6 @@ namespace AIFRED
                 }
                 j++;
             }
-			printf("a %f\n", features[0].faceHaarAverage);
 			return features;
         }
 		

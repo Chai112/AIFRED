@@ -150,32 +150,72 @@ int main(int argc, const char *argv[]) {
 				if (!end
 					&& a < 300)
 				{
+					if (a == totalImages + 1)
+					{
+						printf("\n\n---SUMMARY 1---\n\n");
+						printf("avg %f\n", avgEval / (a - fa));
+						printf("h %f %d\n", highest, ihighest);
+						printf("l %f %d %d\n", lowest, ilowest, fa);
+						avgEval = 0;
+						fa = 0;
+						highest = 0;
+						ihighest = 0;
+						lowest = 0;
+						ilowest = 0;
+						
+					}
 					
-					image.loadPNG(loadFilename(fileDirNonFace, a - totalImages - 1));
-					Eval ev = inImage.evaluate();
-					float e = ev.failPerc;
-					printf("avg %f\n", avgEval / (a - fa));
-					printf("h %f %d\n", highest, ihighest);
-					printf("l %f %d %d\n", lowest, ilowest, fa);
+					image.loadPNG(loadFilename(fileDirFace, a - totalImages - 1));
+					Eval ev = inImage.evaluate(image.toFDSingleScanner());
+					float efail = ev.failPerc;
+					float esucc = ev.evalPerc;
 					
+					float e = esucc;
 					//if (e > -50000 && e < 20000)
-					if (e < 450)
+					if (efail <= 500 && esucc > -8)
+					{
+						printf("that's a face! %f %f\n", efail, esucc);
+						fa++;
+					}
+					else
+					{
+						printf("that's NOT a face! %f %f\n", efail, esucc);
+					}
+
+					avgEval += e;
+					if (e > highest)
+					{
+						highest = e;
+						ihighest = a;
+					}
+					if (e < lowest)
+					{
+						lowest = e;
+						ilowest = a;
+					}
+					
+					/*if (e < 450)
 					{
 						printf("\n\n that's a face!\n");
 					}
 					else
 					{
 						printf("\n\n that's NOT a face!\n");
-					}
-					a++;
+					}*/
 				}
 				else
 				{
 					if (a == 301)
+					{
 						timer.reset();
+						printf("\n\n---SUMMARY 2---\n\n");
+						printf("avg %f\n", avgEval / ((a-totalImages) - 1));
+						printf("h %f %d\n", highest, ihighest);
+						printf("l %f %d %d\n", lowest, ilowest, fa);
+					}
 				
 					
-					inImage.evaluate();
+					inImage.evaluate(image.toFDSingleScanner());
 				}
 				//end = true;
 				if (autoTerminate)
@@ -192,22 +232,21 @@ int main(int argc, const char *argv[]) {
 				if (a != 60 && a != 3)
 				{
 					inImage.evaluateImage(a, true);
-					Eval ev = inImage.evaluate();
+					Eval ev = inImage.evaluate(image.toFDSingleScanner());
 					float efail = ev.failPerc;
 					float esucc = ev.evalPerc;
-					if (efail >= 500 || esucc > 10)
+					if (efail <= 500 || esucc > -8)
 					{
 						e = 0;
-						printf("wow");
+						printf("\ngotcha\n");
 						fa++;
 					}
 					else
 					{
+						printf("\n\n\n");
 						e = esucc;
 					}
 				}
-				if (e > 20000 || e < -50000)
-					printf("wow\n");
 				avgEval += e;
 				if (e > highest)
 				{
@@ -219,7 +258,6 @@ int main(int argc, const char *argv[]) {
 					lowest = e;
 					ilowest = a;
 				}
-				a++;
 				
 			}
 		}

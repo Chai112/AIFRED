@@ -120,7 +120,7 @@ namespace AIFRED
 			void process(u_int64_t ** iintegralImage); // called every training sample
 			
             void evaluateImage(int iteration, bool b_sort); // called at the end of training
-			Eval evaluate(); // called during every comparison
+			Eval evaluate(Render::Texture::colourByte** igreyMap); // called during every comparison
 			
             FDSingleScanner(int inSizeX, int inSizeY);
 			//crop
