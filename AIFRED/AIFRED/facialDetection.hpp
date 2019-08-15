@@ -64,27 +64,7 @@ namespace AIFRED
 			Percent failPerc;
 		};
 		
-		struct FDModel
-		{
-			
-		};
-		
-		// Facial Detection Scanner
-		class FDScanner : Render::Texture::Image
-		{
-			void makeIntegralImage();
-		public:
-			FDScanner();
-			FDScanner(Render::Texture::Image &image);
-			~FDScanner();
-			
-			void loadImg(Render::Texture::Image &image);
-			Eval *scan(FDModel inModel);
-			
-			
-			Render::Texture::colourByte** greyMap;
-			u_int64_t** integralImage;
-		};
+	
 		
 		
         class FDSingleScanner
@@ -131,6 +111,23 @@ namespace AIFRED
             
             friend struct Classifiers;
         };
+		
+			// Facial Detection Scanner
+		class FDScanner : Render::Texture::Image
+		{
+			void makeIntegralImage();
+		public:
+			FDScanner();
+			FDScanner(Render::Texture::Image &image);
+			~FDScanner();
+			
+			void loadImg(Render::Texture::Image &image);
+			Eval *scan(FDSingleScanner &fd, int strideLength);
+			
+			
+			Render::Texture::colourByte** greyMap;
+			u_int64_t** integralImage;
+		};
         
         struct Classifiers
         {

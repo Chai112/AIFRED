@@ -113,7 +113,7 @@ namespace Render
 				sizeY != png_get_image_height(png, info)
 				)
 			{
-				throw "width and height of image is not constant! Create a new Image struct.";
+				throw "width and height of image does not match the struct! Create a new Image struct.";
 			}
 			
 			
@@ -230,9 +230,9 @@ namespace Render
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		}
 		
-		Image createImage(const char *initFilename)
+		Image createImage(const char * constructFilename)
 		{
-			fp = fopen(initFilename, "rb");
+			fp = fopen(constructFilename, "rb");
 			
 			png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 			if(!png) abort();
@@ -257,6 +257,20 @@ namespace Render
 			
 			Image i(sizeX,sizeY);
 			return i;
+		}
+		
+		void Image::cropImage(const int offsetX, const int offsetY, const int toSizeX, const int toSizeY)
+		{
+			ColourRGB **idata = data;
+			
+			int ix = 0, iy = 0;
+			for (int x = offsetX; x < offsetX + toSizeX; x++, ix++)
+			{
+				for (int y = offsetY; y < offsetY + toSizeY; y++, iy++)
+				{
+					data[ix][iy] = idata[x][y];
+				}
+			}
 		}
 		
 		GLuint loadImage(Image &inImage)

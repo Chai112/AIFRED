@@ -50,6 +50,14 @@ namespace AIFRED
 			
 		}
 		
+		Eval *FDScanner::scan(FDSingleScanner &fd, int strideLength)
+		{
+			static Eval eval[3];
+			eval[0].evalPerc = 0;
+
+			return eval;
+		}
+		
 		
 			
         // FDSingleScanner Constructor

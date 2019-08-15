@@ -128,16 +128,13 @@ int main(int argc, const char *argv[]) {
         }
 		
         
-        /*unsigned char pick_col[3][100][100];
-        glReadPixels(841 , 270 , 100 , 100 , GL_RGB , GL_UNSIGNED_BYTE , pick_col);
-        if (pick_col[0][0][0] + pick_col[1][0][0] + pick_col[2][0][0] == 0)
-        {
-            printf("a\n");
-        }*/
+        
 		
 
 		printf("face %d\n", a);
 		printf("%f at %f fps\n", timer.getTime(), (a-200) / timer.getTime());
+		
+		Render::Texture::Image *imgtoPrint = &image;
 		a++;
 		
 		{
@@ -165,7 +162,7 @@ int main(int argc, const char *argv[]) {
 						
 					}
 					
-					image.loadPNG(loadFilename(fileDirNonFace, a - totalImages - 1));
+					image.loadPNG(loadFilename(fileDirFace, a - totalImages - 1));
 					Eval ev = inImage.evaluate(image.toFDSingleScanner());
 					float efail = ev.failPerc;
 					float esucc = ev.evalPerc;
@@ -214,8 +211,15 @@ int main(int argc, const char *argv[]) {
 						printf("l %f %d %d\n", lowest, ilowest, fa);
 					}
 				
-					image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
-					inImage.evaluate(image.toFDSingleScanner());
+					system("screencapture -x ~/Desktop/scn.png");
+					system("sips -c 512 512 ~/Desktop/scn.png");
+					Render::Texture::Image out = Render::Texture::createImage(initFileDir("/Desktop/scn.png").c_str());
+					out.loadPNG(initFileDir("/Desktop/scn.png").c_str());
+					
+					//image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
+					
+					imgtoPrint = &out;
+					inImage.evaluate(out.toFDSingleScanner());
 				}
 				//end = true;
 				if (autoTerminate)
@@ -263,7 +267,10 @@ int main(int argc, const char *argv[]) {
 		}
 		//Texture = Texture::loadTexture(inImage.greyMap);
 		image.data = inImage.toImage();
-		GLuint Texture = Render::Texture::loadImage(image);
+		//GLuint Texture = Render::Texture::loadImage(image);
+		
+		//image.cropImage(0, 0, 128, 128);
+		GLuint Texture = Render::Texture::loadImage(*imgtoPrint);
         
         
         

@@ -45,7 +45,7 @@ namespace Render
 			~Image();
 			
 			void loadPNG(const char *filename);
-			void scaleImage(const int sizeX, const int sizeY);
+			void cropImage(const int offsetX, const int offsetY, const int toSizeX, const int toSizeY);
 			colourByte **toFDSingleScanner();
 			
 			ColourRGB **data;
@@ -53,7 +53,7 @@ namespace Render
 		
 		void initTexture();
 		
-		Image createImage(const char *initFilename);
+		Image createImage(const char *constructFilename);
 		GLuint loadImage(Image &inImage);
     }
 	
