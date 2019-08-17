@@ -106,8 +106,15 @@ int main(int argc, const char *argv[]) {
 	bool end = false;
 	int fa = 0;
 	float avgEval = 0;
-	float highest = 0, lowest = 0;
+	float avgEval2 = 0;
+	float highest = 0, lowest = 100000;
 	int ihighest = 0, ilowest = 0;
+	
+	float highest2 = 0;
+	int ihighest2 = 0;
+	float lowest2 = 1000000;
+	int ilowest2 = 0;
+	int fa2 = 0;
 	int a = 0;
 	
 	fileDirectory fileDirFace = initFileDir("/Desktop/_final/face");
@@ -137,6 +144,9 @@ int main(int argc, const char *argv[]) {
 		Render::Texture::Image *imgtoPrint = &image;
 		a++;
 		
+		float es = 0;
+		float ef = 0;
+		
 		{
 			using namespace std;
 			using namespace AIFRED::FacialDetection;
@@ -149,47 +159,55 @@ int main(int argc, const char *argv[]) {
 					if (a == totalImages + 1)
 					{
 						inImage.evaluateImage(a, true);
-						printf("\n\n---SUMMARY 1---\n\n");
-						printf("avg %f\n", avgEval / (a - fa));
-						printf("h %f %d\n", highest, ihighest);
-						printf("l %f %d %d\n", lowest, ilowest, fa);
-						avgEval = 0;
-						fa = 0;
-						highest = 0;
-						ihighest = 0;
-						lowest = 1000000;
-						ilowest = 0;
-						
 					}
+					
+					
 					
 					image.loadPNG(loadFilename(fileDirFace, a - totalImages - 1));
 					Eval ev = inImage.evaluate(image.toFDSingleScanner());
-					float efail = ev.failPerc;
-					float esucc = ev.evalPerc;
+					float efail = ev.errorPerc;
+					float esucc = ev.succPerc;
 					
-					float e = esucc;
-					//if (e > -50000 && e < 20000)
-					if (esucc < 16)
+					float e = esucc; //
+					
+					
+					
+					if (esucc > 0.3)
 					{
-						printf("that's a face! %f %f\n", efail, esucc);
+						printf("F that's a face! %f %f\n", efail, esucc);
 						fa++;
 					}
 					else
 					{
-						printf("that's NOT a face! %f %f\n", efail, esucc);
+						printf("F that's NOT a face! %f %f\n", efail, esucc);
 					}
 
 					avgEval += e;
-					if (e > highest)
+					if (e > highest){highest = e; ihighest = a;}
+					if (e < lowest){lowest = e; ilowest = a;}
+					
+					image.loadPNG(loadFilename(fileDirNonFace, a - totalImages - 1));
+					ev = inImage.evaluate(image.toFDSingleScanner());
+					efail = ev.errorPerc;
+					esucc = ev.succPerc;
+					
+					float e2 = esucc; //
+
+					
+					
+					if (esucc > 0.3)
 					{
-						highest = e;
-						ihighest = a;
+						printf("N that's a face! %f %f\n", efail, esucc);
+						fa2++;
 					}
-					if (e < lowest)
+					else
 					{
-						lowest = e;
-						ilowest = a;
+						printf("N that's NOT a face! %f %f\n", efail, esucc);
 					}
+					
+					avgEval2 += e2;
+					if (e2 > highest2){highest2 = e2; ihighest2 = a;}
+					if (e2 < lowest2){lowest2 = e2; ilowest2 = a;}
 					
 					/*if (e < 450)
 					{
@@ -206,20 +224,30 @@ int main(int argc, const char *argv[]) {
 					{
 						timer.reset();
 						printf("\n\n---SUMMARY 2---\n\n");
-						printf("avg %f\n", avgEval / ((a-totalImages) - 1));
+						printf("True Pos  avg %f\n", avgEval / ((a-totalImages) - 1));
 						printf("h %f %d\n", highest, ihighest);
 						printf("l %f %d %d\n", lowest, ilowest, fa);
+						
+						printf("False Pos avg %f\n", avgEval2 / ((a-totalImages) - 1));
+						printf("h %f %d\n", highest2, ihighest2);
+						printf("l %f %d %d\n", lowest2, ilowest2, fa2);
 					}
 				
 					system("screencapture -x ~/Desktop/scn.png");
-					system("sips -c 512 512 ~/Desktop/scn.png");
+					system("sips -c 256 256 ~/Desktop/scn.png");
+					system("sips -z 128 128 ~/Desktop/scn.png");
 					Render::Texture::Image out = Render::Texture::createImage(initFileDir("/Desktop/scn.png").c_str());
 					out.loadPNG(initFileDir("/Desktop/scn.png").c_str());
 					
 					//image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
 					
+					
+					Eval ev = inImage.evaluate(out.toFDSingleScanner());
+					
 					imgtoPrint = &out;
-					inImage.evaluate(out.toFDSingleScanner());
+					 es = ev.succPerc;
+					
+					
 				}
 				//end = true;
 				if (autoTerminate)
@@ -232,45 +260,28 @@ int main(int argc, const char *argv[]) {
 				image.loadPNG(loadFilename(fileDirFace, a));
 				inImage.process(image.toFDSingleScanner());
 
-				float e = 0;
-				if (a != 60 && a != 3)
-				{
-					inImage.evaluateImage(a, true);
-					Eval ev = inImage.evaluate(image.toFDSingleScanner());
-					float efail = ev.failPerc;
-					float esucc = ev.evalPerc;
-					if (efail <= 500 || esucc > -8)
-					{
-						e = 0;
-						printf("\ngotcha\n");
-						fa++;
-					}
-					else
-					{
-						printf("\n\n\n");
-						e = esucc;
-					}
-				}
-				avgEval += e;
-				if (e > highest)
-				{
-					highest = e;
-					ihighest = a;
-				}
-				if (e < lowest)
-				{
-					lowest = e;
-					ilowest = a;
-				}
 				
 			}
 		}
 		//Texture = Texture::loadTexture(inImage.greyMap);
 		image.data = inImage.toImage();
+		
+
+		for (int x = 0; x < 10; x++)
+		{
+			for (int y = 0; y < 10; y++)
+			{
+				image.data[x][y].R = (es * (255/0.4));
+				if (es > 0.3)
+				image.data[x][y].R = 255;
+				image.data[x][y].G = (es * (255/0.4));
+				image.data[x][y].B = (es * (255/0.4));}
+			
+		}
 		//GLuint Texture = Render::Texture::loadImage(image);
 		
 		//image.cropImage(0, 0, 128, 128);
-		GLuint Texture = Render::Texture::loadImage(*imgtoPrint);
+		GLuint Texture = Render::Texture::loadImage(image);
         
         
         

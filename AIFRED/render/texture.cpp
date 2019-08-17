@@ -85,8 +85,8 @@ namespace Render
 		
 		Image::~Image() 	// manual init
 		{
-			for (int i = 0; i < sizeX; i++)
-				delete [] data[i];
+			//for (int i = 0; i < sizeX; i++)
+				//delete data[i];
 			
 			delete [] data;
 		}

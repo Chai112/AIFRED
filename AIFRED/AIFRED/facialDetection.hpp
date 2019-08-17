@@ -42,6 +42,10 @@ namespace AIFRED
             
             float faceHaarTotal = 0;
             float nonFaceHaarTotal = 0;
+			
+			float thresholdmin = 0;
+			float threshold = 0;
+			int parity = 1;
             
             int x = 0;
             int y = 0;
@@ -60,8 +64,8 @@ namespace AIFRED
 		
 		struct Eval
 		{
-			Percent evalPerc;
-			Percent failPerc;
+			Percent succPerc; // percent of classifiers passed
+			Percent errorPerc; // error of image
 		};
 		
 	

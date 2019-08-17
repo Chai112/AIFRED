@@ -53,7 +53,7 @@ namespace AIFRED
 		Eval *FDScanner::scan(FDSingleScanner &fd, int strideLength)
 		{
 			static Eval eval[3];
-			eval[0].evalPerc = 0;
+			eval[0].succPerc = 0;
 
 			return eval;
 		}
@@ -108,8 +108,8 @@ namespace AIFRED
             mys = imys;
             totalClassiferCount = 0;
             // allocate all evaluations
-            const int xIncrement = 2;
-            const int yIncrement = 2;
+            const int xIncrement = 4;
+            const int yIncrement = 4;
             const int wIncrement = 4;
             const int hIncrement = 4;
             
@@ -223,6 +223,9 @@ namespace AIFRED
 				
                 e->faceHaarAverage = e->faceHaarTotal / iteration;
 				e->nonFaceHaarAverage = e->nonFaceHaarTotal / iteration;
+				
+				e->threshold = (e->faceHaarAverage + 22.8f);
+				e->thresholdmin = (e->faceHaarAverage - 20.8f);
                 
                 // find best classifier
                 if (highestFaceAverage < FDSingleScanner::abs(e->faceHaarAverage))
@@ -267,9 +270,9 @@ namespace AIFRED
 			
 			for (int i = 0; i < outLength; i++) draw(imageFeaturesEval.featuresSorted[i]);
 			
-			Percent j = 0;
 			float fa = 0;
-			Percent threshold = .5f;
+			
+			//float scale = imageFeaturesEval.featuresSorted[0].faceHaarAverage / imageFeaturesEval.featuresSorted[0].faceHaarAverage
 			for (int i = 0; i < outLength; i++)
 			{
 				Feature f = imageFeaturesEval.featuresSorted[i];
@@ -277,50 +280,51 @@ namespace AIFRED
 				if (f.type == 1)
 				{
 					
-					float e = FDSingleScanner::abs(cl.A(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
-					if (FDSingleScanner::abs(e) < threshold * 128)
+					float e = cl.A(f.x, f.y, f.w, f.h, *this) * f.parity;
+					if (f.thresholdmin < e && e < f.threshold)
 					{
 						fa++;
-						j += e;
 					}
+					//else
+					//j += e *;
 					
 					
 				}
 			
 				if (f.type == 2)
 				{
-					float e = FDSingleScanner::abs(cl.B(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
-					if (FDSingleScanner::abs(e) < threshold * 128)
+					float e = cl.B(f.x, f.y, f.w, f.h, *this) * f.parity;
+					if (f.thresholdmin < e && e < f.threshold)
 						{
 							fa++;
-							j += e;
 						}
+					//else
+					//j += e;
 				}
 				
 				if (f.type == 3)
 				{
-					float e = FDSingleScanner::abs(cl.C(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
-					if (FDSingleScanner::abs(e) < threshold * 128)
+					float e = cl.C(f.x, f.y, f.w, f.h, *this) * f.parity;
+					if (f.thresholdmin < e && e < f.threshold)
 					{fa++;
-						j += e;
 					}
+					//else
+					//j += e;
 				}
 				
 				if (f.type == 4)
 				{
-					float e = FDSingleScanner::abs(cl.D(f.x, f.y, f.w, f.h, *this) - f.faceHaarAverage);
-					if (FDSingleScanner::abs(e) < threshold * 128)
+					float e = cl.D(f.x, f.y, f.w, f.h, *this) * f.parity;
+					if (f.thresholdmin < e && e < f.threshold)
 					{fa++;
-						j += e;
 					}
+					//else
+					//j += e;
 				}
 			}
-			//printf("   eval: %f\n", j / outLength);
-			//printf("   eval:  %f\n", (fa));
 			
 			Eval eval;
-			eval.evalPerc = j / outLength;
-			eval.failPerc = fa;
+			eval.succPerc = fa / outLength;
 			
 			return eval;
 		}
