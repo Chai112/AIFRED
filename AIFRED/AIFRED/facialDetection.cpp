@@ -225,7 +225,7 @@ namespace AIFRED
 				e->nonFaceHaarAverage = e->nonFaceHaarTotal / iteration;
 				
 				e->threshold = (e->faceHaarAverage + 22.8f);
-				e->thresholdmin = (e->faceHaarAverage - 20.8f);
+				e->thresholdmin = (e->faceHaarAverage - 21.f);
                 
                 // find best classifier
                 if (highestFaceAverage < FDSingleScanner::abs(e->faceHaarAverage))
