@@ -37,23 +37,62 @@ namespace AIFRED
 
 		}
 		using namespace Render::Texture;
-		FDScanner::FDScanner(Image &image) : Image(image.sizeX, image.sizeY)
+		
+		FDFullScanner::FDFullScanner(FDSingleScanner &ifss, int inSizeX, int inSizeY)
 		{
+			fss = &ifss;
+			
+			sizeX = inSizeX;
+			sizeY = inSizeY;
 			
 			// create greyMap as 2D array
 			arrayHeapAllocate<colourByte> (&greyMap, sizeX, sizeY);
 			// create integral image as 2D array
 			arrayHeapAllocate<u_int64_t> (&integralImage, sizeX, sizeY);
 		}
-		FDScanner::~FDScanner()
+		FDFullScanner::~FDFullScanner()
 		{
 			
 		}
 		
-		Eval *FDScanner::scan(FDSingleScanner &fd, int strideLength)
+		EvalImage *FDFullScanner::findFaces(Render::Texture::Image &image, Percent strideLength, int threshold)
 		{
-			static Eval eval[3];
-			eval[0].succPerc = 0;
+			static EvalImage *eval = evalAll(image.toFDSingleScanner(), strideLength);
+			
+			
+			return eval;
+		}
+		EvalImage *FDFullScanner::evalAll(colourByte **image, Percent strideLength)
+		{
+			greyMap = image;
+			makeIntegralImage();
+			int c = 0;
+			for (int x = 0; x < sizeX - fss->sizeX; x += strideLength * fss->sizeX)
+			{
+				for (int y = 0; y < sizeY - fss->sizeY; y += strideLength * fss->sizeY)
+				{
+					
+					c++;
+				}
+			}
+			printf("ww %d", c);
+			
+			static EvalImage *eval = new EvalImage[c];
+			for (int x = 0; x < sizeX - fss->sizeX - 1; x += strideLength * fss->sizeX)
+			{
+				for (int y = 0; y < sizeY - fss->sizeY - 1; y += strideLength * fss->sizeY)
+				{
+					for (int xx = 0; xx < fss->sizeX; xx++)
+					{
+						for (int yy = 0; yy < fss->sizeY; yy++)
+						{
+							fss->integralImage[xx][yy] = integralImage[x + xx][y + yy];
+						}
+					}
+					
+				}
+			}
+			
 
 			return eval;
 		}
@@ -61,15 +100,19 @@ namespace AIFRED
 		
 			
         // FDSingleScanner Constructor
-        FDSingleScanner::FDSingleScanner(int inSizeX, int inSizeY) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
+		FDSingleScanner::FDSingleScanner(int inSizeX, int inSizeY) : integralImageProvided(false)
         {
+			sizeX = inSizeX;
+			sizeY = inSizeY;
 			init();
 			initSetFeatures(sizeX, sizeY);
         }
 		
 			// FDSingleScanner Constructor
-		FDSingleScanner::FDSingleScanner(int inSizeX, int inSizeY, int cropMxs, int cropMys) : sizeX(inSizeX), sizeY(inSizeY), integralImageProvided(false)
+		FDSingleScanner::FDSingleScanner(int inSizeX, int inSizeY, int cropMxs, int cropMys) : integralImageProvided(false)
 		{
+			sizeX = inSizeX;
+			sizeY = inSizeY;
 			init();
 			initSetFeatures(cropMxs, cropMys);
 		}
@@ -181,29 +224,30 @@ namespace AIFRED
 		}
 		
 
-        // creates integral image and assigns integral image.
-        void FDSingleScanner::makeIntegralImage()
-        {
-            // integral image
-            for (int x = 0; x < sizeX; x++)
-            {
-                for (int y = 0; y < sizeY; y++)
-                {
-                    // (note x = 1 so no conflict)
-                    if (x > 0 && y > 0)
-                    {
-                        integralImage[x][y] = integralImage[x - 1][y] + integralImage[x][y - 1] - integralImage[x - 1][y - 1] + greyMap[x][y];
-                        if (integralImage[x][y] >= ULLONG_MAX - 1) // is it overloading?
-                            abort();
-                    }
-                    else
-                    {
-                        // padding
-                        integralImage[x][y] = 0;
-                    }
-                }
-            }
-        }
+		
+			// creates integral image and assigns integral image.
+		void FDScanner::makeIntegralImage()
+		{
+				// integral image
+			for (int x = 0; x < sizeX; x++)
+			{
+				for (int y = 0; y < sizeY; y++)
+				{
+						// (note x = 1 so no conflict)
+					if (x > 0 && y > 0)
+					{
+						integralImage[x][y] = integralImage[x - 1][y] + integralImage[x][y - 1] - integralImage[x - 1][y - 1] + greyMap[x][y];
+						if (integralImage[x][y] >= ULLONG_MAX - 1) // is it overloading?
+							abort();
+					}
+					else
+					{
+							// padding
+						integralImage[x][y] = 0;
+					}
+				}
+			}
+		}
 		
 		// does evaluation of image classifiers
         void FDSingleScanner::evaluateImage (int iteration, bool b_sort)
@@ -268,11 +312,23 @@ namespace AIFRED
 			greyMap = igreyMap;
 			makeIntegralImage();
 			
+			return eval();
+		}
+		
+		Eval FDSingleScanner::evaluate(u_int64_t** iintegralImage)
+		{
+			integralImage = iintegralImage;
+			return eval();
+			
+		}
+		
+		Eval FDSingleScanner::eval()
+		{
 			for (int i = 0; i < outLength; i++) draw(imageFeaturesEval.featuresSorted[i]);
 			
 			float fa = 0;
 			
-			//float scale = imageFeaturesEval.featuresSorted[0].faceHaarAverage / imageFeaturesEval.featuresSorted[0].faceHaarAverage
+				//float scale = imageFeaturesEval.featuresSorted[0].faceHaarAverage / imageFeaturesEval.featuresSorted[0].faceHaarAverage
 			for (int i = 0; i < outLength; i++)
 			{
 				Feature f = imageFeaturesEval.featuresSorted[i];
@@ -285,21 +341,21 @@ namespace AIFRED
 					{
 						fa++;
 					}
-					//else
-					//j += e *;
+						//else
+						//j += e *;
 					
 					
 				}
-			
+				
 				if (f.type == 2)
 				{
 					float e = cl.B(f.x, f.y, f.w, f.h, *this) * f.parity;
 					if (f.thresholdmin < e && e < f.threshold)
-						{
-							fa++;
-						}
-					//else
-					//j += e;
+					{
+						fa++;
+					}
+						//else
+						//j += e;
 				}
 				
 				if (f.type == 3)
@@ -308,8 +364,8 @@ namespace AIFRED
 					if (f.thresholdmin < e && e < f.threshold)
 					{fa++;
 					}
-					//else
-					//j += e;
+						//else
+						//j += e;
 				}
 				
 				if (f.type == 4)
@@ -318,8 +374,8 @@ namespace AIFRED
 					if (f.thresholdmin < e && e < f.threshold)
 					{fa++;
 					}
-					//else
-					//j += e;
+						//else
+						//j += e;
 				}
 			}
 			
@@ -328,11 +384,12 @@ namespace AIFRED
 			
 			return eval;
 		}
+			
 		
 		
 		
 		// width 0, height 0 is a 1x1 box
-		float FDSingleScanner::sum (int x, int y, int width, int height)
+		float FDScanner::sum (int x, int y, int width, int height)
 		{
 			width -= 1;
 			height -= 1;
@@ -345,7 +402,7 @@ namespace AIFRED
 			return ((float)(ixy - ix - iy + i) / (width * height));
 		}
         
-        float FDSingleScanner::abs (float in)
+        float FDScanner::abs (float in)
         {
             if (in < 0)
                 return (in * -1);

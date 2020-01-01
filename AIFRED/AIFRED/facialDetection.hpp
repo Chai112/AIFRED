@@ -68,10 +68,28 @@ namespace AIFRED
 			Percent errorPerc; // error of image
 		};
 		
+		struct EvalImage : Eval
+		{
+			int x, y;
+		};
+		
 	
 		
-		
-        class FDSingleScanner
+		struct FDScanner
+		{
+			float sum(int x, int y, int width, int height);
+			float abs(float in);
+			
+			void makeIntegralImage();
+			
+			int sizeX, sizeY; // should be const
+			
+			
+			Render::Texture::colourByte** greyMap;
+			
+			u_int64_t** integralImage;
+		};
+		class FDSingleScanner : public FDScanner
         {
 			void initSetFeatures(int imxs, int imys);
 			void init();
@@ -80,23 +98,17 @@ namespace AIFRED
 			
 			int outLength;
 			
-            float sum(int x, int y, int width, int height);
-            float abs(float in);
             Feature* sort(Feature *features, int length);
 			void prune(Feature *features, int length, Feature *outFeatures, int &outLength, Percent threshold);
 			void draw(Feature target);
+			Eval eval();
 			
-			void makeIntegralImage();
 			
 			const bool integralImageProvided;
             
         public:
-            const int sizeX, sizeY;
-            int mxs, mys; // modifiable for image to be cropped
+			int mxs, mys; // modifiable for image to be cropped
 			
-			Render::Texture::colourByte** greyMap;
-			
-            u_int64_t** integralImage;
             Feature* imageFeatures;
             FeatureImage imageFeaturesEval;
 			
@@ -105,6 +117,7 @@ namespace AIFRED
 			
             void evaluateImage(int iteration, bool b_sort); // called at the end of training
 			Eval evaluate(Render::Texture::colourByte** igreyMap); // called during every comparison
+			Eval evaluate(u_int64_t** iintegralImage);
 			
 			Render::Texture::ColourRGB **toImage();
 			
@@ -117,20 +130,16 @@ namespace AIFRED
         };
 		
 			// Facial Detection Scanner
-		class FDScanner : Render::Texture::Image
+		class FDFullScanner : public FDScanner
 		{
-			void makeIntegralImage();
 		public:
-			FDScanner();
-			FDScanner(Render::Texture::Image &image);
-			~FDScanner();
 			
-			void loadImg(Render::Texture::Image &image);
-			Eval *scan(FDSingleScanner &fd, int strideLength);
+			FDSingleScanner *fss;
+			FDFullScanner(FDSingleScanner &ifss, int inSizeX, int inSizeY);
+			~FDFullScanner();
 			
-			
-			Render::Texture::colourByte** greyMap;
-			u_int64_t** integralImage;
+			EvalImage *findFaces(Render::Texture::Image &image, Percent strideLength, int threshold);
+			EvalImage *evalAll(Render::Texture::colourByte **image, Percent strideLength);
 		};
         
         struct Classifiers

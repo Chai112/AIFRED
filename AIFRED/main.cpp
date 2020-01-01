@@ -122,12 +122,14 @@ int main(int argc, const char *argv[]) {
 	
 	Render::Texture::Image image = Render::Texture::createImage(loadFilename(fileDirFace, 1));
 	
-	// create new GImage (to be processed)
-	AIFRED::FacialDetection::FDScanner MainImage = AIFRED::FacialDetection::FDScanner(image);
+	Render::Texture::Image mainImage = Render::Texture::createImage(initFileDir("/Desktop/scn.png").c_str());
 	
 	
 	
 	AIFRED::FacialDetection::FDSingleScanner inImage(128, 128, 100, 128);
+	
+		// create new GImage (to be processed)
+	AIFRED::FacialDetection::FDFullScanner mainImageScanner = AIFRED::FacialDetection::FDFullScanner(inImage, 512, 512);
     
     while(!glfwWindowShouldClose(shader.window)) {
         if (GLFW_PRESS == glfwGetKey(shader.window, GLFW_KEY_ESCAPE)) {
@@ -208,15 +210,6 @@ int main(int argc, const char *argv[]) {
 					avgEval2 += e2;
 					if (e2 > highest2){highest2 = e2; ihighest2 = a;}
 					if (e2 < lowest2){lowest2 = e2; ilowest2 = a;}
-					
-					/*if (e < 450)
-					{
-						printf("\n\n that's a face!\n");
-					}
-					else
-					{
-						printf("\n\n that's NOT a face!\n");
-					}*/
 				}
 				else
 				{
@@ -234,18 +227,17 @@ int main(int argc, const char *argv[]) {
 					}
 				
 					system("screencapture -x ~/Desktop/scn.png");
-					system("sips -c 256 256 ~/Desktop/scn.png");
-					system("sips -z 128 128 ~/Desktop/scn.png");
-					Render::Texture::Image out = Render::Texture::createImage(initFileDir("/Desktop/scn.png").c_str());
-					out.loadPNG(initFileDir("/Desktop/scn.png").c_str());
+					system("sips -c 500 500 ~/Desktop/scn.png");
+					system("sips -z 512 512 ~/Desktop/scn.png");
+					mainImage.loadPNG(initFileDir("/Desktop/scn.png").c_str());
 					
-					//image.loadPNG("/Users/chaidhatchaimongkol/Downloads/t4.png");
+					mainImageScanner.evalAll(mainImage.toFDSingleScanner(), 1.f);
 					
 					
-					Eval ev = inImage.evaluate(out.toFDSingleScanner());
+					//Eval ev = inImage.evaluate(out.toFDSingleScanner());
 					
-					imgtoPrint = &out;
-					 es = ev.succPerc;
+					//imgtoPrint = &out;
+					 //es = ev.succPerc;
 					
 					
 				}
